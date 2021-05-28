@@ -51,7 +51,7 @@ module.exports = {
      {
        name: 'general',
        label: 'Algemeen',
-       fields: ['resource', 'redirect', 'formType', 'dynamicFormSections']
+       fields: ['resource', 'redirect', 'formType', 'dynamicFormSections', 'allowResourceSaving']
      },
      {
        name: 'title',
@@ -202,6 +202,8 @@ module.exports = {
                 .setEditorMarkerElement('locationField')
                 .setPolygon(req.data.global.mapPolygons || null)
                 .getConfig();
+                
+            widget.allowResourceSaving = !!widget.allowResourceSaving && ['idea', 'article'].includes(widget.resource);
 
   		});
 

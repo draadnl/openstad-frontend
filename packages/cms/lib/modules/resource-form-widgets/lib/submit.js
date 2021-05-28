@@ -28,6 +28,16 @@ module.exports = async function(self, options) {
     };
     const data = req.body;
 
+    // Set the 'publish' field (which is a string) to a boolean field 'isPublished'
+    // which is a virtual field with a getter/setter on the Idea model
+    if (!data.publish || data.publish === 'false') {
+      data.isPublished = false;
+    } else {
+      data.isPublished = true;
+    }
+    
+    delete data.publish;
+    
     data.extraData = data.extraData ? data.extraData : {};
 
     //format image

@@ -2,7 +2,7 @@ const fields = [
      {
         name: 'redirect',
         type: 'string',
-        label: 'Redirect after submit',
+        label: 'Redirect after publishing',
         help: 'The url to redirect to after form submit, it\'s possible to redirect to newly created item (replace with correct url) /pagename/:id   ',
         required: true
     },
@@ -781,6 +781,30 @@ const fields = [
        name: 'buttonTextSave',
        type: 'string',
        label: 'Text for button to save',
+    },
+  {
+    name:    'allowResourceSaving',
+    label:   'Allow resource to be saved (only works with idea / article)',
+    type:    'boolean',
+    choices: [
+      {
+        label: 'Yes',
+        value: true,
+        showFields: ['redirectAfterSave']
+      },
+      {
+        label: 'No',
+        value: false,
+      }
+    ],
+    def: false
+  },
+  {
+        name: 'redirectAfterSave',
+        type: 'string',
+        label: 'Redirect after saving',
+        help: 'The url to redirect to after saving the resource, it\'s possible to redirect to newly saved item (replace with correct url) /pagename/:id   ',
+        required: true
     },
 ];
 

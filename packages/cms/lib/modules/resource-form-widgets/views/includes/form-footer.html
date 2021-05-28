@@ -5,6 +5,7 @@
 {% endif %}
 
 <input class="form-redirect-uri" type="hidden" name="redirect" value="{{data.widget.redirect}}" />
+<input class="form-redirect-save-uri" type="hidden" name="redirectAfterSave" value="{{data.widget.redirectAfterSave}}" />
 <input type="hidden" name="resourceType" value="{{data.widget.resource}}" />
 <input type="hidden" name="resourceEndPoint" value="{{data.widget.resourceEndPoint}}" />
 
@@ -13,8 +14,20 @@
 {% endif %}
 
 {% if activeResource %}
-<input type="submit" class="btn btn-primary" value="{{ data.widget.buttonTextSave if data.widget.buttonTextSave else 'Opslaan' }}">
+
+    {% if data.widget.allowResourceSaving and not activeResource.isPublished %}
+    <button type="submit" class="btn btn-primary btn-save" data-publish="false" value="{{ data.widget.buttonTextSave if data.widget.buttonTextSave else 'Opslaan' }}">{{ data.widget.buttonTextSave if data.widget.buttonTextSave else 'Opslaan' }}</button>
+    <button type="submit" class="btn btn-primary btn-publish" value="{{ data.widget.buttonTextSubmit if data.widget.buttonTextSubmit else 'Versturen' }}">{{ data.widget.buttonTextSubmit if data.widget.buttonTextSubmit else 'Versturen' }}</button>
+    {% else %}
+    <button type="submit" class="btn btn-primary btn-publish" value="{{ data.widget.buttonTextSave if data.widget.buttonTextSave else 'Opslaan' }}">{{ data.widget.buttonTextSave if data.widget.buttonTextSave else 'Opslaan' }}</button>
+    {% endif %}
+
 {% else %}
-<input type="submit" class="btn btn-primary" value="{{ data.widget.buttonTextSubmit if data.widget.buttonTextSubmit else 'Versturen' }}">
+
+{% if data.widget.allowResourceSaving %}
+<button type="submit" class="btn btn-primary btn-save" data-publish="false" value="{{ data.widget.buttonTextSave if data.widget.buttonTextSave else 'Opslaan' }}">{{ data.widget.buttonTextSave if data.widget.buttonTextSave else 'Opslaan' }}</button>
+{% endif %}
+
+<button type="submit" class="btn btn-primary btn-publish" value="{{ data.widget.buttonTextSubmit if data.widget.buttonTextSubmit else 'Versturen' }}">{{ data.widget.buttonTextSubmit if data.widget.buttonTextSubmit else 'Versturen' }}</button>
 {% endif %}
 </form>

@@ -174,23 +174,41 @@ $(document).ready(function () {
           minLengthWithoutHTML: 140
         }*/
       },
-      submitHandler: function(form) {
-
-        $(form).find('input[type="submit"]').val('Verzenden...');
-        $(form).find('input[type="submit"]').attr('disabled', true);
+      submitHandler: function(form, event) {
+      
       //  console.log('X-CSRF-TOKEN');
       //  console.log('asdasdasdasd',$(form).serialize());
 
+        var $submitButton = $(event.originalEvent.submitter);
+        var publish = $submitButton.data('publish') !== false;
+        var submitButtonHtml = $submitButton.html();
+        
+        if (publish) {
+          $submitButton.html('Verzenden...');
+        } else {
+          $submitButton.html('Opslaan...');
+        }
+        
+        $(form).find('button[type="submit"]').attr('disabled', true);
+        
+        var data = $(form).serializeArray();
+        data.push({name: 'publish', value: publish});
+        
        $.ajax({
           url: $(form).attr('action'),
         //  context: document.body,
           type: 'POST',
-          data: $(form).serialize(),
+          data: data,
           dataType: 'json',
           success:function(response) {
-              formHasChanged = false;
-              var redirect = $(form).find('.form-redirect-uri').val();
+            
+              if (publish) {
+                var redirect = $(form).find('.form-redirect-uri').val();
+              } else {
+                var redirect = $(form).find('.form-redirect-save-uri').val();
+              }
               redirect = redirect.replace(':id', response.id);
+              
               //use href to simulate a link click! Not replace, that doesn't allow for back button to work
               window.location.href = window.siteUrl + redirect;
           },
