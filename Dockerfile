@@ -1,5 +1,7 @@
-# Nodejs 8.0.0 alpine 3.6.0
 FROM node:13.14.0-alpine
+
+# Update base image if necessary
+RUN apk -U upgrade
 
 # Label for tracking
 LABEL nl.openstad.container="frontend" nl.openstad.version="0.0.1-beta" nl.openstad.release-date="2020-05-07"
@@ -35,20 +37,30 @@ RUN apk add --no-cache --update openssl g++ make python musl-dev git bash
 # Set the working directory to the root of the container
 WORKDIR /home/app
 
-# Bundle app source
-COPY . /home/app
+RUN npm install -g nodemon
 
-RUN cp -r ./packages/cms/test test
+# Set node ownership to/home/app
+RUN chown node:node /home/app
 
-RUN mkdir ~/.ssh ; echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+COPY --chown=node:node package*.json /home/app/
+
+USER node
 
 # Install node modules
 RUN npm install --loglevel warn --production
 
-RUN npm install -g nodemon
+# Bundle app source
+COPY --chown=node:node . /home/app
+
+COPY --chown=node:node ./packages/cms/test test
+
+RUN mkdir ~/.ssh ; echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
 # Remove unused packages only used for building.
+USER root
 RUN apk del openssl g++ make python && rm -rf /var/cache/apk/*
+
+USER node
 
 RUN mkdir -p /home/app/public
 RUN mkdir -p /home/app/public/modules
@@ -61,10 +73,10 @@ RUN mkdir -p /home/app/data
 # Mount persistent storage
 #VOLUME /home/app/data
 VOLUME /home/app/public/uploads
+
+USER root
 RUN mkdir -p /home/app/public/uploads/assets
 
-# Set node ownership to/home/app
-RUN chown -R node:node /home/app
 USER node
 
 # Exposed ports for application
