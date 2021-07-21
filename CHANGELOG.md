@@ -2,6 +2,8 @@
 
 ## v0.18.2-beta
 * Add global option to disable newsletter captcha
+* Add options to hide votes / status / last name in resource-representation-widgets
+* Allow title above share buttons to be changed in resource-representation-widgets
 
 ## v0.18.0 (2021-07-30)
 * Add embedded email, sms, code auth form directly to voting proces
