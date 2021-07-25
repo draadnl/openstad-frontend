@@ -96,12 +96,15 @@ function initToggleMenuVisibility() {
         if ($target.is(':visible')) {
             $('.body-background').hide();
             $('.visibility-toggle').removeClass('active');
+            $('.visibility-toggle').attr('aria-expanded', 'false');
             $('.toggle-menu').removeClass('active').hide();
         } else {
             $('.visibility-toggle').removeClass('active');
+            $('.visibility-toggle').attr('aria-expanded', 'false');
             $('.toggle-menu').removeClass('active').hide();
             $('.body-background').show();
             $button.addClass('active');
+            $button.attr('aria-expanded', 'true');
             $target.addClass('active').show();
         }
     });
@@ -109,6 +112,7 @@ function initToggleMenuVisibility() {
     $('.body-background').click(function (e) {
         $('.body-background').hide();
         $('.visibility-toggle').removeClass('active');
+        $('.visibility-toggle').attr('aria-expanded', 'false');
         $('.toggle-menu').removeClass('active').hide();
     });
 }
