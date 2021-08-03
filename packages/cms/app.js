@@ -71,7 +71,7 @@ app.use(express.static('public', {
 }));
 // serve static also on first level
 
-app.set('trust proxy', true);
+app.set('trust proxy', 'loopback, linklocal, uniquelocal');
 
 function fetchAllSites(req, res, startSites) {
     const apiUrl = process.env.INTERNAL_API_URL ? process.env.INTERNAL_API_URL : process.env.API;
@@ -165,7 +165,7 @@ function serveSite(req, res, siteConfig, forceRestart) {
                 runner(dbName, config, req.options).then(function (apos) {
                     aposStartingUp[domain] = false;
                     aposServer[domain] = apos;
-                    aposServer[domain].app.set('trust proxy', true);
+                    aposServer[domain].app.set('trust proxy', 'loopback, linklocal, uniquelocal');
                     aposServer[domain].app(req, res);
                 });
             } else {
