@@ -137,6 +137,8 @@ module.exports = {
      const postUrl = `${apiUrl}/api/site/${siteId}/vote`;
      
      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+     
+     console.log ('===> Vote IP:', req.headers, req.connection.remoteAddress);
 
      let votes = req.body.votes ? req.body.votes : [{
        ideaId: req.body.ideaId,
