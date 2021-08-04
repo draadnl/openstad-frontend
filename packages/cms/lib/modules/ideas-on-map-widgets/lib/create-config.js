@@ -146,7 +146,7 @@ module.exports = function createConfig(widget, data, jwt, apiUrl) {
       },
       locationIcon: mapLocationIcon,
       autoZoomAndCenter: widget.mapAutoZoomAndCenter,
-      polygon: ( data.global.siteConfig && data.global.siteConfig.openstadMap && data.global.siteConfig.openstadMap.polygon ) || undefined,
+      polygon: ( data.global.siteConfig && data.global.siteConfig.area && data.global.siteConfig.area.polygon ) || undefined,
       showCoverageOnHover: false,
 		},
 
