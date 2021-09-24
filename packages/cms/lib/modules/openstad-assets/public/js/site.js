@@ -606,7 +606,7 @@ function initImagesGallery () {
             initFotorama();
             // otherwise load scripts first
         } else {
-            $.getScript( "/modules/openstad-assets/js/vendor/fotorama.min.js" )
+            $.getScript( "/modules/openstad-assets/js/vendor/fotorama.js" )
                 .done(function( script, textStatus ) {
                     initFotorama();
                 })
