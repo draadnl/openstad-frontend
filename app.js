@@ -81,6 +81,7 @@ function serveSites (req, res, next) {
 
     rp(siteOptions)
       .then((siteConfig) => {
+        console.log ('===> serving site w/ siteConfig', siteConfig);
         configForHosts[thisHost] = siteConfig;
         serveSite(req, res, siteConfig, true);
       }).catch((e) => {
