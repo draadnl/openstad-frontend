@@ -57,23 +57,20 @@ function serveSites (req, res, next) {
   let thisHost = req.headers['x-forwarded-host'] || req.get('host');
 
   thisHost = thisHost.replace(['http://', 'https://'], ['']);
-
-  console.log ('===> thisHost', thisHost);
-  
-  console.log ('===> configForHosts', configForHosts);
   
   // if the config is existing it means the site has been loaded already, serve site
   if (configForHosts[thisHost]) {
     serveSite(req, res, configForHosts[thisHost], false);
   } else {
-
-    console.log ('=>>> fetch API siteconfig', `${process.env.API}/api/site/${thisHost}`);
     
     /**
      * Fetch the config for sites
      */
     const siteOptions = {
         uri:`${process.env.API}/api/site/${thisHost}`, //,
+        agentOptions: {
+          rejectUnauthorized: false
+        },
         headers: {
             'Accept': 'application/json',
             "Cache-Control": "no-cache"
