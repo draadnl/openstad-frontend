@@ -58,11 +58,17 @@ function serveSites (req, res, next) {
 
   thisHost = thisHost.replace(['http://', 'https://'], ['']);
 
+  console.log ('===> thisHost', thisHost);
+  
+  console.log ('===> configForHosts', configForHosts);
+  
   // if the config is existing it means the site has been loaded already, serve site
   if (configForHosts[thisHost]) {
     serveSite(req, res, configForHosts[thisHost], false);
   } else {
 
+    console.log ('=>>> fetch API siteconfig', `${process.env.API}/api/site/${thisHost}`);
+    
     /**
      * Fetch the config for sites
      */
@@ -81,7 +87,6 @@ function serveSites (req, res, next) {
 
     rp(siteOptions)
       .then((siteConfig) => {
-        console.log ('===> serving site w/ siteConfig', siteConfig);
         configForHosts[thisHost] = siteConfig;
         serveSite(req, res, siteConfig, true);
       }).catch((e) => {
