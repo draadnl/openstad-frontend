@@ -1,3 +1,6 @@
+// Temporary workaround for LetsEncrypt intermediate certificate issue
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 /**
  * This is the startup script voor ApostrhopheCMS for the Openstad cms
  * It allows multiple CMS sites to run on this one server.
