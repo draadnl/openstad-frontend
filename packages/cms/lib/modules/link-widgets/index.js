@@ -42,12 +42,32 @@ module.exports = {
       label: 'Open in new window',
     },
     {
+      name: 'onlyForModerator',
+      label: 'Only show to moderators',
+      type: 'boolean',
+      choices: [
+        {
+          label: 'Yes',
+          value: true,
+        },
+        {
+          label: 'No',
+          value: false,
+        }
+      ],
+      def: false
+    },
+    {
       name: 'style',
       type: 'select',
       choices: [
         {
           'label': 'No style',
           'value': 'no-styling'
+        },
+        {
+          'label': 'Link with back icon',
+          'value': 'link-caret--back-black'
         },
         {
           'label': 'List style Link',
@@ -106,7 +126,7 @@ module.exports = {
       {
         name: 'advancedGroup',
         label: 'Advanced',
-        fields: ['targetBlank', 'classNameCustom', 'addTelephoneProtocol']
+        fields: ['targetBlank', 'classNameCustom', 'addTelephoneProtocol', 'onlyForModerator']
       }
     ]);
 
@@ -114,10 +134,13 @@ module.exports = {
     self.load = (req, widgets, callback) => {
       widgets.forEach((widget) => {
         if (widget.containerStyles) {
-          const containerId = widget._id;
+          const containerId = self.apos.utils.generateId();
           widget.containerId = containerId;
           widget.formattedContainerStyles = styleSchema.format(containerId, widget.containerStyles);
         }
+
+        widget.cssHelperClassesString = widget.cssHelperClasses ? widget.cssHelperClasses.join(' ') : '';
+
       });
 
       return superLoad(req, widgets, callback);

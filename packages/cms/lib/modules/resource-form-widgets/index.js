@@ -7,11 +7,11 @@
  */
 
 const rp            = require('request-promise');
-const proxy         = require('http-proxy-middleware');
 const url           = require('url');
 const request       = require('request');
 const pick          = require('lodash/pick')
 const eventEmitter  = require('../../../events').emitter;
+
 
 const resourcesSchema = require('../../../config/resources.js').schemaFormat;
 const openstadMap = require('../../../config/map').default;
@@ -26,6 +26,7 @@ const toSqlDatetime = (inputDate) => {
 }
 
 const fields = require('./lib/fields.js');
+const userFormFields = require('./lib/userFormFields.js');
 
 module.exports = {
   extend: 'map-widgets',
@@ -136,6 +137,8 @@ module.exports = {
         const styles = openstadMap.defaults.styles;
         const globalData = req.data.global;
 
+        req.data.userFormFields = userFormFields;
+
 	      widgets.forEach((widget) => {
             const resourceType = widget.resource ?  widget.resource : false;
             const resourceInfo = resourceType  ? resourcesSchema.find((resourceInfo) => resourceInfo.value === resourceType) : false;
@@ -183,18 +186,22 @@ module.exports = {
     				const resources = activeResource ? [activeResource] : [];
             const googleMapsApiKey = self.apos.settings.getOption(req, 'googleMapsApiKey');
 
+
             widget.mapConfig = self.getMapConfigBuilder(globalData)
                 .setDefaultSettings({
                     mapCenterLat: (activeResource && activeResource.location && activeResource.location.coordinates && activeResource.location.coordinates[0]) || globalData.mapCenterLat,
                     mapCenterLng: (activeResource && activeResource.location && activeResource.location.coordinates && activeResource.location.coordinates[1]) || globalData.mapCenterLng,
-                    mapZoomLevel: 16,
+                    mapZoomLevel: 13,
                     zoomControl: true,
                     disableDefaultUI : true,
                     styles: styles,
                     googleMapsApiKey: googleMapsApiKey,
-                    useMarkerLinks: false
+                    useMarkerLinks: false,
+                    markers: []
+                  //  polygon: req.data.global.mapPolygons || null
                 })
                 .setMarkerStyle(markerStyle)
+                .setMarkersByResources(resources)
                 .setEditorMarker()
                 .setEditorMarkerElement('locationField')
                 .setPolygon(req.data.global.mapPolygons || null)
@@ -214,6 +221,7 @@ module.exports = {
      self.pushAsset('stylesheet', 'trix', { when: 'always' });
      self.pushAsset('stylesheet', 'form', { when: 'always' });
      self.pushAsset('stylesheet', 'main', { when: 'always' });
+
      self.pushAsset('script', 'map', { when: 'always' });
      self.pushAsset('script', 'editor', { when: 'always' });
 

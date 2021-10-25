@@ -26,6 +26,7 @@ module.exports = [
 		],
     def: 'complete',
 	},
+
   {
     name: 'displayWidth',
     type: 'string',
@@ -82,7 +83,25 @@ module.exports = [
 			},
 		]
 	},
+
+	{
+		type: 'select',
+		name: 'onMarkerClickAction',
+		label: 'Op een kaart icon klikken',
+    def: true,
+		choices: [
+			{
+				label: 'Selecteert een idee',
+				value: 'selectIdea',
+			},
+			{
+				label: 'Toon idee details',
+				value: 'showIdeaDetails'
+			},
+		]
+	},
   
+
 	{ 
 		name: 'noSelectionHTML',
 		type: 'string',
@@ -186,6 +205,7 @@ module.exports = [
     textarea: true,
     required: false,
   },
+
 	{
 		name: 'mapVariant',
 		type: 'select',
@@ -197,10 +217,28 @@ module.exports = [
       },{
         label: 'Amsterdam',
         value: 'amaps',
+      },{
+        label: 'Geavanceerd',
+        value: 'custom',
+        showFields: ['mapTilesUrl', 'mapTilesSubdomains'],
       },
     ],
 		required: false
 	},
+  { 
+    name: 'mapTilesUrl',
+    type: 'string',
+    label: 'Url van de tiles server',
+    help: 'Ziet er uit als: https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    required: false,
+  },
+  { 
+    name: 'mapTilesSubdomains',
+    type: 'string',
+    label: 'Subdomains van de tiles server',
+    help: 'De mogelijke waarden voor \'s\' hierboven. Meestal \'1234\' of \'abcd\'.',
+    required: false,
+  },
 	{
 		name: 'mapAutoZoomAndCenter',
 		type: 'select',
@@ -215,6 +253,12 @@ module.exports = [
       },
     ],
 		required: false
+	},
+  {
+    name: 'mapLocationIcon',
+    type: 'string',
+    label: 'Default Location icon',
+    help: 'JSON object: { "html": "<svg>...</svg>", "className": "osc-ideas-on-map-icon", "width": 39, "height": 50, "iconAnchor": [20,50] }',
 	},
   // zonder clusering werkt hij niet goed, dus die kun je nog niet uit zetten
 	// {
@@ -245,18 +289,29 @@ module.exports = [
 	{
 		name: 'ideaName',
 		type: 'string',
-		label: 'Naam voor idea',
+		label: 'Naam voor ideas',
 		def: 'Inzending',
 		required: false
 	},
+
 	{
 		name: 'typeField',
-		type: 'string',
+    type: 'select',
 		label: 'Veld voor type inzending',
+	  choices: [
+		  {
+			  label: 'Idee type',
+			  value: 'typeId',
+		  },{
+			  label: 'Thema',
+			  value: 'extraData.theme',
+		  },
+	  ],
 		def: 'extraData.theme',
 		required: false
 	},
-	{
+
+  {
 		name: 'typesFilterLabel',
 		type: 'string',
 		label: 'Label voor type in filters',
@@ -273,7 +328,7 @@ module.exports = [
 			{
 				label: 'Ja',
 				value: true,
-        showFields: ['reactionsTitle', 'reactionsPlaceholder', 'reactionsFormIntro', 'ignoreReactionsForIdeaIds'],
+        showFields: ['reactionsTitle', 'reactionsPlaceholder', 'reactionsFormIntro', 'ignoreReactionsForIdeaIds', 'reactionsClosed'],
 			},
 			{
 				label: 'Nee',
@@ -310,11 +365,45 @@ module.exports = [
 		required: false
 	},
 
+  {
+    name: 'reactionsClosed',
+    type: 'select',
+    label: 'Reactiemogelijkheid is...',
+    help: 'Deze wijzigingen zijn pas zichbaar na een commit',
+    default: false,
+    choices: [
+      {
+        value: false,
+        label: "...open voor alle ideeën",
+      },
+      {
+        value: true,
+        label: "...gesloten voor alle ideeën",
+        showFields: ['reactionsClosedText'],
+      },
+      {
+        value: '',
+        label: "...gesloten voor sommige ideeën",
+        showFields: ['closeReactionsForIdeaIds', 'reactionsClosedText'],
+      },
+    ],
+    def: false,
+  },
+
 	{
 		name: 'closeReactionsForIdeaIds',
 		type: 'string',
 		label: 'Ids van Ideas waarvoor reacties gesloten zijn',
 		required: false
+	},
+
+	{
+		name: 'reactionsClosedText',
+		type: 'string',
+		label: 'Tekst boven gesloten reacties blok',
+    help: 'Deze wijzigingen zijn pas zichbaar na een commit',
+    default: "De reactiemogelijkheid is gesloten, u kunt niet meer reageren",
+		required: false,
 	},
 
   {
@@ -329,6 +418,49 @@ module.exports = [
     label: 'Select the default sorting',
     choices: sortingOptions
   },
+
+  {
+    name: 'imageAllowMultipleImages',
+    type: 'boolean',
+    label: 'Meerdere afbeeldingen bij een idee',
+    choices: [
+      {
+        value: true,
+        label: "Yes",
+      },
+      {
+        value: false,
+        label: "No"
+      },
+    ],
+    def: false
+  },
+
+  {
+    name: 'imagePlaceholderImageSrc',
+    type: 'attachment',
+    svgImages: true,
+    label: 'Default afbeelding',
+    apiSyncField: 'styling.logo',
+    trash: true
+  },
+
+	{
+		name: 'imageAspectRatio',
+		type: 'select',
+		label: 'Aspect ratio',
+		choices: [
+			{
+				label: '16:9',
+				value: '16x9'
+			},
+			{
+				label: '1:1',
+				value: '1x1'
+			}
+		],
+    def: '16x9',
+	},
 
   { 
     name: 'metaDataTemplate',
@@ -389,7 +521,7 @@ module.exports = [
       {
         value: 'ideas and addresses',
         label: "Zoek in ideeën en adressen",
-        showFields: ['searchPlaceHolder']
+        showFields: ['searchPlaceHolder','searchAddresssesMunicipality']
       },
       {
         value: 'ideas',
@@ -399,7 +531,7 @@ module.exports = [
       {
         value: 'addresses',
         label: "Zoek in adressen",
-        showFields: ['searchPlaceHolder']
+        showFields: ['searchPlaceHolder','searchAddresssesMunicipality']
       },
       {
         value: 'none',
@@ -408,12 +540,18 @@ module.exports = [
     ],
     def: true
   },
-
 	{
 		name: 'searchPlaceHolder',
 		type: 'string',
 		label: 'Placeholder tekst in het zoekveld',
     def: 'Zoek op trefwoord',
+		required: false
+	},
+	{
+		name: 'searchAddresssesMunicipality',
+		type: 'string',
+		label: 'Gemeente waarin naar adressen wordt gezocht',
+    help: 'Een lijst van gemeenten is o.m. beschikbaar op Wikipedia: https://nl.wikipedia.org/wiki/Lijst_van_Nederlandse_gemeenten',
 		required: false
 	},
 

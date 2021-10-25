@@ -1,6 +1,7 @@
-const sortingOptions  = require('../../../../config/sorting.js').ideasOnMapOptions;
+const sortingOptions = require('../../../../config/sorting.js').ideasOnMapOptions;
+const ideaForm = require('./idea-form');
 
-module.exports = function createConfig(widget, data, jwt, apiUrl) {
+module.exports = function createConfig(widget, data, jwt, apiUrl, loginUrl, imageProxy, apos) {
 
   let contentConfig = {
     ignoreReactionsForIdeaIds: widget.ignoreReactionsForIdeaIds,
@@ -16,15 +17,10 @@ module.exports = function createConfig(widget, data, jwt, apiUrl) {
   if (widget.mobilePreviewNotLoggedInHTML) contentConfig.mobilePreviewNotLoggedInHTML = widget.mobilePreviewNotLoggedInHTML;
   contentConfig.showNoSelectionOnMobile = widget.showNoSelectionOnMobile;
 
-  // allowMultipleImages to formfields
-  let formFields = [ ...widget.formFields ];
-  let allowMultipleImages = ( data.global.siteConfig && data.global.siteConfig.ideas && data.global.siteConfig.ideas.allowMultipleImages ) || false;
-  formFields.forEach((formField) => {
-    if ( formField.inputType ==  "image-upload" ) {
-      formField.allowMultiple = allowMultipleImages;
-    }
-  });
-
+  // image settings; todo: deze moeten syncen naar de api en dan moet de voorwaardelijkheid omgedraaid
+  let allowMultipleImages = typeof widget.imageAllowMultipleImages != 'undefined' ? widget.imageAllowMultipleImages : ( ( data.global.siteConfig && data.global.siteConfig.ideas && typeof data.global.siteConfig.ideas.allowMultipleImages != 'undefined' ) ? data.global.siteConfig.ideas.allowMultipleImages : false );
+  let placeholderImageSrc = typeof widget.imagePlaceholderImageSrc != 'undefined' ? apos.attachments.url(widget.imagePlaceholderImageSrc) : ( ( data.global.siteConfig && data.global.siteConfig.ideas && typeof data.global.siteConfig.ideas.placeholderImageSrc != 'undefined' ) ? data.global.siteConfig.ideas.placeholderImageSrc : undefined );
+  
   let themeTypes;
   try {
     themeTypes = data.global.themes || [];
@@ -34,10 +30,15 @@ module.exports = function createConfig(widget, data, jwt, apiUrl) {
       mapicon: JSON.parse(type.mapicon),
       listicon: JSON.parse(type.listicon || '{}'),
     }})
-  } catch (err) {
-  }
-
+  } catch (err) {}
   let ideaTypes = data.global.siteConfig && data.global.siteConfig.ideas && typeof data.global.siteConfig.ideas.types != 'undefined' ? data.global.siteConfig.ideas.types : undefined;
+  let typeField = widget.typeField || 'typeId';
+  let types = typeField == 'typeId' ? ideaTypes : themeTypes;
+
+  let mapLocationIcon = widget.mapLocationIcon;
+  try {
+    mapLocationIcon = JSON.parse(mapLocationIcon);
+  } catch (err) {}
 
   let config = {
     // data.isAdmin
@@ -53,28 +54,63 @@ module.exports = function createConfig(widget, data, jwt, apiUrl) {
       fullName:  data.openstadUser && (data.openstadUser.fullName || data.openstadUser.firstName + ' ' + data.openstadUser.lastName)
     },
 
-		displayType: widget.displayType,
-		displayWidth: widget.displayWidth,
-		displayHeight: widget.displayHeight,
-		linkToCompleteUrl: widget.linkToCompleteUrl,
+		display: {
+      type: widget.displayType,
+		  width: widget.displayWidth,
+		  height: widget.displayHeight,
+    },
+
+    loginUrl,
+
+		linkToCompleteUrl: widget.linkToCompleteUrl && data.siteUrl + widget.linkToCompleteUrl,
 
     canSelectLocation: widget.canSelectLocation,
+    onMarkerClickAction: widget.onMarkerClickAction,
     startWithListOpenOnMobile: widget.startWithListOpenOnMobile,
 
-    linkToUserPageUrl: widget.linkToUserPageUrl,
+    linkToUserPageUrl: widget.linkToUserPageUrl && data.siteUrl + widget.linkToUserPageUrl,
 
     search: {
       searchIn: { 'ideas and addresses': ['ideas', 'addresses'], 'ideas': ['ideas'], 'addresses': ['addresses'], 'none': [] }[ widget.searchIn ] || [],
       placeholder: widget.searchPlaceHolder,
+      showButton: true,  // todo: naar settings?
+      showSuggestions: true,  // todo: naar settings?
+      defaultValue: '',  // todo: naar settings?
+      addresssesMunicipality: widget.searchAddresssesMunicipality || null,
     },
 
     content: contentConfig,
     ideaName: widget.ideaName,
-    typeField: widget.typeField,
-    types: widget.typeField == 'typeId' ? ideaTypes : themeTypes,
-    typesFilterLabel: widget.typesFilterLabel,
+
+    typeField,
+    types,
+    filter: [{
+      label: '',
+      showFilter: true,
+      fieldName: typeField,
+      filterOptions: [{ value: '', label: widget.typesFilterLabel }].concat( types.map(function(type) { return { value: type.id, label: type.label || type.name } }) ),
+      defaultValue: '',
+    }],
+
+    sort: {
+      sortOptions: widget.selectedSorting ? widget.selectedSorting.map(key => sortingOptions.find(option => option.value == key ) ) : [],
+      showSortButton: widget.selectedSorting && widget.selectedSorting.length ? true : false,
+      defaultValue: widget.defaultSorting,
+    },
+
+    image: {
+      server: {
+				process: imageProxy,
+				fetch: imageProxy,
+        srcExtension: '/:/rs=w:[[width]],h:[[height]];cp=w:[[width]],h:[[height]]',
+      },
+      aspectRatio: widget.imageAspectRatio || '16x9',
+      allowMultipleImages,
+      placeholderImageSrc,
+    },
+    
 		idea: {
-      formUrl: widget.formUrl,
+      formUrl: widget.formUrl && data.siteUrl + widget.formUrl,
       showVoteButtons: data.global.siteConfig && data.global.siteConfig.ideas && typeof data.global.siteConfig.ideas.showVoteButtons != 'undefined' ? data.global.siteConfig.ideas.showVoteButtons : true,
       showLabels: data.global.siteConfig && data.global.siteConfig.ideas && typeof data.global.siteConfig.ideas.showLabels != 'undefined' ? data.global.siteConfig.ideas.showLabels : true,
       canAddNewIdeas: data.global.siteConfig && data.global.siteConfig.ideas && typeof data.global.siteConfig.ideas.canAddNewIdeas != 'undefined' ? data.global.siteConfig.ideas.canAddNewIdeas : true,
@@ -85,43 +121,51 @@ module.exports = function createConfig(widget, data, jwt, apiUrl) {
 			descriptionMinLength: ( data.global.siteConfig && data.global.siteConfig.ideas && data.global.siteConfig.ideas.descriptionMinLength ) || 30,
 			descriptionMaxLength: ( data.global.siteConfig && data.global.siteConfig.ideas && data.global.siteConfig.ideas.descriptionMaxLength ) || 200,
 			allowMultipleImages,
-      imageserver: {
-        // TODO: hij staat nu zonder /image in de .env van de frontend, maar daar zou natuurlijk de hele url moeten staan
-				process: '/image',
-				fetch: '/image',
-      },
-      fields: formFields,
+      fields: ideaForm.getWidgetFormFields(widget),
       shareChannelsSelection: widget.showShareButtons ? widget.shareChannelsSelection : [],
-      sort: {
-        sortOptions: widget.selectedSorting ? widget.selectedSorting.map(key => sortingOptions.find(option => option.value == key ) ) : [],
-        showSortButton: widget.selectedSorting && widget.selectedSorting.length ? true : false,
-        defaultSortOrder: widget.defaultSorting,
-      },
       metaDataTemplate: widget.metaDataTemplate,
 		},
-		poll: data.global.siteConfig && data.global.siteConfig.polls,
-		argument: {
+
+    poll: data.global.siteConfig && data.global.siteConfig.polls,
+
+    argument: {
       isActive: widget.showReactions,
-      isClosed: data.global.siteConfig && data.global.siteConfig.arguments && typeof data.global.siteConfig.arguments.isClosed != 'undefined' ? data.global.siteConfig.arguments.isClosed : false,
-      closedText: data.global.siteConfig && data.global.siteConfig.arguments && typeof data.global.siteConfig.arguments.closedText != 'undefined' ? data.global.siteConfig.arguments.closedText : true,
       title: widget.reactionsTitle,
       formIntro: widget.reactionsFormIntro,
       placeholder: widget.reactionsPlaceholder,
 			descriptionMinLength: ( data.global.siteConfig && data.global.siteConfig.arguments && data.global.siteConfig.arguments.descriptionMinLength ) || 30,
 			descriptionMaxLength: ( data.global.siteConfig && data.global.siteConfig.arguments && data.global.siteConfig.arguments.descriptionMaxLength ) || 100,
-      closeReactionsForIdeaIds: widget.closeReactionsForIdeaIds,
+      isClosed: typeof widget.reactionsClosed != 'undefined' ? !!widget.reactionsClosed : (data.global.siteConfig && data.global.siteConfig.arguments && typeof data.global.siteConfig.arguments.isClosed != 'undefined' ? data.global.siteConfig.arguments.isClosed : false),
+      closedText: typeof widget.reactionsClosedText != 'undefined' ? widget.reactionsClosedText : (data.global.siteConfig && data.global.siteConfig.arguments && typeof data.global.siteConfig.arguments.closedText != 'undefined' ? data.global.siteConfig.arguments.closedText : true),
+      closeReactionsForIdeaIds: widget.reactionsClosed === '' && widget.closeReactionsForIdeaIds || '',
 		},
-		map: {
+
+    map: {
       variant: widget.mapVariant,
+      mapTilesUrl: widget.mapTilesUrl,
+      mapTilesSubdomains: widget.mapTilesSubdomains,
       zoom: 16,
       clustering: {
         isActive: true, // widget.mapClustering,
         maxClusterRadius: widget.mapMaxClusterRadius,
       },
+      locationIcon: mapLocationIcon,
       autoZoomAndCenter: widget.mapAutoZoomAndCenter,
-      polygon: ( data.global.siteConfig && data.global.siteConfig.openstadMap && data.global.siteConfig.openstadMap.polygon ) || undefined,
+      polygon: data.global.mapPolygons || ( data.global.siteConfig && data.global.siteConfig.openstadMap && data.global.siteConfig.openstadMap.polygon ) || undefined,
       showCoverageOnHover: false,
-		}
+		},
+
+    vote: {
+      isViewable: data.global.siteConfig.votes.isViewable,
+      isActive: data.global.siteConfig.votes.isActive,
+      isActiveFrom: data.global.siteConfig.votes.isActiveFrom,
+      isActiveTo: data.global.siteConfig.votes.isActiveTo,
+      requiredUserRole: data.global.siteConfig.votes.requiredUserRole,
+      voteType: data.global.siteConfig.votes.voteType,
+      voteValues: data.global.siteConfig.votes.voteValues,
+
+    },
+
   }
 
   return config;

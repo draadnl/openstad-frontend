@@ -17,6 +17,11 @@ module.exports = {
 
     },
     {
+      name: 'htmlId',
+      type: 'string',
+      label: 'HTML ID',
+    },
+    {
       name: 'backgroundImage',
       type: 'attachment',
       label: 'Background image',
@@ -83,6 +88,10 @@ module.exports = {
           label: 'Full screen (vertical & horizontal)',
           value: 'full-screen',
         },
+        {
+          label: 'Tabs',
+          value: 'tabs',
+        },
 
 
       /*  {
@@ -115,7 +124,20 @@ module.exports = {
       label: 'Area 4',
       contextual: true
     },
+    {
+      name: 'area5',
+      type: 'area',
+      label: 'Area 5',
+      contextual: true
+    },
+    {
+      name: 'area6',
+      type: 'area',
+      label: 'Area 6',
+      contextual: true
+    },
     styleSchema.definition('containerStyles', 'Styles for the container'),
+    styleSchema.getHelperClassesField(),
     {
       name: 'marginType',
       label: 'Margin type',
@@ -212,6 +234,55 @@ module.exports = {
         },
       ]
     },
+    {
+      name: 'tabs',
+      label: 'Tabs',
+      type: 'array',
+      titleField: 'title',
+      schema: [
+        {
+          type: 'string',
+          name: 'title',
+          label: 'Title'
+        },
+        {
+          name: 'areaName',
+          label: 'Area name',
+          help: `
+            Because of the structure of the CMS the content needs a set area, so you can select an area.
+            This is similar to the columns, area 1 will be the same content as the first column.
+            We don't do this automatically because it won't allow for changing the order of the columns
+          `,
+          type: 'select',
+          choices: [
+            {
+              label: 'Area 1',
+              value: 'area1',
+            },
+            {
+              label: 'Area 2',
+              value: 'area2',
+            },
+            {
+              label: 'Area 3',
+              value: 'area3',
+            },
+            {
+              label: 'Area 4',
+              value: 'area4',
+            },
+            {
+              label: 'Area 5',
+              value: 'area5',
+            },
+            {
+              label: 'Area 6',
+              value: 'area6',
+            },
+          ]
+        },
+      ]
+    },
   ],
 
 
@@ -230,12 +301,17 @@ module.exports = {
       {
         name: 'styling',
         label: 'Styling',
-        fields: ['backgroundColor', 'backgroundImage', 'containerStyles']
+        fields: ['backgroundColor', 'backgroundImage', 'containerStyles', 'cssHelperClasses']
       },
       {
         name: 'advanced',
         label: 'Advanced',
         fields: ['containerId', 'marginType', 'htmlId', 'htmlClass']
+      },
+      {
+        name: 'tabs',
+        label: 'Tabs',
+        fields: ['tabs']
       }
     ]);
 
@@ -243,6 +319,7 @@ module.exports = {
     self.pushAssets = function () {
       superPushAssets();
       self.pushAsset('stylesheet', 'main', { when: 'always' });
+      self.pushAsset('script', 'main', { when: 'always' });
     };
 
     const superLoad = self.load;
@@ -258,8 +335,9 @@ module.exports = {
 
         widgets.forEach((widget) => {
           //is Admin needs to be set to widget object otherwise it's not present during ajax call
-          widget.containerId = widget._id;
+          widget.containerId = self.apos.utils.generateId();
           widget.formattedContainerStyles = styleSchema.format(widget.containerId, widget.containerStyles);
+          widget.cssHelperClassesString = widget.cssHelperClasses ? widget.cssHelperClasses.join(' ') : '';
 
           // get the content widget that fit with the role of logged in user and insert data
           const isAdmin = self.apos.permissions.can(req, 'admin');
@@ -268,13 +346,14 @@ module.exports = {
         });
         return callback(null);
       });
-    };
+    }
 
     const superOutput = self.output;
+
     self.output = (widget, options) => {
       Object.keys(widget.contentWidgets).forEach((widgetKey) => {
 
-        if (widgetKey === 'resource-representation' || widgetKey === 'resource-admin' ||  widgetKey === 'participatory-budgeting' || widgetKey === 'arguments-form' || widgetKey === 'arguments' ) {
+        if (widgetKey === 'resource-representation' || widgetKey === 'resource-admin' ||  widgetKey === 'participatory-budgeting' || widgetKey === 'arguments-form' || widgetKey === 'arguments' || widgetKey === 'arguments-block' ) {
           widget.contentWidgets[widgetKey] = Object.assign(widget.contentWidgets[widgetKey], {
             pageType: options.pageType ? options.pageType : '',
             activeResource: options.activeResource,

@@ -32,14 +32,14 @@ const fields = [
   {
     name: 'imageHeight',
     type: 'string',
-    label: 'Image Height (used for resizing dynamic image and map, not default, for performance reasons)',
-    required: false,
+    label: 'Image height - size to download from server, for performance reasons (example: 300px)',
+    required: true,
   },
   {
     name: 'imageWidth',
     type: 'string',
-    label: 'Image Width (used for resizing dynamic image and map, not default, for performance reasons)',
-    required: false,
+    label: 'Image width - size to download from server, for performance reasons (example: 940px)',
+    required: true,
   },
   styleSchema.definition('containerStyles', 'Styles for the container')
 ]
@@ -60,11 +60,14 @@ module.exports = {
      self.load = function (req, widgets, next) {
          widgets.forEach((widget) => {
            if (widget.containerStyles) {
-             const containerId = widget._id;
+             const containerId = self.apos.utils.generateId();
              widget.containerId = containerId;
              widget.formattedContainerStyles = styleSchema.format(containerId, widget.containerStyles);
            }
-        });
+
+           widget.cssHelperClassesString = widget.cssHelperClasses ? widget.cssHelperClasses.join(' ') : '';
+
+         });
 
         return superLoad(req, widgets, next);
      }
