@@ -91,7 +91,6 @@ if (votingContainer !== null) {
 	  }
     if (votingType == 'budgeting-per-theme' || votingType == 'count-per-theme') {
       data.budgetVote = themes.reduce( function(result, theme) { return result.concat( theme.currentSelection ) }, []);
-      console.log(data.budgetVote);
     }
 
   }
@@ -118,7 +117,6 @@ if (votingContainer !== null) {
 	  }
     if (votingType == 'budgeting-per-theme' || votingType == 'count-per-theme') {
       data.budgetVote = themes.reduce( function(result, theme) { return result.concat( theme.currentSelection ) }, []);
-      console.log(data.budgetVote);
     }
 
   }
@@ -241,7 +239,7 @@ if (votingContainer !== null) {
     }
 
 	  if (currentStep == 3) {
-		  if (typeof userIsLoggedIn != 'undefined' && userIsLoggedIn &&!userHasVoted ) {
+		  if (typeof userIsLoggedIn != 'undefined' && userIsLoggedIn && !userHasVoted ) {
 			  // user is al ingelogd
 			  currentStep = 2;
 		  }
@@ -291,7 +289,6 @@ if (votingContainer !== null) {
             errorMessage = 'Je moet ' + ( minIdeas != maxIdeas ? 'minimaal ' + minIdeas : minIdeas ) + ' plannen selecteren.'
           }
           if (votingType === 'budgeting') {
-            console.log(initialAvailableBudget - availableBudgetAmount <= minimalBudgetSpent, initialAvailableBudget, availableBudgetAmount, minimalBudgetSpent);
             if (initialAvailableBudget - availableBudgetAmount < minimalBudgetSpent) {
 				      errorMessage = 'Je hebt nog niet voor ' + formatEuros(minimalBudgetSpent) + ' aan plannen geselecteerd.';
             } else {
@@ -348,7 +345,7 @@ if (votingContainer !== null) {
     }
 
 	  if (currentStep == 3) {
-		  if (typeof userIsLoggedIn != 'undefined' && userIsLoggedIn &&!userHasVoted ) {
+		  if (typeof userIsLoggedIn != 'undefined' && userIsLoggedIn && !userHasVoted ) {
 			  // user is al ingelogd en kan gaan stemmen
 			  currentStep = 4;
 		  }
@@ -358,7 +355,7 @@ if (votingContainer !== null) {
 
 	  if (currentStep == 3) {
 	  	$('a.button-stemcode').focus();
-		}
+	  }
 
 	  if (currentStep == 5) {
 		  submitBudget();
@@ -596,19 +593,22 @@ if (votingContainer !== null) {
 			  
 			      selection.forEach(function(id) {
 				      var element = sortedElements.find( function(el) { return el.ideaId == id } );
-				      var imageEl = element.querySelector('.idea-image-mask').cloneNode(true);//.innerHTML;
-				      var titleEl = element.querySelector('.title').cloneNode(true).innerHTML;
 
-				      imageEl.setAttribute('data-idea-id', id);
-				      imageEl.className += ' idea-' + id;
-				      imageEl = imageEl.innerHTML;
+				      if (element) {
+								var imageEl = element.querySelector('.idea-image-mask').cloneNode(true);//.innerHTML;
+								var titleEl = element.querySelector('.title').cloneNode(true).innerHTML;
 
-				      overviewHtml = overviewHtml + '<tr><td>'+imageEl + '</td><td>'+ titleEl +'</td>';
-				      if ( votingType === 'budgeting' || votingType === 'budgeting-per-theme' ) {
-					      var budgetEl = element.querySelector('.budget') && element.querySelector('.budget').cloneNode(true).innerHTML;
-					      overviewHtml += '<td class="text-align-right primary-color">' +budgetEl+ '</td>'
-				      }
-				      overviewHtml += '</tr>';
+								imageEl.setAttribute('data-idea-id', id);
+								imageEl.className += ' idea-' + id;
+								imageEl = imageEl.innerHTML;
+
+								overviewHtml = overviewHtml + '<tr><td>' + imageEl + '</td><td>' + titleEl + '</td>';
+								if (votingType === 'budgeting' || votingType === 'budgeting-per-theme') {
+									var budgetEl = element.querySelector('.budget') && element.querySelector('.budget').cloneNode(true).innerHTML;
+									overviewHtml += '<td class="text-align-right primary-color">' + budgetEl + '</td>'
+								}
+								overviewHtml += '</tr>';
+							}
 
 			      });
 
@@ -1106,10 +1106,10 @@ if (votingContainer !== null) {
     }
 
 	  //var url = '/api/site/'+siteId+'/vote';
-	  var url = '/vote';
+	  var url = window.siteUrl + '/vote';
 
 	  var options = {
-      url: url,
+      		url: url,
 		  type: 'post',
 		  dataType: 'json',
 		  data: {votes: votesToSubmit}, //votesToSubmit, //{idea: 52, sentiment: 'for'},//votesToSubmit,
@@ -1794,6 +1794,17 @@ if (votingContainer !== null) {
 			  currentStep = 3;
 		  } else {
 			  currentStep = 4;
+
+			  /**
+			   * in this case user returns from oauth server, we automatically submit,
+			   * other cases we still allow user to click through it themselves
+			   *
+			   * it needs setTimeout, otherwise ajax call will not be ready with CSRF header.
+			   * in refactor, this has to be done pretty
+			   */
+			  setTimeout(function () {
+				  nextStep();
+			  },500);
 		  }
 	  }
 
@@ -1806,7 +1817,7 @@ if (votingContainer !== null) {
 
   	if (votingType != 'budgeting') {
   		return;
-		}
+	}
 
   	if (typeof productAdded === 'undefined') {
   		productAdded = true;

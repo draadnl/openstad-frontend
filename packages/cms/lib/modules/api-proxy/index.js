@@ -8,7 +8,9 @@ const eventEmitter = require('../../../events').emitter;
 module.exports = {
     construct: function (self, options) {
 
-        const apiPath = options.sitePrefix ? options.sitePrefix + '/api' : '/api'
+        const apiPath = options.sitePrefix ? options.sitePrefix + '/api' : '/api';
+
+
 
         /*
          * Create api route for proxying api so we don't have cross origin errors when making AJAX requests
@@ -25,8 +27,9 @@ module.exports = {
                 if (req.body && req.body.areYouABot) {
                     const captchData = req.session.captcha;
                     const isCaptchaValid = captchData && captchData.text && captchData.text === req.body.areYouABot;
-
-                    if (!isCaptchaValid) {
+                    const shouldCheckCaptcha = req.data && req.data.global && req.data.global.useCaptchaForNewsletter !== false;
+                    
+                    if (shouldCheckCaptcha && !isCaptchaValid) {
                         return res.status(403).json({
                             'message' : self.apos.i18n.__('The captcha code is not correct, try again or refresh the captcha.')
                         });
@@ -81,7 +84,9 @@ module.exports = {
             }
         }));
 
-        const statsUrl = options.sitePrefix ? options.sitePrefix + '/stats' : '/stats'
+        const statsPath = options.sitePrefix ? options.sitePrefix + '/stats' : '/stats'
+
+
 
         /*
         * Create api route for proxying api so we don't have cross origin errors when making AJAX requests
@@ -89,7 +94,7 @@ module.exports = {
         self.apos.app.use('/stats', proxy({
             target: apiUrl,
             changeOrigin: true,
-            pathRewrite: {['^' + statsUrl]: '/stats'},
+            pathRewrite: {['^' + statsPath]: '/stats'},
             onProxyReq: (proxyReq, req, res) => {
 
                 // add custom header to request
@@ -104,6 +109,9 @@ module.exports = {
                 //console.log('errerrerr newBody', err);
             }
         }));
+
+
+
 
     }
 };
