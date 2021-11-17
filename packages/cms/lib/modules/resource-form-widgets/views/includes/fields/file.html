@@ -1,6 +1,13 @@
 <fieldset class="filepondFieldset" data-type="file">
+  <legend>Upload file</legend>
   <!-- a list of already uploaded files -->
-  <input type="file" class="filepond filepond-file" {% if field.uploadMultiple %} multiple {% endif %} />
+  <input
+          type="file"
+          class="filepond filepond-file"
+          data-max-file-size="{{field.maxFileSize}}MB"
+          data-max-files="{{field.maxFiles}}"
+          {% if field.uploadMultiple %} multiple {% endif %}
+  />
 
 </fieldset>
 <input type="hidden" name="validateFiles" {% if field.fieldRequired %}required{% endif %} />

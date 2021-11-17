@@ -33,8 +33,6 @@ apos.define('resource-form-widgets', {
               // mock file information
               file: {
                 name: image,
-                // size: 3001025,
-                //type: 'jpeg'
               },
               metadata: {
                 poster: image,
@@ -54,8 +52,6 @@ apos.define('resource-form-widgets', {
               // mock file information
               file: {
                 name: file,
-                // size: 3001025,
-                //	 type: 'image/png'
               },
               metadata: {
                 url: file
@@ -65,7 +61,6 @@ apos.define('resource-form-widgets', {
         });
       }
 
-      // Todo: get uploaded files
       var ideaForm = $widget.find('#js-form');
       var sortableInstance;
 
@@ -201,9 +196,6 @@ apos.define('resource-form-widgets', {
           ignore: '',
           rules: {
             ignore: [],
-            //      location: {
-            //        required: true
-            //      },
             title: {
               required: true,
               minlength: titleMinLength,
@@ -231,8 +223,6 @@ apos.define('resource-form-widgets', {
 
             $(form).find('input[type="submit"]').val('Verzenden...');
             $(form).find('input[type="submit"]').attr('disabled', true);
-            //  console.log('X-CSRF-TOKEN');
-            //  console.log('asdasdasdasd',$(form).serialize());
 
             $.ajax({
               url: $(form).attr('action'),

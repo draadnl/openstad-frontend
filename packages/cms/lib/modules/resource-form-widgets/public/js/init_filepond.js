@@ -152,10 +152,9 @@ function getImageLabels() {
  * @param {string} element
  * @param {string|'image'|'file'} type
  * @param {object[]} uploadedFiles
- * @param {object|null} options
  * @returns {null|fieldsetElement}
  */
-function initFilePond(element, type, uploadedFiles, options = null) {
+function initFilePond(element, type, uploadedFiles) {
   var fieldsetElement = document.querySelector('.filepondFieldset');
 
   if (!fieldsetElement) {
@@ -179,9 +178,7 @@ function initFilePond(element, type, uploadedFiles, options = null) {
     filePosterHeight: 100,
     filePosterMaxHeight: 100,
     allowFileSizeValidation: true,
-    maxFileSize: '8mb', // Todo: make configurable in server env?
     name: type,
-    maxFiles: 5, // Todo: make configurable in field option?
     allowBrowse: true,
     files: uploadedFiles,
     server: getServer(type),

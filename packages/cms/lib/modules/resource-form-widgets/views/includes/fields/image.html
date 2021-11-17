@@ -1,6 +1,25 @@
+{% set maxFiles = 5 %}
+{% set maxFileSize = 8 %}
+{% set allowMultiple = data.widget.uploadMultiple %}
+
+{% if field.maxFiles %}
+  {% set maxFiles = field.maxFiles %}
+{% endif %}
+{% if field.maxFileSize %}
+  {% set maxFiles = field.maxFileSize %}
+{% endif %}
+{% if field.uploadMultiple %}
+  {% set allowMultiple = field.uploadMultiple %}
+{% endif %}
+
 <fieldset class="filepondFieldset" data-type="image">
 
-  <input type="file" class="imageUploader filepond filepond-image" {% if data.widget.uploadMultiple %} multiple {% endif %} {% if data.widget.requiredImages %}required{% endif %} />
+  <input type="file"
+         class="imageUploader filepond filepond-image"
+         data-max-file-size="{{maxFileSize}}MB"
+         data-max-files="{{maxFiles}}"
+         {% if allowMultiple %} multiple {% endif %} {% if data.widget.requiredImages %}required{% endif %}
+  />
 
 </fieldset>
 <input type="hidden" name="validateImages" multiple />
