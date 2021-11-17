@@ -1,0 +1,6 @@
+<fieldset class="filepondFieldset" data-type="file">
+  <!-- a list of already uploaded files -->
+  <input type="file" class="filepond filepond-file" {% if field.uploadMultiple %} multiple {% endif %} />
+
+</fieldset>
+<input type="hidden" name="validateFiles" {% if field.fieldRequired %}required{% endif %} />

@@ -3,6 +3,51 @@ const eventEmitter  = require('../../../../events').emitter;
 
 module.exports = async function(self, options) {
 
+  /**
+   * @param data
+   */
+  self.addImagesToPayload = function(data) {
+    if (data.image) {
+      // when only one image filepondjs sadly just returns object, not array with one file,
+      // to make it consistent we turn it into an array
+      let images = data.image && typeof data.image === 'string' ? [data.image] : data.image;
+
+      // format images
+      images = images ? images.map(function(image) {
+        image = JSON.parse(image);
+        return image ? image.url : '';
+      }) : [];
+
+      // add the formatedd images
+      data.extraData.images = images;
+
+      //clean up data object
+      delete data.image;
+    }
+  }
+
+  /**
+   * @param data
+   */
+  self.addFilesToPayload = function(data) {
+    if (data.file) {
+      // when only one file uploaded filepondjs just returns an object, not an array with one file,
+      // to make it consistent we turn it into an array
+      let files = data.file && typeof data.file === 'string' ? [data.file] : data.file;
+
+      // format files
+      files = files ? files.map(function(file) {
+        file = JSON.parse(file);
+        return file ? file.url : '';
+      }) : [];
+
+      // add the formatted files
+      data.extraData.files = files;
+
+      //clean up data object
+      delete data.file;
+    }
+  }
 
   // Almost identical  to proxy,
   // Server side validation is done by the API
@@ -31,25 +76,10 @@ module.exports = async function(self, options) {
     data.extraData = data.extraData ? data.extraData : {};
 
     //format image
-    if (data.image) {
-      // when only one image filepondjs sadly just returns object, not array with one file,
-      // to make it consistent we turn it into an array
-      let images = data.image && typeof data.image === 'string' ? [data.image] : data.image;
-
-      // format images
-      images = images ? images.map(function(image) {
-        image = JSON.parse(image);
-        return image ? image.url : '';
-      }) : [];
-
-      // add the formatedd images
-      data.extraData.images = images;
-
-      //clean up data object
-      delete data.image;
-   } else {
-     data.extraData.images = [];
-   }
+    data.extraData.images = [];
+    data.extraData.files = [];
+    self.addImagesToPayload(data);
+    self.addFilesToPayload(data);
 
     const options = {
         method: req.body.resourceId ? 'PUT' : 'POST',

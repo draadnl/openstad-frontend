@@ -4,240 +4,293 @@
 // a reference to each uploaded file. This reference list is used
 // by the server to connect the correct image uploads to this idea.
 
-var fieldsetElement = document.querySelector('.filepondFieldset');
-
-if (fieldsetElement) {
-  FilePond.registerPlugin(FilePondPluginImagePreview);
-  FilePond.registerPlugin(FilePondPluginFileValidateSize);
-  FilePond.registerPlugin(FilePondPluginFileValidateType);
-  FilePond.registerPlugin(FilePondPluginFilePoster);
-  FilePond.registerPlugin(FilePondPluginImageExifOrientation);
-
-/*FilePond.setOptions({
-    server: {
-        process: '/image',
-        fetch: null,
-        revert: null
-     }
-  });*/
-
-  var filePondSettings = {
-    // set allowed file types with mime types
-    acceptedFileTypes: ['image/*'],
-    allowFileSizeValidation: true,
-    maxFileSize: '8mb',
-    name: 'image',
-    maxFiles: 5,
-    allowBrowse: true,
-    files: uploadedFiles,
-    server: {
-      process: window.siteUrl + '/image',
-      fetch: window.siteUrl + '/fetch-image?img=',
-      revert: null
-    },
-    labelIdle: "Sleep afbeelding(en) naar deze plek of <span class='filepond--label-action'>klik hier</span>",
-    labelInvalidField: "Field contains invalid files",
-    labelFileWaitingForSize: "Wachtend op grootte",
-    labelFileSizeNotAvailable: "Grootte niet beschikbaar",
-    labelFileCountSingular: "Bestand in lijst",
-    labelFileCountPlural: "Bestanden in lijst",
-    labelFileLoading: "Laden",
-    labelFileAdded: "Toegevoegd", // assistive only
-    labelFileLoadError: "Fout bij het uploaden",
-    labelFileRemoved: "Verwijderd", // assistive only
-    labelFileRemoveError: "Fout bij het verwijderen",
-    labelFileProcessing: "Laden",
-    labelFileProcessingComplete: "Afbeelding geladen",
-    labelFileProcessingAborted: "Upload cancelled",
-    labelFileProcessingError: "Error during upload",
-    labelFileProcessingRevertError: "Error during revert",
-    labelTapToCancel: "tap to cancel",
-    labelTapToRetry: "tap to retry",
-    labelTapToUndo: "tap to undo",
-    labelButtonRemoveItem: "Verwijderen",
-    labelButtonAbortItemLoad: "Abort",
-    labelButtonRetryItemLoad: "Retry",
-    labelButtonAbortItemProcessing: "Verwijder",
-    labelButtonUndoItemProcessing: "Undo",
-    labelButtonRetryItemProcessing: "Retry",
-    labelButtonProcessItem: "Upload"
-  }
-
-  var pond = FilePond.create(fieldsetElement, filePondSettings);
-
-  var sortableInstance;
-
-  var pondEl = document.querySelector('.filepond--root');
-}
-
+//Fixme: don't use global vars
 var formHasChanged = false;
 
-$(document).ready(function () {
-  var ideaForm = document.getElementById('js-form');
+apos.define('resource-form-widgets', {
+  extend: 'map-widgets',
+  construct: function (self, options) {
+    self.playAfterlibsLoaded = function ($widget, data, options) {
+      var mapConfig = typeof resourceMapConfig !== 'undefined' && resourceMapConfig ? resourceMapConfig : {};
+
+      if (mapConfig) {
+        self.createMap(mapConfig);
+        self.addPolygon(mapConfig);
+        self.setIdeaMarker(mapConfig);
+        self.addFormEventListeners(mapConfig);
+        self.center();
+      }
+      var fieldsetElements = $widget.find('.filepondFieldset');
+
+      var uploadedImages = [];
+      var uploadedFiles = [];
+      if (data.resourceImages) {
+        uploadedImages = data.resourceImages.map(function (image) {
+          return {
+            source: '{"url":"' + image + '"}',
+            options: {
+              type: 'local',
+              // mock file information
+              file: {
+                name: image,
+                // size: 3001025,
+                //type: 'jpeg'
+              },
+              metadata: {
+                poster: image,
+                url: image
+              }
+            }
+          };
+        });
+      }
+
+      if (data.resourceFiles) {
+        uploadedFiles = data.resourceFiles.map(function (file) {
+          return {
+            source: '{"url":"' + file + '"}',
+            options: {
+              type: 'local',
+              // mock file information
+              file: {
+                name: file,
+                // size: 3001025,
+                //	 type: 'image/png'
+              },
+              metadata: {
+                url: file
+              }
+            }
+          };
+        });
+      }
+
+      // Todo: get uploaded files
+      var ideaForm = $widget.find('#js-form');
+      var sortableInstance;
+
+      var filePonds = [];
+      fieldsetElements.each(function(index, fieldsetElement) {
+        var type = fieldsetElement.dataset.type;
+        var uploadedItems = type === 'file' ? uploadedFiles : uploadedImages;
+        var pond = initFilePond(fieldsetElement, type, uploadedItems);
+        filePonds.push({
+          type, pond
+        });
+
+        var pondEl = $.find('.filepond--root')[0];
+
+        if (ideaForm && pondEl) {
+
+          // check if files are being uploaded
+
+          pondEl.addEventListener('FilePond:addfile', function (e) {
+            if (sortableInstance) {
+              $("ul.filepond--list").sortable('refresh');
+            } else {
+              sortableInstance = true;
+              $("ul.filepond--list").sortable();
+            }
+          });
+
+          pondEl.addEventListener('FilePond:processfile', function (e) {
+              validator.element($('input[name=validateFiles]'))
+              validator.element($('input[name=validateImages]'))
+          });
+        }
+      })
+
+      $.validator.addMethod("minLengthWithoutHTML", function (val, el, params) {
+        var mainEditor = document.getElementById('js-editor');
+        var lengthOfChars = stripHTML(mainEditor.innerHTML).length;
+        return lengthOfChars >= params;
+      }, "Minimaal {0} tekens.");
 
 
-/*  if (ideaFiles) {
-    ideaFiles.forEach(function (file) {
-      pond.addFile(file).then(function(file){
-      });
-    })
-  }*/
+      $.validator.addMethod("validateFilePondImages", function () {
+        if ($('.filepond-file').prop('required')) {
+          var filePond = filePonds.find(function(filePond) {
+            if (filePond.type === 'image') {
+              return true;
+            }
 
+            return null;
+          });
 
-  if (ideaForm && pondEl) {
+          var files = filePond ? filePond.pond.getFiles() : [];
+          var pondFileStates = FilePond.FileStatus;
 
-    // check if files are being uploaded
-    $.validator.addMethod("validateFilePondProcessing", function() {
-        var files = pond ? pond.getFiles() : [];
-        var pondFileStates =  FilePond.FileStatus;
+          files = files.filter(function (file) {
+            return file.status === pondFileStates.PROCESSING_COMPLETE;
+          });
+
+          return files && files.length > 0;
+        } else {
+          return true;
+        }
+
+      }, "Eén of meerdere plaatjes zijn verplicht.");
+
+      $.validator.addMethod("validateFilePondFiles", function () {
+        if ($('.validateFiles').prop('required')) {
+          var filePond = filePonds.find(function(filePond) {
+            if (filePond.type === 'file') {
+              return true;
+            }
+
+            return null;
+          });
+
+          var files = filePond ? filePond.pond.getFiles() : [];
+          var pondFileStates = FilePond.FileStatus;
+
+          files = files.filter(function (file) {
+            return file.status === pondFileStates.PROCESSING_COMPLETE;
+          });
+
+          return files && files.length > 0;
+        } else {
+          return true;
+        }
+
+      }, "Eén of meerdere bestanden zijn verplicht.");
+
+      $.validator.addMethod("validateFilePondProcessingFiles", function () {
+        var filePond = filePonds.find(function(filePond) {
+          if (filePond.type === 'file') {
+            return true;
+          }
+
+          return null;
+        });
+
+        var files = filePond ? filePond.pond.getFiles() : [];
+        var pondFileStates = FilePond.FileStatus;
 
         var processingFiles = files.filter(function (file) {
           return file.status !== pondFileStates.PROCESSING_COMPLETE;
         });
 
         return processingFiles.length === 0;
-    }, "Plaatjes zijn nog aan het uploaden.");
+      }, "Bestanden zijn nog aan het uploaden.");
 
-    $.validator.addMethod("validateFilePond", function() {
-      if ($('.filepond').prop('required')) {
-        var files = pond ? pond.getFiles() : [];
-        var pondFileStates =  FilePond.FileStatus;
+      $.validator.addMethod("validateFilePondProcessingImages", function () {
+        var filePond = filePonds.find(function(filePond) {
+          if (filePond.type === 'image') {
+            return true;
+          }
 
-        files = files.filter(function (file) {
-          return file.status === pondFileStates.PROCESSING_COMPLETE;
+          return null;
         });
 
-        return files && files.length > 0;
-      } else {
-        return true;
-      }
+        var files = filePond ? filePond.pond.getFiles() : [];
+        var pondFileStates = FilePond.FileStatus;
 
-    }, "Eén of meerdere plaatjes zijn verplicht.");
-
-    $.validator.addMethod("minLengthWithoutHTML", function(val, el, params) {
-      var mainEditor  = document.getElementById('js-editor');
-      var lengthOfChars = stripHTML(mainEditor.innerHTML).length;
-      return lengthOfChars >= params;
-    }, "Minimaal {0} tekens.");
-
-    pondEl.addEventListener('FilePond:addfile', function(e) {
-        if (sortableInstance) {
-          $("ul.filepond--list").sortable('refresh');
-        } else {
-          sortableInstance = true;
-          $("ul.filepond--list").sortable();
-        }
-
-      //  validator.element($('input[name=validateImages]'))
-    });
-
-    pondEl.addEventListener('FilePond:processfile', function(e) {
-      validator.element($('input[name=validateImages]'))
-    });
-  }
-
-  if (ideaForm) {
-
-
-    initLeavePageWarningForForm();
-
-    /*$.validator.addClassRules('filepond', {
-      validateFilePond: true,
-    });*/
-
-    var validator = $(ideaForm).validate({
-      ignore: '',
-      rules: {
-        ignore: [],
-  //      location: {
-  //        required: true
-  //      },
-        title : {
-          required: true,
-          minlength: titleMinLength,
-          maxlength: titleMaxLength,
-        },
-        summary : {
-          minlength: summaryMinLength,
-          maxlength: summaryMaxLength,
-        },
-        description : {
-          required: true,
-          minlength: descriptionMinLength,
-          maxlength: descriptionMaxLength,
-        },
-        validateImages: {
-          validateFilePond: true,
-          validateFilePondProcessing: true
-        },
-    /*    description: {
-          minLengthWithoutHTML: 140
-        }*/
-      },
-      submitHandler: function(form) {
-
-        $(form).find('input[type="submit"]').val('Verzenden...');
-        $(form).find('input[type="submit"]').attr('disabled', true);
-      //  console.log('X-CSRF-TOKEN');
-      //  console.log('asdasdasdasd',$(form).serialize());
-
-       $.ajax({
-          url: $(form).attr('action'),
-        //  context: document.body,
-          type: 'POST',
-          data: $(form).serialize(),
-          dataType: 'json',
-          success:function(response) {
-              formHasChanged = false;
-              var redirect = $(form).find('.form-redirect-uri').val();
-              redirect = redirect.replace(':id', response.id);
-              //use href to simulate a link click! Not replace, that doesn't allow for back button to work
-              window.location.href = window.siteUrl + redirect;
-          },
-          error:function(response) {
-              // "this" the object you passed
-              alert(response.responseJSON.msg);
-              $(form).find('input[type="submit"]').val('Opslaan');
-              $(form).find('input[type="submit"]').attr('disabled', false);
-          },
-
+        var processingFiles = files.filter(function (file) {
+          return file.status !== pondFileStates.PROCESSING_COMPLETE;
         });
-        return false;
-       //form.submit();
-      },
-      errorPlacement: function(error, element) {
-        if (element.attr("type") === "radio" || element.attr("type") === "checkbox") {
-          var elementContainer = $(element).closest('.form-field-container')
-          error.insertAfter(elementContainer);
-        } else {
-          error.insertAfter(element);
-        }
-      },
-      invalidHandler: function(form, validator) {
 
-       if (!validator.numberOfInvalids()) {
-           return;
-       }
+        return processingFiles.length === 0;
 
-        var $firstErrorEl = $(validator.errorList[0].element).closest('.form-group');
-        if ($firstErrorEl.length > 0) {
-          var scrollOffset = parseInt($firstErrorEl.offset().top, 10);
-          scrollOffset = scrollOffset;// - 1200;
+      }, "Plaatjes zijn nog aan het uploaden.");
 
-          $('html, body').scrollTop(scrollOffset);
-        }
+      if (ideaForm) {
+        initLeavePageWarningForForm();
 
+        var validator = $(ideaForm).validate({
+          ignore: '',
+          rules: {
+            ignore: [],
+            //      location: {
+            //        required: true
+            //      },
+            title: {
+              required: true,
+              minlength: titleMinLength,
+              maxlength: titleMaxLength,
+            },
+            summary: {
+              minlength: summaryMinLength,
+              maxlength: summaryMaxLength,
+            },
+            description: {
+              required: true,
+              minlength: descriptionMinLength,
+              maxlength: descriptionMaxLength,
+            },
+            validateImages: {
+              validateFilePondImages: true,
+              validateFilePondProcessingImages: true
+            },
+            validateFiles: {
+              validateFilePondFiles: true,
+              validateFilePondProcessingFiles: true
+            }
+          },
+          submitHandler: function (form) {
+
+            $(form).find('input[type="submit"]').val('Verzenden...');
+            $(form).find('input[type="submit"]').attr('disabled', true);
+            //  console.log('X-CSRF-TOKEN');
+            //  console.log('asdasdasdasd',$(form).serialize());
+
+            $.ajax({
+              url: $(form).attr('action'),
+              //  context: document.body,
+              type: 'POST',
+              data: $(form).serialize(),
+              dataType: 'json',
+              success: function (response) {
+                formHasChanged = false;
+                var redirect = $(form).find('.form-redirect-uri').val();
+                redirect = redirect.replace(':id', response.id);
+                //use href to simulate a link click! Not replace, that doesn't allow for back button to work
+                window.location.href = window.siteUrl + redirect;
+              },
+              error: function (response) {
+                // "this" the object you passed
+                alert(response.responseJSON.msg);
+                $(form).find('input[type="submit"]').val('Opslaan');
+                $(form).find('input[type="submit"]').attr('disabled', false);
+              },
+
+            });
+            return false;
+          },
+          errorPlacement: function (error, element) {
+            if (element.attr("type") === "radio" || element.attr("type") === "checkbox") {
+              var elementContainer = $(element).closest('.form-field-container')
+              error.insertAfter(elementContainer);
+            } else {
+              error.insertAfter(element);
+            }
+          },
+          invalidHandler: function (form, validator) {
+
+            if (!validator.numberOfInvalids()) {
+              return;
+            }
+
+            var $firstErrorEl = $(validator.errorList[0].element).closest('.form-group');
+            if ($firstErrorEl.length > 0) {
+              var scrollOffset = parseInt($firstErrorEl.offset().top, 10);
+              scrollOffset = scrollOffset;// - 1200;
+
+              $('html, body').scrollTop(scrollOffset);
+            }
+
+          }
+        });
+
+
+        $('#locationField').on('change', function () {
+          validator.element($(this))
+        });
       }
-    });
-
-
-
-
-    $('#locationField').on('change', function () {
-      validator.element($(this))
-    });
+    }
   }
 });
+
 
 // characters counters ------------------------------
 
@@ -377,15 +430,3 @@ function initLeavePageWarningForForm () {
     });
   }
 }
-
-
-
-
-
-
-/*
-
-FilePond.parse(document.body, {
-  name: 'files',
-});
-*/

@@ -31,6 +31,7 @@ const userFormFields = require('./lib/userFormFields.js');
 module.exports = {
   extend: 'map-widgets',
   label: 'Resource form',
+  playerData: ['resourceImages', 'resourceFiles'],
   addFields: fields,
   beforeConstruct: function(self, options) {
 
@@ -186,6 +187,10 @@ module.exports = {
     				const resources = activeResource ? [activeResource] : [];
             const googleMapsApiKey = self.apos.settings.getOption(req, 'googleMapsApiKey');
 
+            if (activeResource) {
+              widget.resourceImages = activeResource.extraData.images || [];
+              widget.resourceFiles = activeResource.extraData.files || [];
+            }
 
             widget.mapConfig = self.getMapConfigBuilder(globalData)
                 .setDefaultSettings({
@@ -218,14 +223,14 @@ module.exports = {
    self.pushAssets = function () {
      superPushAssets();
      self.pushAsset('stylesheet', 'filepond', { when: 'always' });
+     self.pushAsset('stylesheet', 'filepond-get-file', { when: 'always' });
      self.pushAsset('stylesheet', 'trix', { when: 'always' });
      self.pushAsset('stylesheet', 'form', { when: 'always' });
      self.pushAsset('stylesheet', 'main', { when: 'always' });
 
-     self.pushAsset('script', 'map', { when: 'always' });
      self.pushAsset('script', 'editor', { when: 'always' });
 
-
+     self.pushAsset('script', 'init_filepond', {when: 'always'});
      self.pushAsset('script', 'main', { when: 'always' });
      self.pushAsset('script', 'delete-form', { when: 'always' });
      self.pushAsset('script', 'status-form', { when: 'always' });

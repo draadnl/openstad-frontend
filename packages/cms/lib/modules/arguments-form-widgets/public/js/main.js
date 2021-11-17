@@ -18,6 +18,9 @@ function bindArgumentValidation ($form){
       validateImages: {
         validateFilePond: true
       },
+      validateFiles: {
+        validateFilePond: true
+      },
     },
     submitHandler: function(form) {
       $(form).find('input[type="submit"]').val('Verzenden...');

@@ -128,6 +128,11 @@ const fields = [
                       label: "Image"
                   },
                   {
+                    value: 'file',
+                    label: "File",
+                    showFields: ["fieldRequired", "uploadMultiple"]
+                  },
+                  {
                       value: 'map',
                       label: "Map"
                   },
@@ -227,6 +232,11 @@ const fields = [
               name: 'fieldRequired',
               label: 'Required',
               type: 'boolean'
+            },
+            {
+              name: 'uploadMultiple',
+              type: 'boolean',
+              label: 'Allow multiple images/files to be uploaded',
             },
             {
               name: 'fieldMin',
