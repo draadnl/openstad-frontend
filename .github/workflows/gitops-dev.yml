@@ -6,6 +6,7 @@ on:
     branches:
       - master
       - development
+      - develop
       - feature/*
       - release/*
       - release
@@ -61,7 +62,7 @@ jobs:
       - name: Set environment to acc
         id: acc_values_file
         shell: bash
-        if: contains(github.ref, 'release')
+        if: contains(github.ref, 'develop')
         run: echo "GITOPS_VALUES_FILE=k8s/openstad/environments/acc.values.yaml" >> $GITHUB_ENV
 
       - name: Set environment to production
