@@ -10,6 +10,167 @@ var formHasChanged = false;
 apos.define('resource-form-widgets', {
   extend: 'map-widgets',
   construct: function (self, options) {
+
+    /**
+     *
+     * @param ideaForm
+     * @returns {*|jQuery}
+     */
+    self.setValidator = function(ideaForm) {
+      if (self.validator) {
+        return self.validator;
+      }
+
+      self.validator = $(ideaForm).validate({
+        ignore: '',
+        rules: {
+          ignore: [],
+          title: {
+            required: true,
+            minlength: titleMinLength,
+            maxlength: titleMaxLength,
+          },
+          summary: {
+            minlength: summaryMinLength,
+            maxlength: summaryMaxLength,
+          },
+          description: {
+            required: true,
+            minlength: descriptionMinLength,
+            maxlength: descriptionMaxLength,
+          },
+          validateImages: {
+            validateFilePondImages: true,
+            validateFilePondProcessingImages: true
+          },
+          validateFiles: {
+            validateFilePondFiles: true,
+            validateFilePondProcessingFiles: true
+          }
+        },
+        submitHandler: function (form) {
+
+          $(form).find('input[type="submit"]').val('Verzenden...');
+          $(form).find('input[type="submit"]').attr('disabled', true);
+
+          $.ajax({
+            url: $(form).attr('action'),
+            //  context: document.body,
+            type: 'POST',
+            data: $(form).serialize(),
+            dataType: 'json',
+            success: function (response) {
+              formHasChanged = false;
+              var redirect = $(form).find('.form-redirect-uri').val();
+              redirect = redirect.replace(':id', response.id);
+              //use href to simulate a link click! Not replace, that doesn't allow for back button to work
+              window.location.href = window.siteUrl + redirect;
+            },
+            error: function (response) {
+              // "this" the object you passed
+              alert(response.responseJSON.msg);
+              $(form).find('input[type="submit"]').val('Opslaan');
+              $(form).find('input[type="submit"]').attr('disabled', false);
+            },
+
+          });
+          return false;
+        },
+        errorPlacement: function (error, element) {
+          if (element.attr("type") === "radio" || element.attr("type") === "checkbox") {
+            var elementContainer = $(element).closest('.form-field-container')
+            error.insertAfter(elementContainer);
+          } else {
+            error.insertAfter(element);
+          }
+        },
+        invalidHandler: function (form, validator) {
+
+          if (!validator.numberOfInvalids()) {
+            return;
+          }
+
+          var $firstErrorEl = $(validator.errorList[0].element).closest('.form-group');
+          if ($firstErrorEl.length > 0) {
+            var scrollOffset = parseInt($firstErrorEl.offset().top, 10);
+            scrollOffset = scrollOffset;// - 1200;
+
+            $('html, body').scrollTop(scrollOffset);
+          }
+
+        }
+      });
+    }
+
+    /**
+     * Find filepond by type
+     * @param filePonds
+     * @param type
+     * @returns {*}
+     */
+    self.findFilePond = function(filePonds, type) {
+      return filePonds.find(function(pond) {
+        if (pond.type === type) {
+          return true;
+        }
+
+        return null;
+      });
+    }
+
+    /**
+     * Get resource images
+     * @param images
+     * @returns {*}
+     */
+    self.getResourceImages = function(images) {
+      if (!images) {
+        return [];
+      }
+      return images.map(function (image) {
+        return {
+          source: '{"url":"' + image + '"}',
+          options: {
+            type: 'local',
+            // mock file information
+            file: {
+              name: image,
+            },
+            metadata: {
+              poster: image,
+              url: image
+            }
+          }
+        };
+      });
+    }
+
+    /**
+     * Get files
+     * @param files
+     * @returns {*}
+     */
+    self.getResourceFiles = function(files) {
+      if (!files) {
+        return [];
+      }
+      return files.map(function (file) {
+        return {
+          source: '{"url":"' + file + '"}',
+          options: {
+            type: 'local',
+            // mock file information
+            file: {
+              name: file,
+            },
+            metadata: {
+              url: file
+            }
+          }
+        };
+      });
+    }
+
     self.playAfterlibsLoaded = function ($widget, data, options) {
       var mapConfig = typeof resourceMapConfig !== 'undefined' && resourceMapConfig ? resourceMapConfig : {};
 
@@ -22,44 +183,8 @@ apos.define('resource-form-widgets', {
       }
       var fieldsetElements = $widget.find('.filepondFieldset');
 
-      var uploadedImages = [];
-      var uploadedFiles = [];
-      if (data.resourceImages) {
-        uploadedImages = data.resourceImages.map(function (image) {
-          return {
-            source: '{"url":"' + image + '"}',
-            options: {
-              type: 'local',
-              // mock file information
-              file: {
-                name: image,
-              },
-              metadata: {
-                poster: image,
-                url: image
-              }
-            }
-          };
-        });
-      }
-
-      if (data.resourceFiles) {
-        uploadedFiles = data.resourceFiles.map(function (file) {
-          return {
-            source: '{"url":"' + file + '"}',
-            options: {
-              type: 'local',
-              // mock file information
-              file: {
-                name: file,
-              },
-              metadata: {
-                url: file
-              }
-            }
-          };
-        });
-      }
+      var uploadedImages = self.getResourceImages(data.resourceImages)
+      var uploadedFiles = self.getResourceFiles(data.resourceFiles);
 
       var ideaForm = $widget.find('#js-form');
       var sortableInstance;
@@ -76,9 +201,9 @@ apos.define('resource-form-widgets', {
         var pondEl = $.find('.filepond--root')[0];
 
         if (ideaForm && pondEl) {
+          self.setValidator(ideaForm);
 
           // check if files are being uploaded
-
           pondEl.addEventListener('FilePond:addfile', function (e) {
             if (sortableInstance) {
               $("ul.filepond--list").sortable('refresh');
@@ -89,8 +214,12 @@ apos.define('resource-form-widgets', {
           });
 
           pondEl.addEventListener('FilePond:processfile', function (e) {
-              validator.element($('input[name=validateFiles]'))
-              validator.element($('input[name=validateImages]'))
+              if ($(e.target).hasClass('filepond-image')) {
+                self.validator.element($('input[name=validateImages]'))
+              }
+              if ($(e.target).hasClass('filepond-file')) {
+                self.validator.element($('input[name=validateFiles]'))
+              }
           });
         }
       })
@@ -104,13 +233,7 @@ apos.define('resource-form-widgets', {
 
       $.validator.addMethod("validateFilePondImages", function () {
         if ($('.filepond-file').prop('required')) {
-          var filePond = filePonds.find(function(filePond) {
-            if (filePond.type === 'image') {
-              return true;
-            }
-
-            return null;
-          });
+          var filePond = self.findFilePond(filePonds, 'image');
 
           var files = filePond ? filePond.pond.getFiles() : [];
           var pondFileStates = FilePond.FileStatus;
@@ -128,14 +251,7 @@ apos.define('resource-form-widgets', {
 
       $.validator.addMethod("validateFilePondFiles", function () {
         if ($('.validateFiles').prop('required')) {
-          var filePond = filePonds.find(function(filePond) {
-            if (filePond.type === 'file') {
-              return true;
-            }
-
-            return null;
-          });
-
+          var filePond = self.findFilePond(filePonds, 'file');
           var files = filePond ? filePond.pond.getFiles() : [];
           var pondFileStates = FilePond.FileStatus;
 
@@ -151,13 +267,7 @@ apos.define('resource-form-widgets', {
       }, "Eén of meerdere bestanden zijn verplicht.");
 
       $.validator.addMethod("validateFilePondProcessingFiles", function () {
-        var filePond = filePonds.find(function(filePond) {
-          if (filePond.type === 'file') {
-            return true;
-          }
-
-          return null;
-        });
+        var filePond = self.findFilePond(filePonds, 'file');
 
         var files = filePond ? filePond.pond.getFiles() : [];
         var pondFileStates = FilePond.FileStatus;
@@ -170,13 +280,7 @@ apos.define('resource-form-widgets', {
       }, "Bestanden zijn nog aan het uploaden.");
 
       $.validator.addMethod("validateFilePondProcessingImages", function () {
-        var filePond = filePonds.find(function(filePond) {
-          if (filePond.type === 'image') {
-            return true;
-          }
-
-          return null;
-        });
+        var filePond = self.findFilePond(filePonds, 'image');
 
         var files = filePond ? filePond.pond.getFiles() : [];
         var pondFileStates = FilePond.FileStatus;
@@ -192,90 +296,7 @@ apos.define('resource-form-widgets', {
       if (ideaForm) {
         initLeavePageWarningForForm();
 
-        var validator = $(ideaForm).validate({
-          ignore: '',
-          rules: {
-            ignore: [],
-            title: {
-              required: true,
-              minlength: titleMinLength,
-              maxlength: titleMaxLength,
-            },
-            summary: {
-              minlength: summaryMinLength,
-              maxlength: summaryMaxLength,
-            },
-            description: {
-              required: true,
-              minlength: descriptionMinLength,
-              maxlength: descriptionMaxLength,
-            },
-            validateImages: {
-              validateFilePondImages: true,
-              validateFilePondProcessingImages: true
-            },
-            validateFiles: {
-              validateFilePondFiles: true,
-              validateFilePondProcessingFiles: true
-            }
-          },
-          submitHandler: function (form) {
-
-            $(form).find('input[type="submit"]').val('Verzenden...');
-            $(form).find('input[type="submit"]').attr('disabled', true);
-
-            $.ajax({
-              url: $(form).attr('action'),
-              //  context: document.body,
-              type: 'POST',
-              data: $(form).serialize(),
-              dataType: 'json',
-              success: function (response) {
-                formHasChanged = false;
-                var redirect = $(form).find('.form-redirect-uri').val();
-                redirect = redirect.replace(':id', response.id);
-                //use href to simulate a link click! Not replace, that doesn't allow for back button to work
-                window.location.href = window.siteUrl + redirect;
-              },
-              error: function (response) {
-                // "this" the object you passed
-                alert(response.responseJSON.msg);
-                $(form).find('input[type="submit"]').val('Opslaan');
-                $(form).find('input[type="submit"]').attr('disabled', false);
-              },
-
-            });
-            return false;
-          },
-          errorPlacement: function (error, element) {
-            if (element.attr("type") === "radio" || element.attr("type") === "checkbox") {
-              var elementContainer = $(element).closest('.form-field-container')
-              error.insertAfter(elementContainer);
-            } else {
-              error.insertAfter(element);
-            }
-          },
-          invalidHandler: function (form, validator) {
-
-            if (!validator.numberOfInvalids()) {
-              return;
-            }
-
-            var $firstErrorEl = $(validator.errorList[0].element).closest('.form-group');
-            if ($firstErrorEl.length > 0) {
-              var scrollOffset = parseInt($firstErrorEl.offset().top, 10);
-              scrollOffset = scrollOffset;// - 1200;
-
-              $('html, body').scrollTop(scrollOffset);
-            }
-
-          }
-        });
-
-
-        $('#locationField').on('change', function () {
-          validator.element($(this))
-        });
+        self.setValidator(ideaForm);
       }
     }
   }
