@@ -18,7 +18,7 @@
 <input
   type="text"
   id="{{field.fieldKey}}_input"
-  class="chars-counter"
+  class="chars-counter{% if field.size %} {{field.size}}{% endif %}"
   minlength="{{field.fieldMin if field.fieldMin else 2}}"
   maxlength="{{field.fieldMax if field.fieldMax else 140}}"
   {% if field.notExtraDataKey %}

@@ -20,6 +20,7 @@
   <div class="radio">
     <input
       type="radio"
+      class="{% if field.size %}{{field.size}}{% endif %}"
       {% if field.notExtraDataKey %}
       name="{{field.fieldKey}}"
       {% else %}

@@ -120,7 +120,7 @@ const fields = [
                   {
                       value: 'radio',
                       label: "Radio",
-                      showFields: ['fieldKey', 'fieldRequired', 'fieldOptions', 'notExtraDataKey']
+                      showFields: ['fieldKey', 'fieldRequired', 'fieldOptions', 'notExtraDataKey', 'size']
                   },
                   {
                       value: 'checkbox',
@@ -135,7 +135,7 @@ const fields = [
                   {
                       value: 'text',
                       label: "Text",
-                      showFields: ['fieldKey', 'fieldRequired', 'fieldMin', 'fieldMax', 'notExtraDataKey']
+                      showFields: ['fieldKey', 'fieldRequired', 'fieldMin', 'fieldMax', 'notExtraDataKey', 'size']
                   },
                   {
                       value: 'hidden',
@@ -145,7 +145,7 @@ const fields = [
                   {
                       value: 'textarea',
                       label: "Textarea",
-                      showFields: ['fieldKey', 'fieldRequired', 'fieldMin', 'fieldMax', 'notExtraDataKey']
+                      showFields: ['fieldKey', 'fieldRequired', 'fieldMin', 'fieldMax', 'notExtraDataKey', 'size']
                   },
                   {
                       value: 'tags',
@@ -336,6 +336,25 @@ const fields = [
                 }
               ],
               def: false
+            },
+            {
+              name: 'size',
+              label: 'Size',
+              type: 'select',
+              choices: [
+                {
+                  label: 'Full',
+                  value: 'field-full',
+                },
+                {
+                  label: 'Medium',
+                  value: 'field-medium',
+                },
+                {
+                  label: 'Small',
+                  value: 'field-small',
+                }
+              ],
             },
             {
               name: 'onlyForModerator',
