@@ -1,4 +1,4 @@
-module.exports = async function(self, options) {
+module.exports = function(self, options) {
   /**
    * Checks when form should be visible
    * @param widget
@@ -8,14 +8,19 @@ module.exports = async function(self, options) {
    * @returns {boolean}
    */
   self.showForm = (widget, activeResource, isOwnerOrAdmin, openstadUser) => {
-    if (widget.formVisibility === 'always') {
+    const formVisibility = widget.formVisibility || 'user';
+    
+    if (formVisibility === 'always') {
+      if (activeResource && !isOwnerOrAdmin) {
+        return false;
+      }
       return true;
     }
-    if (widget.formVisibility === 'user' && activeResource && isOwnerOrAdmin) {
-      return true;
-    }
-    else if (widget.formVisibility === 'user' && !activeResource && openstadUser && openstadUser.id) {
-      return true;
+
+    if (formVisibility === 'user') {
+      if ((activeResource && isOwnerOrAdmin) || (!activeResource && openstadUser && openstadUser.id)) {
+        return true;
+      }
     }
 
     return false;
