@@ -7,6 +7,7 @@
 * Make autoCenter configurable in idea-map-widgets
 * Add submission to resource form with configurable confirmation settings
 * resource-form-widgets: Make login text configurable
+* Make My account button text configurable
 
 ## v0.21.0
 * Add global option to disable newsletter captcha
@@ -55,14 +56,8 @@
 * Fix location picker if no polygon
 
 ## v0.17.1 (2021-07-14)
-* Add user authorization to imgage upload
-
-<<<<<<< HEAD
-## v0.17.1 (2021-07-14)
 * Add user authorization to image upload
 
-=======
->>>>>>> amsterdam/master
 ## v0.17.0 (2021-06-08)
 * Add config options to openstad components: default image, aspect ratio, allow multiple
 * Fix cookie warning in iframes
