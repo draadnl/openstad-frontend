@@ -1,30 +1,25 @@
-<fieldset class="filepondFieldset">
-  <!-- a list of already uploaded files -->
-  <script>
-    var uploadedFiles = [];
-    <!-- a list of already uploaded files -->
-    {% if activeResource.extraData.images %}
-    {% for image in activeResource.extraData.images %}
-    uploadedFiles.push({
-      source: '{"url":"{{image}}"}',
-      options : {
-        type: 'local',
-            // mock file information
-         file: {
-             name: '{{image}}',
-        //		 size: 3001025,
-          //	 type: 'image/png'
-        },
-        metadata: {
-          poster: '{{image}}',
-        }
-      }
+{% set maxFiles = 5 %}
+{% set maxFileSize = 8 %}
+{% set allowMultiple = data.widget.uploadMultiple %}
 
-    });
-    {% endfor %}
-    {% endif %}
-  </script>
-  <input type="file" class="imageUploader filepond" {% if data.widget.uploadMultiple %} multiple {% endif %} {% if data.widget.requiredImages %}required{% endif %} />
+{% if field.maxFiles %}
+  {% set maxFiles = field.maxFiles %}
+{% endif %}
+{% if field.maxFileSize %}
+  {% set maxFiles = field.maxFileSize %}
+{% endif %}
+{% if field.uploadMultiple %}
+  {% set allowMultiple = field.uploadMultiple %}
+{% endif %}
+
+<fieldset class="filepondFieldset" data-type="image">
+
+  <input type="file"
+         class="imageUploader filepond filepond-image"
+         data-max-file-size="{{maxFileSize}}MB"
+         data-max-files="{{maxFiles}}"
+         {% if allowMultiple %} multiple {% endif %} {% if data.widget.requiredImages %}required{% endif %}
+  />
 
 </fieldset>
 <input type="hidden" name="validateImages" multiple />

@@ -179,7 +179,13 @@ const fields = [
                   },
                   {
                       value: 'image',
-                      label: "Image"
+                      label: "Image",
+                      showFields: ["uploadMultiple", "maxFileSize", "maxFiles"]
+                  },
+                  {
+                    value: 'file',
+                    label: "File",
+                    showFields: ["fieldRequired", "uploadMultiple", "maxFileSize", "maxFiles"]
                   },
                   {
                       value: 'map',
@@ -281,6 +287,23 @@ const fields = [
               name: 'fieldRequired',
               label: 'Required',
               type: 'boolean'
+            },
+            {
+              name: 'uploadMultiple',
+              type: 'boolean',
+              label: 'Allow multiple images/files to be uploaded',
+            },
+            {
+              name: 'maxFileSize',
+              label: 'Max file size (MB)',
+              type: 'integer',
+              def: 8
+            },
+            {
+              name: 'maxFiles',
+              label: 'Max files',
+              type: 'integer',
+              def: 5
             },
             {
               name: 'fieldMin',

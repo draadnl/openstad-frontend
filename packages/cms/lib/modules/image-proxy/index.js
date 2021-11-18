@@ -10,7 +10,9 @@ module.exports = {
     construct: function(self, options) {
 
         let imagePath = options.sitePrefix ? (options.sitePrefix + '/image' ) : '/image';
+        let filePath = options.sitePrefix ? (options.sitePrefix + '/file' ) : '/file';
         let imagesPath = options.sitePrefix ? (options.sitePrefix + '/images') : '/images';
+        let filesPath = options.sitePrefix ? (options.sitePrefix + '/files') : '/files';
 
         // console.log('options.sitePrefix on image proxy', options.sitePrefix);
 
@@ -38,6 +40,33 @@ module.exports = {
         self.apos.app.use('/images', checkUserMiddlware, proxy({
             target: imageApiUrl,
             pathRewrite: {['^' + imagesPath] : '/images'},
+            changeOrigin: true,
+            onProxyReq : (proxyReq, req, res) => {
+                // add custom header to request
+                proxyReq.setHeader('Authorization', `Bearer ${imageApiToken}`);
+            }
+        }));
+
+        /**
+         * Create route for proxying one image to image server, add api token in header
+         */
+        self.apos.app.use('/file', checkUserMiddlware, proxy({
+            target: imageApiUrl,
+            changeOrigin: true,
+            pathRewrite: {['^' + filePath] : '/file'},
+            onProxyReq : (proxyReq, req, res) => {
+                // add custom header to request
+                console.log(imageApiToken);
+                proxyReq.setHeader('Authorization', `Bearer ${imageApiToken}`);
+            }
+        }));
+
+        /**
+         * Create route for proxying multiples images to image server, add api token in header
+         */
+        self.apos.app.use('/files', checkUserMiddlware, proxy({
+            target: imageApiUrl,
+            pathRewrite: {['^' + filesPath] : '/files'},
             changeOrigin: true,
             onProxyReq : (proxyReq, req, res) => {
                 // add custom header to request

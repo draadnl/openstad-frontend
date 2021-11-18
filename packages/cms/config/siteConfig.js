@@ -73,6 +73,8 @@ module.exports = {
               //     '/modules/idea-form-widgets/submit',
               '/image',
               '/images',
+              '/file',
+              '/files',
               '/video-api',
               '/vimeo-upload',
               '/attachment-upload',

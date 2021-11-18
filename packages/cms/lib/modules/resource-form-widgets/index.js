@@ -14,6 +14,7 @@ const userFormFields = require('./lib/userFormFields.js');
 module.exports = {
   extend: 'map-widgets',
   label: 'Resource form',
+  playerData: ['resourceImages', 'resourceFiles'],
   addFields: fields,
   beforeConstruct: function (self, options) {
 
@@ -191,6 +192,11 @@ module.exports = {
         const isReactedTo = activeResource ? (activeResource.yes > 0 || activeResource.no > 0 || activeResource.argumentCount > 0) : false;
         const isOwnerOrAdmin = ((!isReactedTo || !widget.hideAdminAfterPublicAction) && isOwner) || req.data.hasModeratorRights;
 
+        if (activeResource) {
+          widget.resourceImages = activeResource.extraData.images || [];
+          widget.resourceFiles = activeResource.extraData.files || [];
+        }
+
         widget.mapConfig = self.getMapConfigBuilder(globalData)
           .setDefaultSettings({
             mapCenterLat: (activeResource && activeResource.location && activeResource.location.coordinates && activeResource.location.coordinates[0]) || globalData.mapCenterLat,
@@ -236,13 +242,13 @@ module.exports = {
     self.pushAssets = function () {
       superPushAssets();
       self.pushAsset('stylesheet', 'filepond', {when: 'always'});
+      self.pushAsset('stylesheet', 'filepond-get-file', { when: 'always' });
       self.pushAsset('stylesheet', 'trix', {when: 'always'});
       self.pushAsset('stylesheet', 'form', {when: 'always'});
       self.pushAsset('stylesheet', 'main', {when: 'always'});
-      self.pushAsset('script', 'map', {when: 'always'});
       self.pushAsset('script', 'editor', {when: 'always'});
 
-
+      self.pushAsset('script', 'init_filepond', {when: 'always'});
       self.pushAsset('script', 'main', {when: 'always'});
       self.pushAsset('script', 'delete-form', {when: 'always'});
       self.pushAsset('script', 'status-form', {when: 'always'});
