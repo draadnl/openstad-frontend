@@ -35,7 +35,7 @@ module.exports = {
       {
         name: 'general',
         label: 'Algemeen',
-        fields: ['resource', 'formName', 'redirect', 'hideAdminAfterPublicAction', 'formType', 'dynamicFormSections']
+        fields: ['resource', 'formName', 'redirect', 'loginText', 'hideAdminAfterPublicAction', 'formType', 'dynamicFormSections']
       },
       {
         name: 'visibility',

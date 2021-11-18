@@ -6,6 +6,7 @@
 * Add a new text style to select in the rich text editor.
 * Make autoCenter configurable in idea-map-widgets
 * Add submission to resource form with configurable confirmation settings
+* resource-form-widgets: Make login text configurable
 
 ## v0.21.0
 * Add global option to disable newsletter captcha

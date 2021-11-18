@@ -51,6 +51,11 @@ const fields = [
       def: 'user'
     },
     {
+      name: 'loginText',
+      type: 'string',
+      label: 'Login text'
+    },
+    {
       name: 'shouldDisplayUserName',
       type: 'boolean',
       label: 'Show user name in form header?',
