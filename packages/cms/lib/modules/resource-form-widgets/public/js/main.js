@@ -195,7 +195,8 @@ apos.define('resource-form-widgets', {
         var uploadedItems = type === 'file' ? uploadedFiles : uploadedImages;
         var pond = initFilePond(fieldsetElement, type, uploadedItems);
         filePonds.push({
-          type, pond
+          type: type,
+          pond: pond
         });
 
         var pondEl = $.find('.filepond--root')[0];
