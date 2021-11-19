@@ -55,6 +55,13 @@ module.exports = {
             'ideaId'
           ]
         },
+        {
+          label: 'Choices guide count',
+          value: 'choicesGuide',
+          showFields: [
+            'choicesGuideId'
+          ]
+        },
       ]
     },
     {
@@ -88,6 +95,31 @@ module.exports = {
       type: 'string',
       label: 'idea ID - leave empty to fetch total arguments',
       required: false,
+    },
+    {
+      name: 'argumentSentiment',
+      label: 'Argument sentiment',
+      type: 'select',
+      def: '',
+      choices: [
+        {
+          label: 'For',
+          value: 'for',
+        },
+        {
+          label: 'Against',
+          value: 'against',
+        },
+        {
+          label: 'Both',
+          value: '',
+        },
+      ]
+    },
+    {
+      name: 'choicesGuideId',
+      label: 'Choices guide id',
+      type: 'string'
     },
     styleSchema.definition('containerStyles', 'Styles for the container')
   ],
@@ -173,6 +205,11 @@ module.exports = {
 
         case 'argumentCount':
           count = widget.argsCount;
+          break;
+
+        case 'choicesGuide':
+          count = 0;
+          widget.statsUrl = `/api/site/${widget.siteId}/choicesguide/${widget.choicesGuideId}/result?count=true`
           break;
 
         default:
