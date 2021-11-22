@@ -97,26 +97,6 @@ module.exports = {
       required: false,
     },
     {
-      name: 'argumentSentiment',
-      label: 'Argument sentiment',
-      type: 'select',
-      def: '',
-      choices: [
-        {
-          label: 'For',
-          value: 'for',
-        },
-        {
-          label: 'Against',
-          value: 'against',
-        },
-        {
-          label: 'Both',
-          value: '',
-        },
-      ]
-    },
-    {
       name: 'choicesGuideId',
       label: 'Choices guide id',
       type: 'string'
