@@ -31,5 +31,9 @@
 {% if data.cookieConsent %}
 {{data.global.analyticsCodeBlock | safe}}
 {% endif %}
+
+{% if data.global.analyticsNoCookieCodeBlock %}
+{{data.global.analyticsNoCookieCodeBlock | safe}}
+{% endif %}
 {% endif %}
 

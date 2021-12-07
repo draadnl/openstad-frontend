@@ -175,7 +175,7 @@ module.exports = [
       {
         value: 'custom',
         label: "Custom: use a custom codeblock",
-        showFields: ['analyticsCodeBlock']
+        showFields: ['analyticsCodeBlock', 'analyticsNoCookieCodeBlock']
       }
     ]
   },
@@ -184,6 +184,13 @@ module.exports = [
     type: 'string',
     name: 'analyticsCodeBlock',
     label: 'Custom code',
+    textarea: true,
+  },
+  
+  {
+    type: 'string',
+    name: 'analyticsNoCookieCodeBlock',
+    label: 'Custom code without cookies (will be loaded before user consents to cookies, make 100% sure no unallowed cookies are set!)',
     textarea: true,
   },
 
