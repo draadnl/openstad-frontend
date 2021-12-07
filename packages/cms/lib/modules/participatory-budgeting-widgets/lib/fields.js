@@ -116,6 +116,11 @@ const fields = [
     label: 'Url where orginal urls are found (ideaId is attached to the end)',
   },
   {
+    name: 'originalIdeaLinkText',
+    type: 'string',
+    label: 'Text for the link to the original idea. Leave empty for default (Bekijk het originele voorstel)',
+  },
+  {
     name: 'contentArea',
     type: 'area',
     label: 'Content Area',
