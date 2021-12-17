@@ -27,6 +27,11 @@
       name="extraData[{{field.fieldKey}}]"
       {% endif %}
       value="{{option.value}}"
+
+      {% if field.errorMessage %}
+      data-error-message="{{field.errorMessage}}"
+      {% endif %}
+
       id="checkbox-{{uniqueId}}-{{loop.index}}-{{option.value}}"
 
       {% if field.fieldRequired %}required{% endif %}

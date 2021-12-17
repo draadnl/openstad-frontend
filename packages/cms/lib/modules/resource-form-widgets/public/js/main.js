@@ -231,7 +231,25 @@ $(document).ready(function () {
     });
 
 
+// Put the available types inside an array. This will be beneficial in the future if more types are added.
+    let customErrorElements = ['input[type=text]', 'input[type=radio]', 'input[type=checkbox]'];
 
+    $.map(customErrorElements,function(elem){
+      $( ideaForm ).find( elem + '[required]').each(function () {
+        let errorMessage = $(this).attr('data-error-message');
+
+        // For some browsers, `attr` is undefined; for others,
+        // `attr` is false.  Check for both.
+        if (typeof errorMessage !== 'undefined' && errorMessage !== false) {
+          $( this ).rules( "add", {
+            required: true,
+            messages: {
+              required: errorMessage,
+            }
+          });
+        }
+      });
+    })
 
     $('#locationField').on('change', function () {
       validator.element($(this))

@@ -29,6 +29,10 @@
       value="{{option.value}}"
       id="radio-{{uniqueId}}-{{loop.index}}-{{option.value}}"
 
+      {% if field.errorMessage %}
+      data-error-message="{{field.errorMessage}}"
+      {% endif %}
+
       {% if field.fieldRequired %}required{% endif %}
       {% if fieldValue === option.value %}checked{% endif %}
     />

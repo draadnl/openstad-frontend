@@ -26,6 +26,9 @@
   {% else %}
   name="extraData[{{field.fieldKey}}]"
   {% endif %}
+  {% if field.errorMessage %}
+  data-error-message="{{field.errorMessage}}"
+  {% endif %}
   value="{{fieldValue}}"
 
   {% if field.fieldRequired %}required{% endif %}

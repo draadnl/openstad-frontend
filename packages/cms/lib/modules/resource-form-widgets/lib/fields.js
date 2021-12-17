@@ -110,12 +110,12 @@ const fields = [
                   {
                       value: 'radio',
                       label: "Radio",
-                      showFields: ['fieldKey', 'fieldRequired', 'fieldOptions', 'notExtraDataKey']
+                      showFields: ['fieldKey', 'fieldRequired', 'fieldOptions', 'errorMessage', 'notExtraDataKey']
                   },
                   {
                       value: 'checkbox',
                       label: 'Checkbox',
-                      showFields: ['fieldKey', 'fieldRequired', 'fieldOptions', 'notExtraDataKey']
+                      showFields: ['fieldKey', 'fieldRequired', 'fieldOptions', 'errorMessage', 'notExtraDataKey']
                   },
                   {
                     value: 'select',
@@ -125,7 +125,7 @@ const fields = [
                   {
                       value: 'text',
                       label: "Text",
-                      showFields: ['fieldKey', 'fieldRequired', 'fieldMin', 'fieldMax', 'notExtraDataKey']
+                      showFields: ['fieldKey', 'fieldRequired', 'fieldMin', 'fieldMax', 'errorMessage', 'notExtraDataKey']
                   },
                   {
                       value: 'hidden',
@@ -303,6 +303,12 @@ const fields = [
                 }
               ],
               def: false
+            },
+            {
+              name: 'errorMessage',
+              label: 'Custom error message',
+              type: 'string',
+              help: 'This form field needs to be a required field for this to work. By default the error message is \'This is a required field\' ',
             },
             {
               name: 'onlyForModerator',
@@ -830,6 +836,16 @@ const fields = [
        name: 'buttonTextSave',
        type: 'string',
        label: 'Text for button to save',
+    },
+    {
+      name: 'buttonSubmitScreenreader',
+      type: 'string',
+      label: 'Screen reader text for button to submit',
+    },
+    {
+      name: 'buttonSaveScreenreader',
+      type: 'string',
+      label: 'Screen reader text for button to save',
     },
     {
       name: 'confirmationEnabledUser',

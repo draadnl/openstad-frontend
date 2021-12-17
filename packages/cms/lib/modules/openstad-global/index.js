@@ -65,6 +65,33 @@ module.exports = {
         req.data.envStyleSheets = sheets;
       }
 
+      // Add current language to the global data
+      if (self.apos.i18n) {
+        req.data.global.locale = self.apos.i18n.getLocale();
+      } else if (self.apos.workflow) {
+        req.data.global.locale = self.apos.workflow.lang();
+      }
+
+      // Append the title of the current piece/page/resource to the site logo alt text
+      // As per recommendation of the accessibility audit
+      let appendTitle = '';
+      if (req.data.piece) {
+        appendTitle = req.data.piece.title;
+      } else if (req.data.page) {
+        if (req.data.page.metaTitle) {
+          appendTitle = req.data.page.metaTitle;
+        } else if (req.data.activeResource && req.data.activeResource.title) {
+          appendTitle = req.data.activeResource.title;
+        } else if (req.data.page && req.data.page.title) {
+          appendTitle = req.data.page.title;
+        }
+      }
+
+
+      if (appendTitle) {
+        req.data.global.siteLogoAltText = req.data.global.siteLogoAltText ? `${req.data.global.siteLogoAltText}, ${appendTitle}` : `${data.global.siteTitle}, ${appendTitle}`;
+      }
+
       //for legacy purposes, remove to better solutions at some point
       //Amsterdam
       //
@@ -90,6 +117,9 @@ module.exports = {
         req.data.global.analyticsType = 'google-analytics-old-style';
         req.data.global.analyticsIdentifier = req.data.global.analytics;
       }
+
+      // Set the siteTitle as sensible default for the logo alt text
+      req.data.global.siteLogoAltText = req.data.global.siteLogoAltText || req.data.global.siteTitle;
 
       // get the identifier for making sure that the custom js/css files we load in also bust the cache
       req.data.assetsGeneration = fs.existsSync('data/generation') ? fs.readFileSync('data/generation').toString().trim() : Math.random().toString(36).slice(-5);

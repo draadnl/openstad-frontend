@@ -99,7 +99,7 @@ module.exports = {
       {
         name: 'submitting',
         label: 'Submitting',
-        fields: ['buttonTextSubmit', 'buttonTextSave']
+        fields: ['buttonTextSubmit', 'buttonTextSave', 'buttonSubmitScreenreader', 'buttonSaveScreenreader']
       },
       {
         name: 'agreed',
