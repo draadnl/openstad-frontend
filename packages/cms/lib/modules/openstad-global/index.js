@@ -72,6 +72,10 @@ module.exports = {
         req.data.global.locale = self.apos.workflow.lang();
       }
 
+      if (req.data.global.locale === 'default') {
+        req.data.global.locale = 'nl';
+      }
+
       // Append the title of the current piece/page/resource to the site logo alt text
       // As per recommendation of the accessibility audit
       let appendTitle = '';
