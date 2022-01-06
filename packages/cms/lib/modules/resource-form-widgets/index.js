@@ -9,7 +9,6 @@ const resourcesSchema = require('../../../config/resources.js').schemaFormat;
 const openstadMap = require('../../../config/map').default;
 
 const fields = require('./lib/fields.js');
-const userFormFields = require('./lib/userFormFields.js');
 
 module.exports = {
   extend: 'map-widgets',
@@ -140,7 +139,7 @@ module.exports = {
       const styles = openstadMap.defaults.styles;
       const globalData = req.data.global;
 
-      req.data.userFormFields = userFormFields;
+      //req.data.userFormFields = userFormFields;
 
       widgets.forEach(async (widget) => {
         const resourceType = widget.resource ? widget.resource : false;

@@ -46,7 +46,18 @@ apos.define('resource-form-widgets', {
           validateFiles: {
             validateFilePondFiles: true,
             validateFilePondProcessingFiles: true
-          }
+          },
+          firstName: {
+            required: true
+          },
+          lastName: {
+            required: true,
+          },
+          postcode: {
+            required: false,
+            minlength: 1,  // <- here
+            postcodeNL: true
+          },
         },
         submitHandler: function (form) {
 
@@ -63,11 +74,22 @@ apos.define('resource-form-widgets', {
               formHasChanged = false;
               var redirect = $(form).find('.form-redirect-uri').val();
               redirect = redirect.replace(':id', response.id);
-              //use href to simulate a link click! Not replace, that doesn't allow for back button to work
-              window.location.href = window.siteUrl + redirect;
+              redirect = window.siteUrl + redirect;
+
+              // in case its the same page a reload is necessary
+              // otherwise when there hashtags used the page wont be reloaded
+              if (redirect ===  window.location.href) {
+                window.location.reload();
+              } else {
+                window.location.href = redirect;
+              }
+
+            //use href to simulate a link click! Not replace, that doesn't allow for back button to work
+x
             },
-            error: function (response) {
-              // "this" the object you passed
+            error: function (response) {console.log('erererre', response)
+
+            // "this" the object you passed
               alert(response.responseJSON.msg);
               $(form).find('input[type="submit"]').val('Opslaan');
               $(form).find('input[type="submit"]').attr('disabled', false);
@@ -189,6 +211,11 @@ apos.define('resource-form-widgets', {
       var ideaForm = $widget.find('#js-form');
       var sortableInstance;
 
+      $.validator.addMethod("postcodeNL", function(value, element, val) {
+        var rege = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
+        return !value || rege.test(value);
+      }, "Postcode niet correct");
+      
       var filePonds = [];
       fieldsetElements.each(function(index, fieldsetElement) {
         var type = fieldsetElement.dataset.type;
@@ -225,6 +252,8 @@ apos.define('resource-form-widgets', {
         }
       })
 
+      
+      
       $.validator.addMethod("minLengthWithoutHTML", function (val, el, params) {
         var mainEditor = document.getElementById('js-editor');
         var lengthOfChars = stripHTML(mainEditor.innerHTML).length;
