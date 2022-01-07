@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - development
       - develop
       - feature/*
       - release/*
@@ -58,7 +59,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set environment to acc
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: gh-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            gh-node-
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+      - name: Set environment to dev
         id: dev_values_file
         shell: bash
         if: contains(github.ref, 'develop')
