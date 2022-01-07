@@ -7,12 +7,12 @@ module.exports = [
     {
         name: 'analytics',
         label: 'Analytics',
-        fields: ['analyticsType', 'analyticsIdentifier', 'analyticsCodeBlock', 'tagmanager']
+        fields: ['analyticsType', 'analyticsIdentifier', 'analyticsCodeBlock', 'analyticsNoCookieCodeBlock', 'tagmanager']
     },
     {
         name: 'api',
         label: 'Url & api instellingen',
-        fields: ['siteId', 'ideaSlug', 'ideaOverviewSlug', 'editIdeaUrl', 'cacheIdeas']
+        fields: ['siteId', 'ideaSlug', 'ideaOverviewSlug', 'editIdeaUrl', 'cacheIdeas', 'openstadComponentsUrl']
     },
 
     {
@@ -43,7 +43,7 @@ module.exports = [
     {
         name: 'mainMenu',
         label: 'Hoofdmenu',
-        fields: ['arrangeMainMenu', 'displayLoginTopLink', 'mainMenuItems', 'ctaButtonText', 'ctaButtonUrl', 'topLinks', 'displayMyAcount', "myAccountButtonText"]
+        fields: ['arrangeMainMenu', 'displayLoginTopLink', 'mainMenuItems', 'ctaButtonText', 'ctaButtonUrl', 'ctaButtonTargetBlank', 'topLinks', 'displayMyAcount', "myAccountButtonText"]
     },
     {
         name: 'userRights',

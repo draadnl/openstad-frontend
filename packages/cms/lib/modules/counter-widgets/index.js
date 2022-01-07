@@ -132,10 +132,8 @@ module.exports = {
           const siteConfig = req.data.global.siteConfig;
           if (widget.counterType === 'voteCount') {
             widget.isCountPublic = siteConfig && siteConfig.votes && siteConfig.votes.isViewable ? siteConfig.votes.isViewable : false;
-          } else {
-            widget.isCountPublic = true;
           }
-
+          
           if (widget.counterType === 'argumentCount') {
             // todo: hij zou in een resourceobverview het dieaid dynamisch moeten ophalen?
           }

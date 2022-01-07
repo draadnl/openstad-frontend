@@ -175,7 +175,7 @@ module.exports = [
       {
         value: 'custom',
         label: "Custom: use a custom codeblock",
-        showFields: ['analyticsCodeBlock']
+        showFields: ['analyticsCodeBlock', 'analyticsNoCookieCodeBlock']
       },
       {
         value: 'serverdefault',
@@ -188,6 +188,13 @@ module.exports = [
     type: 'string',
     name: 'analyticsCodeBlock',
     label: 'Custom code',
+    textarea: true,
+  },
+  
+  {
+    type: 'string',
+    name: 'analyticsNoCookieCodeBlock',
+    label: 'Custom code without cookies (will be loaded before user consents to cookies, make 100% sure no unallowed cookies are set!)',
     textarea: true,
   },
 
@@ -526,6 +533,11 @@ module.exports = [
     label: 'CTA button url',
   },
   {
+      name: 'ctaButtonTargetBlank',
+      type: 'boolean',
+      label: 'Open CTA link in new window',
+    },
+  {
     name: 'topLinks',
     type: 'array',
     label: 'Top Links',
@@ -756,4 +768,12 @@ module.exports = [
         choices: rightsChoices,
         def: 'member'
         },*/
+  
+  {
+    type: 'string',
+    name: 'openstadComponentsUrl',
+    label: 'Openstad Components URL',
+    help: 'Specify the URL where the Openstad Components (choice guide, ideas on map etc.) are loaded from. Leave empty to use the default URL.',
+    def: ''
+  },
 ];

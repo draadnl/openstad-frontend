@@ -707,5 +707,12 @@
 	"Authentication": "Authentication",
 	"Display Original Idea Url": "Display Original Idea Url",
 	"Manage Tags": "Manage Tags",
-	"Find or add a tag...": "Find or add a tag..."
+	"Find or add a tag...": "Find or add a tag...",
+	"Edit Keuzewijzer": "Edit Keuzewijzer",
+	"Use the server default settings": "Use the server default settings",
+	"Custom code without cookies (will be loaded before user consents to cookies, make 100% sure no unallowed cookies are set!)": "Custom code without cookies (will be loaded before user consents to cookies, make 100% sure no unallowed cookies are set!)",
+	"Openstad Components URL": "Openstad Components URL",
+	"Specify the URL where the Openstad Components (choice guide, ideas on map etc.) are loaded from. Leave empty to use the default URL.": "Specify the URL where the Openstad Components (choice guide, ideas on map etc.) are loaded from. Leave empty to use the default URL.",
+	"Open CTA link in new window": "Open CTA link in new window",
+	"My account button text": "My account button text"
 }

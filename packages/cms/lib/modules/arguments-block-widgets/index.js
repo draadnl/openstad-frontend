@@ -48,7 +48,7 @@ module.exports = {
 			widgets.forEach((widget) => {
 
         widget.config = createConfig(widget, req.data, req.session.jwt, self.apos.settings.getOption(req, 'apiUrl'), req.data.siteUrl + '/oauth/login?{returnTo}' ); // stringfy in .output
-        widget.openstadComponentsCdn = self.apos.settings.getOption(req, 'siteConfig').openstadComponentsCdn;
+        widget.openstadComponentsCdn = (req && req.data && req.data.global && req.data.global.openstadComponentsUrl) || self.apos.settings.getOption(req, 'siteConfig').openstadComponentsCdn;
 
         const containerId = self.apos.utils.generateId();
         widget.containerId = containerId;
@@ -65,7 +65,7 @@ module.exports = {
     const superOutput = self.output;
     self.output = function(widget, options) {
       widget.config.ideaId =  options.activeResource ?  options.activeResource.id : false;
-			widget.config = JSON.stringify(widget.config); 
+			widget.config = JSON.stringify(widget.config);
       return superOutput(widget, options);
     };
 

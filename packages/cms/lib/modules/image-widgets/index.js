@@ -29,6 +29,48 @@ module.exports = {
       type: 'string'
     },
     {
+      name: 'useLink',
+      label: 'Add a link to the image?',
+      type: 'boolean',
+      choices: [
+        {
+          label: 'Ja',
+          value: true,
+          showFields: [
+            'url',
+            'targetBlank',
+          ]
+        },
+        {
+          label: 'Nee',
+          value: false,
+        }
+      ],
+      def: false
+    },
+    {
+      name: 'url',
+      type: 'url',
+      label: 'URL',
+      required: true
+    },
+    {
+      name: 'targetBlank',
+      type: 'boolean',
+      label: 'Open in new window',
+      choices: [
+        {
+          label: 'Ja',
+          value: true,
+        },
+        {
+          label: 'Nee',
+          value: false,
+        }
+      ],
+      def: false
+    },
+    {
       name: 'displaySize',
       type: 'select',
       label: 'Display size',
@@ -68,7 +110,7 @@ module.exports = {
       {
         name: 'generalGroup',
         label: 'General',
-        fields: ['uploadedImage', 'displaySize']
+        fields: ['uploadedImage', 'uploadedImageTitle', 'uploadedImageAlt', 'useLink', 'url', 'targetBlank', 'displaySize']
       },
       {
         name: 'stylingGroup',

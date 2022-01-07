@@ -137,6 +137,11 @@ const fields = [
     required: true
   },
   {
+    name: 'originalIdeaLinkText',
+    type: 'string',
+    label: 'Text for the link to the original idea. Leave empty for default (Bekijk het originele voorstel)',
+  },
+  {
     name: 'contentArea',
     type: 'area',
     label: 'Content Area',

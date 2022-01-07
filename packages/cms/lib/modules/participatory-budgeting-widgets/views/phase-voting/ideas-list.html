@@ -163,7 +163,7 @@ data-default-sort="{{data.widget.defaultSorting}}"
 					{% if data.widget.displayOriginalIdeaUrl and data.widget.originalIdeaUrl and not idea.extraData.hideOriginalLink %}
 					{% set originalId = idea.extraData.originalId if idea.extraData.originalId else idea.id %}
 					<div class="margin-hor-10">
-						<a href="{{data.widget.originalIdeaUrl | safeRelativeUrl}}/{{originalId}}" class="link-original link-caret--blue" target="_blank">Bekijk het originele voorstel</a>
+						<a href="{{data.widget.originalIdeaUrl | safeRelativeUrl}}/{{originalId}}" class="link-original link-caret--blue" target="_blank">{{ data.widget.originalIdeaLinkText or 'Bekijk het originele voorstel' }}</a>
 					</div>
 					{% endif %}
 					<br />
