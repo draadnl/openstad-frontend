@@ -50,6 +50,16 @@ const fields = [
     def: true
   },
   {
+    type: 'string',
+    name: 'filterExcludeThemes',
+    label: 'Exclude ideas with this theme: (theme names, comma seperated)',
+  },
+  {
+    type: 'string',
+    name: 'filterIncludeThemes',
+    label: 'Only show idea including this theme: (theme names, comma seperated)',
+  },
+  {
     name: 'votingType',
     type: 'select',
     label: 'Voting type',
