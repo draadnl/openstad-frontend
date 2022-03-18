@@ -7,7 +7,7 @@ module.exports = [
     {
         name: 'analytics',
         label: 'Analytics',
-        fields: ['analyticsType', 'analyticsIdentifier', 'analyticsCodeBlock', 'tagmanager']
+        fields: ['analyticsType', 'analyticsIdentifier', 'analyticsCodeBlock', 'analyticsNoCookieCodeBlock', 'tagmanager']
     },
     {
         name: 'api',

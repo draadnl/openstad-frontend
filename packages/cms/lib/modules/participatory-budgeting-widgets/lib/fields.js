@@ -50,6 +50,16 @@ const fields = [
     def: true
   },
   {
+    type: 'string',
+    name: 'filterExcludeThemes',
+    label: 'Exclude ideas with this theme: (theme names, comma seperated)',
+  },
+  {
+    type: 'string',
+    name: 'filterIncludeThemes',
+    label: 'Only show idea including this theme: (theme names, comma seperated)',
+  },
+  {
     name: 'votingType',
     type: 'select',
     label: 'Voting type',
@@ -114,6 +124,11 @@ const fields = [
     name: 'originalIdeaUrl',
     type: 'string',
     label: 'Url where orginal urls are found (ideaId is attached to the end)',
+  },
+  {
+    name: 'originalIdeaLinkText',
+    type: 'string',
+    label: 'Text for the link to the original idea. Leave empty for default (Bekijk het originele voorstel)',
   },
   {
     name: 'contentArea',

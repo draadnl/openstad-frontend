@@ -7,7 +7,7 @@
 
                 var $ul = $(this).find('.slide-items');
 
-                var afterFirst = $ul.find('li:not(:first)');
+                var afterFirst = $ul.find('li.slide-item:not(:first)');
                 
                 afterFirst.hide();
                 
@@ -27,30 +27,30 @@
             function goToPreviousSlide () {
                 var $ul = $(this).closest('.slide-items');
                 
-                var $currLi = $ul.find('li:visible');
+                var $currLi = $ul.find('li.slide-item:visible');
                 $currLi.hide();
                 
-                var $prevLi = $currLi.prev('li');
+                var $prevLi = $currLi.prev('li.slide-item');
                 
                 if ($prevLi.length) {
                     $prevLi.show();
                 } else {
-                    $ul.find('li:last').show();
+                    $ul.find('li.slide-item:last').show();
                 }
             }
             
             function goToNextSlide () {
                 var $ul = $(this).closest('.slide-items');
                 
-                var $currLi = $ul.find('li:visible');
+                var $currLi = $ul.find('li.slide-item:visible');
                 $currLi.hide();
                 
-                var $nextLi = $currLi.next('li');
+                var $nextLi = $currLi.next('li.slide-item');
                 
                 if ($nextLi.length) {
                     $nextLi.show();
                 } else {
-                    $ul.find('li:first').show();
+                    $ul.find('li.slide-item:first').show();
                 }
 
             }
