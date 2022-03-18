@@ -1,0 +1,36 @@
+{% set uniqueId = apos.utils.generateId() %}
+{% if ( field.fieldOptions.length % 2 ) === 1 %}
+{% set value = ( (field.fieldOptions.length + 1 ) / 2 ) %}
+{% else %}
+{% set value = ( field.fieldOptions.length / 2 ) %}
+{% endif %}
+
+<div class="range-slider-container">
+    <input
+            type="range"
+            min="1"
+            max="{{field.fieldOptions.length}}"
+            value="{{value}}"
+            step="1"
+            list="tickmarks"
+            id="rangeInput"
+            {% if field.fieldRequired %}required{% endif %}
+    >
+    <!--           oninput="output.value = rangeInput.value"-->
+    <datalist id="tickmarks">
+
+        {% for option in field.fieldOptions %}
+        <option value="{{option.value}}">{{option.label}}</option>
+        {% endfor %}
+
+    </datalist>
+
+    <div class="choicesData">
+
+        {% for option in field.fieldOptions %}
+        {% set left = ( 100 / (field.fieldOptions.length - 1) * ( loop.index - 1 )) %}
+        <p id="choice-{{loop.index}}" style="left: {{left}}%">{{option.label}}</p>
+        {% endfor %}
+
+    </div>
+</div>
