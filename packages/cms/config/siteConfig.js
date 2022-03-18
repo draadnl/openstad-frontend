@@ -211,6 +211,9 @@ module.exports = {
         'resource-form-widgets' : {
           resources: resources
         },
+        'enquete-widgets' : {
+          resources: resources
+        },
 
 
         'info-bar-widgets': {},

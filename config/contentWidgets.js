@@ -8,6 +8,9 @@ const contentWidgets = {
   'resource-form': {
     adminOnly: true
   },
+  'enquete': {
+    adminOnly: true
+  },
   'resource-representation': {
     adminOnly: true
   },

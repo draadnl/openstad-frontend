@@ -1,0 +1,45 @@
+{% if data.widget.editorDescription %}
+{% set useModernEditor = true %}
+{% else %}
+{% set useModernEditor = false %}
+{% endif %}
+
+<div class="pageContent enquete-fields" id="content">
+	<div class="form-content-container">
+		<div class="form-introduction">
+			{% if data.widget.formTitle %}
+				<h2>{{data.widget.formTitle}}</h2>
+			{% endif %}
+			{% if data.widget.formIntro %}
+				<div class="form-intro">
+					<p>{{data.widget.formIntro}}</p>
+				</div>
+			{% endif %}
+		</div>
+
+		<div id="formulier-block">
+			{% include 'includes/dynamic-form.html' %}
+		</div>
+	</div>
+</div>
+<script>
+	var titleMinLength = parseInt('{{data.widget.resourceConfig.titleMinLength}}');
+  var titleMaxLength = parseInt('{{data.widget.resourceConfig.titleMaxLength}}');
+  var summaryMinLength = parseInt('{{data.widget.resourceConfig.summaryMinLength}}');
+  var summaryMaxLength = parseInt('{{data.widget.resourceConfig.summaryMaxLength}}');
+  var descriptionMinLength = parseInt('{{data.widget.resourceConfig.descriptionMinLength}}');
+  var descriptionMaxLength = parseInt('{{data.widget.resourceConfig.descriptionMaxLength}}');
+</script>
+
+<script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/trix.js"></script>
+{#
+	<script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/browser-polyfill.min.js"></script>
+#}
+<script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-polyfill.min.js"></script>
+<script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond.js"></script>
+
+<script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-plugin-image-preview.js"></script>
+<script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-plugin-file-validate-type.js"></script>
+<script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-plugin-file-validate-size.js"></script>
+<script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-plugin-file-poster.js"></script>
+<script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-plugin-image-exif-orientation.js"></script>

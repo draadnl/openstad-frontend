@@ -1,0 +1,11 @@
+<input
+        type="date"
+        {% if field.fieldKey %}
+        id="{{field.fieldKey}}"
+        {% endif %}
+        name="trip-start"
+       value="2018-07-22"
+       min="1900-01-01"
+        max="2050-12-31"
+        {% if field.fieldRequired %}required{% endif %}
+>
