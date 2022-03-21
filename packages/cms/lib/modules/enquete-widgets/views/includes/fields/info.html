@@ -21,9 +21,13 @@
         {% if field.descriptionImage %}
             <img
                     id="{{field.descriptionImage._id}}"
-                    src="{{apos.attachments.url(field.descriptionImage.image)}}"
+                    src="{{apos.attachments.url(field.descriptionImage)}}"
                     title="{{field.descriptionImage.title}}"
+                    alt="{{field.imageAltText}}"
             />
+        {% endif %}
+        {% if field.imageCaptionText %}
+            <p class="captoin">{{field.imageCaptionText}}</p>
         {% endif %}
 
     </div>
@@ -34,9 +38,12 @@
     {% if not field.descriptionAccordeon and field.descriptionImage %}
     <img
             id="{{field.descriptionImage._id}}"
-            src="{{apos.attachments.url(field.descriptionImage.image)}}"
+            src="{{apos.attachments.url(field.descriptionImage)}}"
             title="{{field.descriptionImage.title}}"
-            alt="{{field.descriptionImage.imageAltText}}"
+            alt="{{field.imageAltText}}"
     />
+    {% endif %}
+    {% if field.imageCaptionText %}
+    <p class="caption">{{field.imageCaptionText}}</p>
     {% endif %}
 </div>

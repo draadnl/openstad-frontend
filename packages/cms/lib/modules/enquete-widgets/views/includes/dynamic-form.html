@@ -23,7 +23,8 @@
 
     {% for field in formSection.fields %}
     {% if not field.onlyForModerator or (field.onlyForModerator and data.hasModeratorRights) %}
-    <div class="form-field-container">
+
+    <div class="form-field-container {{field.fieldWidth}}">
 
         {% if field.fieldInfo and field.type !== 'info' %}
           {% if field.fieldKey %}
@@ -39,7 +40,6 @@
 
       {% include 'includes/fields/' + field.type + '.html' ignore missing %}
     </div>
-    <br />
     {% endif %}
     {% endfor %}
     <br />
