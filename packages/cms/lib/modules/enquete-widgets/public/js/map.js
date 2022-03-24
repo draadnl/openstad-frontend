@@ -1,4 +1,4 @@
-apos.define('resource-form-widgets', {
+apos.define('enquete-widgets', {
     extend: 'map-widgets',
     construct: function(self, options) {
         self.playAfterlibsLoaded = function($widget, data, options) {

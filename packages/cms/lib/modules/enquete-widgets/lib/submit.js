@@ -15,6 +15,7 @@ module.exports = async function(self, options) {
     /**
      * Format API Url
      */
+    req.body.resourceType = 'submission';
     const apiUrl = self.apos.settings.getOption(req, 'apiUrl');
     const siteId = req.data.global.siteId;
     const postUrl = `${apiUrl}/api/site/${siteId}/${req.body.resourceEndPoint}`;
@@ -54,10 +55,8 @@ module.exports = async function(self, options) {
      data.extraData.images = [];
    }
 
-    if (req.body.resourceType === 'submission') {
-      data.submittedData = data.extraData;
-      delete data.extraData;
-    }
+    data.submittedData = data.extraData;
+    delete data.extraData;
 
     const options = {
         method: req.body.resourceId ? 'PUT' : 'POST',

@@ -10,13 +10,16 @@
     >
         <span class="accordeon-label"> {{field.fieldInfo}} </span>
     </button>
-{% else %}
+{% elseif field.fieldInfo %}
     <p class="info-title"> {{field.fieldInfo}} </p>
 {% endif %}
 
 {% if field.descriptionAccordeon %}
     <div id="accordion-panel-{{uniqueId}}" class="accordion-panel" aria-hidden="true">
-        <p>{{field.descriptionText}}</p>
+
+        {% if field.descriptionText %}
+            <p>{{field.descriptionText}}</p>
+        {% endif %}
 
         {% if field.descriptionImage %}
             <img

@@ -153,7 +153,6 @@ $(document).ready(function () {
   //        required: true
   //      },
         title : {
-          required: true,
           minlength: titleMinLength,
           maxlength: titleMaxLength,
         },
@@ -162,7 +161,6 @@ $(document).ready(function () {
           maxlength: summaryMaxLength,
         },
         description : {
-          required: true,
           minlength: descriptionMinLength,
           maxlength: descriptionMaxLength,
         },
