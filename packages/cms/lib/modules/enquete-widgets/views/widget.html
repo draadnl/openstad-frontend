@@ -1,18 +1,40 @@
+{% set pageTitle = 'Jouw plan insturen' %}
+{% set activeResource = data.activeResource %}
+
 {% if data.widget.editorDescription %}
 {% set useModernEditor = true %}
 {% else %}
 {% set useModernEditor = false %}
 {% endif %}
 
-<div class="pageContent enquete-fields" id="content">
+<div class="pageContent newactiveResource enquete-fields" id="content">
+	{% if not data.widget.showForm %}
+
+	<div class="box-grey">
+
+		{% if data.widget.notVisibleTitle %}
+		<h1>{{ data.widget.notVisibleTitle | nlbr | sanitize | safe }}</h1>
+		{% else %}
+		<h1>Om een plan in te dienen moet je ingelogd zijn.</h1>
+		{% endif %}
+
+		{% if data.widget.notVisibleDesc %}
+		<p>{{ data.widget.notVisibleDesc | nlbr | sanitize | safe }}</p>
+		{% else %}
+		<p>Klik <a href="{{data.siteUrl}}/oauth/login">hier</a> om in te loggen.</p>
+		{% endif %}
+	</div>
+
+	{% elseif data.widget.showForm %}
+
 	<div class="form-content-container">
 		<div class="form-introduction">
 			{% if data.widget.formTitle %}
-				<h2>{{data.widget.formTitle}}</h2>
+				<h2>{{data.widget.formTitle | nlbr | sanitize | safe }}</h2>
 			{% endif %}
 			{% if data.widget.formIntro %}
 				<div class="form-intro">
-					<p>{{data.widget.formIntro}}</p>
+					<p>{{data.widget.formIntro | nlbr | sanitize | safe }}</p>
 				</div>
 			{% endif %}
 		</div>
@@ -21,6 +43,9 @@
 			{% include 'includes/dynamic-form.html' %}
 		</div>
 	</div>
+
+	{% endif %}
+
 </div>
 <script>
 	var titleMinLength = parseInt('{{data.widget.resourceConfig.titleMinLength}}');

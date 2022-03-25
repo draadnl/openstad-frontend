@@ -2,7 +2,7 @@
        accept="image/png, image/jpeg"
        {% if field.fieldKey %}
        id="{{field.fieldKey}}"
-       name="{{field.fieldKey}}"
+       name="extraData[{{field.fieldKey}}]"
        {% endif %}
        {% if field.fieldRequired %}required{% endif %}
 >
