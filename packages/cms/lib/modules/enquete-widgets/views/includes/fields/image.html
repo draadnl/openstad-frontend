@@ -24,7 +24,13 @@
     {% endfor %}
     {% endif %}
   </script>
-  <input type="file" class="imageUploader filepond" {% if data.widget.uploadMultiple %} multiple {% endif %} {% if data.widget.requiredImages %}required{% endif %} />
+  <input
+    type="file"
+    class="imageUploader filepond"
+    {% if data.widget.uploadMultiple %} multiple {% endif %}
+    {% if data.widget.requiredImages %}required{% endif %}
+    name="extraData[{{field.fieldKey}}]"
+  />
 
 </fieldset>
 <input type="hidden" name="validateImages" multiple />

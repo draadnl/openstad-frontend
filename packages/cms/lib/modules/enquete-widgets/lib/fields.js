@@ -24,22 +24,18 @@ const fields = [
     help: 'The url to redirect to after form submit',
     required: true
   },
-  // {
-  //     name: 'formType',
-  //     type: 'select',
-  //     label: 'How do you want to organise the form?',
-  //     choices: [
-  //         {
-  //           value: 'static',
-  //           label: "Static (default)"
-  //         },
-  //         {
-  //           value: 'dynamic',
-  //           label: "Dynamic",
-  //           showFields: ['dynamicFormSections']
-  //         },
-  //     ]
-  // },
+  {
+    type: 'select',
+    name: 'resource',
+    label: 'Resource',
+    choices: [
+      {
+        value: 'submission',
+        label: "Submission",
+      },
+    ],
+    def: 'submission'
+  },
   {
     name: 'formVisibility',
     type: 'select',
@@ -55,6 +51,16 @@ const fields = [
       },
     ],
     def: 'user'
+  },
+  {
+    name: 'notVisibleTitle',
+    type: 'string',
+    label: 'When the form isn\'t visible, this text will overwrite the default title',
+  },
+  {
+    name: 'notVisibleDesc',
+    type: 'string',
+    label: 'When the form isn\'t visible, this text will overwrite the default message. Be sure to include a login link inside this message',
   },
   {
     name: 'shouldDisplayUserName',

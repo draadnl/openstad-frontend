@@ -15,6 +15,7 @@
             list="tickmarks"
             id="rangeInput"
             {% if field.fieldRequired %}required{% endif %}
+            name="extraData[{{field.fieldKey}}]"
     >
     <!--           oninput="output.value = rangeInput.value"-->
     <datalist id="tickmarks">

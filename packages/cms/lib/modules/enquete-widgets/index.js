@@ -5,6 +5,7 @@
  * 1. Through query params: ?resourceType=idea&resourceId=1
  * 2 Through CMS user configured page settings, like so /idea/1
  */
+const resourcesSchema = require('../../../config/resources.js').schemaFormat;
 const openstadMap = require('../../../config/map').default;
 const fields = require('./lib/fields.js');
 
@@ -18,12 +19,12 @@ module.exports = {
       {
         name: 'general',
         label: 'Algemeen',
-        fields: ['formTitle', 'formIntro', 'formName', 'redirect', 'hideAdminAfterPublicAction', 'formType', 'dynamicFormSections']
+        fields: ['resource', 'formTitle', 'formIntro', 'formName', 'redirect', 'hideAdminAfterPublicAction', 'formType', 'dynamicFormSections']
       },
       {
         name: 'visibility',
         label: 'Visibility settings',
-        fields: ['formVisibility', 'shouldDisplayUserName']
+        fields: ['formVisibility', 'shouldDisplayUserName', 'notVisibleTitle', 'notVisibleDesc']
       },
       {
         name: 'submitting',

@@ -21,11 +21,7 @@
   class="chars-counter"
   minlength="{{field.fieldMin if field.fieldMin else 2}}"
   maxlength="{{field.fieldMax if field.fieldMax else 140}}"
-  {% if field.notExtraDataKey %}
-  name="{{field.fieldKey}}"
-  {% else %}
   name="extraData[{{field.fieldKey}}]"
-  {% endif %}
   value="{{fieldValue}}"
 
   {% if field.fieldRequired %}required{% endif %}

@@ -21,11 +21,7 @@
             />
         <input
                 type="radio"
-                {% if field.notExtraDataKey %}
-                name="{{field.fieldKey}}"
-                {% else %}
                 name="extraData[{{field.fieldKey}}]"
-                {% endif %}
                 value="{{option.value}}"
                 id="radio-{{uniqueId}}-{{loop.index}}-{{option.value}}"
 
