@@ -75,6 +75,15 @@ module.exports = {
                     }
 
                     req.data.idea.extraData = idea.extraData;
+                    
+                    if (idea.user && !idea.user.displayName) {
+                     if (idea.user.nickName) {
+                       idea.user.displayName = idea.user.nickName;
+                     } else {
+                       idea.user.displayName = (idea.user.firstName + ' ' + idea.user.lastName).trim();
+                     }
+                   }
+                    
                     req.data.idea.user = idea.user;
 
                     if (req.data.hasModeratorRights) {
