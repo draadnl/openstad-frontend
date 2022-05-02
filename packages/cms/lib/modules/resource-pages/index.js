@@ -63,6 +63,15 @@ module.exports = {
        */
       rp(options)
         .then(function (activeResource) {
+          
+          if (activeResource.user && !activeResource.user.displayName) {
+             if (activeResource.user.nickName) {
+               activeResource.user.displayName = activeResource.user.nickName;
+             } else {
+               activeResource.user.displayName = (activeResource.user.firstName + ' ' + activeResource.user.lastName).trim();
+             }
+           }
+          
           req.data.activeResource = activeResource;
 
           if (req.data.activeResourceType === 'idea' && req.data.hasModeratorRights) {

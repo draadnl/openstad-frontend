@@ -60,6 +60,15 @@ module.exports = {
              */
             rp(options)
                 .then(function (idea) {
+                    
+                    if (idea.user && !idea.user.displayName) {
+                     if (idea.user.nickName) {
+                       idea.user.displayName = idea.user.nickName;
+                     } else {
+                       idea.user.displayName = (idea.user.firstName + ' ' + idea.user.lastName).trim();
+                     }
+                   }
+                    
                     req.data.idea = idea;
                     // because we now have dynamic resource widgets and urls, the idea is also called
                     // plan is to phase this module out
@@ -75,14 +84,6 @@ module.exports = {
                     }
 
                     req.data.idea.extraData = idea.extraData;
-                    
-                    if (idea.user && !idea.user.displayName) {
-                     if (idea.user.nickName) {
-                       idea.user.displayName = idea.user.nickName;
-                     } else {
-                       idea.user.displayName = (idea.user.firstName + ' ' + idea.user.lastName).trim();
-                     }
-                   }
                     
                     req.data.idea.user = idea.user;
 
