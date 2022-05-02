@@ -55,7 +55,7 @@ module.exports =  function (req, res, next) {
       const sort = req.query.sort ? req.query.sort : 'createdate_desc';
 
       var options = {
-           uri: `${apiUrl}/api/site/${globalData.siteId}/idea?sort=${sort}&includeVoteCount=1&includeUserVote=1&includeTags=1&includeArgsCount=1`,
+           uri: `${apiUrl}/api/site/${globalData.siteId}/idea?sort=${sort}&includeVoteCount=1&includeUserVote=1&includeTags=1&includeArgsCount=1&includeUser=1`,
            headers: headers,
            json: true // Automatically parses the JSON string in the response
      };
@@ -83,7 +83,15 @@ module.exports =  function (req, res, next) {
               idea.locationMapImage = `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=380x214&maptype=roadmap&markers=icon:${appUrl}/modules/openstad-assets/img/idea/${flag}.png|${lat},${lng}&key=${googleMapsApiKey}`;
               idea.locationUrl = `https://maps.google.com/?ll=${lat},${lng}`;
            }
-
+           
+           if (idea.user && !idea.user.displayName) {
+             if (idea.user.nickName) {
+               idea.user.displayName = idea.user.nickName;
+             } else {
+               idea.user.displayName = (idea.user.firstName + ' ' + idea.user.lastName).trim();
+             }
+           }
+           
            return idea;
          });
 
