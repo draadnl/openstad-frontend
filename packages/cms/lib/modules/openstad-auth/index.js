@@ -142,6 +142,15 @@ module.exports = {
                         const requiredRoles = ['member', 'moderator', 'admin', 'editor'];
                         const user = req.session.openstadUser;
                         req.data.loggedIn = user && user.role && requiredRoles.includes(user.role);
+                        
+                        if (user && !user.displayName) {
+                         if (user.nickName) {
+                           user.displayName = user.nickName;
+                         } else {
+                           user.displayName = (user.firstName + ' ' + user.lastName).trim();
+                         }
+                       }
+                        
                         req.data.openstadUser = user;
                         // todo: een admin is ook moderaor en editor,  en een editor is ook moderator, maar ik kan de consequenties zo snel niet overzien dus dat nmoet later een keer
                         req.data.isAdmin = user.role === 'admin'; // user;
@@ -172,6 +181,15 @@ module.exports = {
                         rp(options)
                             .then(function (user) {
                                 if (user && Object.keys(user).length > 0 && user.id) {
+                                    
+                                    if (user && !user.displayName) {
+                                     if (user.nickName) {
+                                       user.displayName = user.nickName;
+                                     } else {
+                                       user.displayName = (user.firstName + ' ' + user.lastName).trim();
+                                     }
+                                   }
+                                    
                                     req.session.openstadUser = user;
                                     req.session.lastJWTCheck = new Date().toISOString();
 
