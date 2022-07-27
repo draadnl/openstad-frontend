@@ -29,7 +29,7 @@ ENV APOS_BUNDLE="assets"
 ENV NODE_ENV="production"
 
 # Install all base dependencies.
-RUN apk add --no-cache --update openssl g++ make python2 musl-dev git bash
+RUN apk add --no-cache --update openssl g++ make python3 musl-dev git bash
 
 
 # Set the working directory to the root of the container
@@ -48,7 +48,7 @@ RUN npm install --loglevel warn --production
 RUN npm install -g nodemon
 
 # Remove unused packages only used for building.
-RUN apk del openssl g++ make python2 && rm -rf /var/cache/apk/*
+RUN apk del openssl g++ make python3 && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /home/app/public
 RUN mkdir -p /home/app/public/modules
