@@ -12,7 +12,11 @@ module.exports = {
 
       // overwrite default config to add possibility to put siteUrl in front of it
       sanitizeConfig.transformTags.a = function( tagName, attrs ) {
-        if( attrs.href && remoteURL.test(attrs.href) ) {
+        
+        const siteUrlWithoutProtocol = siteUrl.replace(/^https?:\/\//, '');
+        
+        // Check if the href attribute is a remote url
+        if( attrs.href && (remoteURL.test(attrs.href) && !attrs.href.includes(siteUrlWithoutProtocol)) ) {
           attrs.target = '_blank';
           attrs.rel    = 'noreferrer noopener';
         } else if (attrs && attrs.href && siteUrl)  {
