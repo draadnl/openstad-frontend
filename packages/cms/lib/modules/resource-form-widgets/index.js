@@ -29,97 +29,94 @@ module.exports = {
       ].concat(options.addFields || [])
     }
   },
-  construct: function (self, options) {
-    options.arrangeFields = (options.arrangeFields || []).concat([
-      {
-        name: 'general',
-        label: 'Algemeen',
-        fields: ['resource', 'formName', 'redirect', 'loginText', 'hideAdminAfterPublicAction', 'formType', 'dynamicFormSections']
-      },
-      {
-        name: 'visibility',
-        label: 'Visibility settings',
-        fields: ['formVisibility', 'shouldDisplayUserName']
-      },
-      {
-        name: 'title',
-        label: 'Title',
-        fields: ['labelTitle', 'infoTitle', 'requiredTitle', 'minTitle', 'maxTitle']
-      },
-      {
-        name: 'summary',
-        label: 'Summary',
-        fields: ['labelSummary', 'infoSummary', 'requiredSummary', 'typeSummary', 'minSummary', 'maxSummary']
-      },
-      {
-        name: 'description',
-        label: 'Description',
-        fields: ['labelDescription', 'infoDescription', 'editorDescription', 'requiredDescription', 'minDescription', 'maxDescription']
-      },
-      {
-        name: 'images',
-        label: 'Images Upload',
-        fields: ['labelImages', 'infoImages', 'uploadMultiple', 'requiredImages']
-      },
-      {
-        name: 'themes',
-        label: 'Themes',
-        fields: ['labelThemes', 'infoThemes', 'requiredThemes']
-      },
-      {
-        name: 'areas',
-        label: 'Areas',
-        fields: ['labelAreas', 'infoAreas', 'requiredAreas']
-      },
-      {
-        name: 'location',
-        label: 'Location',
-        fields: ['labelLocation', 'infoLocation', 'displayLocation', 'requiredLocation']
-      },
-      {
-        name: 'Estimate',
-        label: 'Estimate costs',
-        fields: ['labelEstimate', 'infoEstimate', 'displayEstimate', 'requiredEstimate', 'typeEstimate', 'minEstimate', 'maxEstimate']
-      },
-      {
-        name: 'Role',
-        label: 'Role',
-        fields: ['labelRole', 'infoRole', 'displayRole', 'requiredRole', 'typeRole', 'minRole', 'maxRole']
-      },
-      {
-        name: 'Phone',
-        label: 'Phone number',
-        fields: ['labelPhone', 'infoPhone', 'displayPhone', 'requiredPhone', 'minPhone', 'maxPhone']
-      },
-      {
-        name: 'advice',
-        label: 'Tip',
-        fields: ['labelAdvice', 'infoAdvice', 'displayAdvice', 'requiredAdvice', 'minAdvice', 'maxAdvice']
-      },
-      {
-        name: 'submitting',
-        label: 'Submitting',
-        fields: ['buttonTextSubmit', 'buttonTextSave']
-      },
-      {
-        name: 'agreed',
-        label: 'Agreed checkbox',
-        fields: ['agreedLabel', 'agreedRequired']
-      },
-      {
-        name: 'budget',
-        label: 'Budget',
-        fields: ['displayBudget']
-      },
-      {
-        name: 'confirmation',
-        label: 'Confirmation',
-        fields: [
-          'confirmationEnabledUser', 'confirmationTemplateNameUser', 'confirmationSubjectUser', 'confirmationEmailFieldUser', 'confirmationEmailFieldUser', 'confirmationEmailContentUser',
-          'confirmationEnabledAdmin', 'confirmationTemplateNameAdmin', 'confirmationSubjectAdmin', 'confirmationEmailFieldAdmin', 'confirmationEmailFieldAdmin', 'confirmationEmailContentAdmin'
-        ]
-      }
-    ]);
+  construct: function(self, options) {
+   options.arrangeFields = (options.arrangeFields || []).concat([
+
+     {
+       name: 'general',
+       label: 'Algemeen',
+       fields: ['resource', 'formName', 'redirect', 'loginText', 'hideAdminAfterPublicAction', 'formType', 'dynamicFormSections']
+     },
+     {
+       name: 'title',
+       label: 'Title',
+       fields: ['labelTitle', 'infoTitle', 'requiredTitle', 'minTitle', 'maxTitle']
+     },
+     {
+       name: 'summary',
+       label: 'Summary',
+       fields: ['labelSummary', 'infoSummary', 'requiredSummary', 'typeSummary', 'minSummary', 'maxSummary']
+     },
+     {
+       name: 'description',
+       label: 'Description',
+       fields: ['labelDescription', 'infoDescription', 'editorDescription', 'requiredDescription', 'minDescription', 'maxDescription']
+     },
+     {
+       name: 'images',
+       label: 'Images Upload',
+       fields: ['labelImages', 'infoImages', 'uploadMultiple', 'requiredImages']
+     },
+     {
+       name: 'themes',
+       label: 'Themes',
+       fields: ['labelThemes', 'infoThemes', 'requiredThemes']
+     },
+     {
+       name: 'areas',
+       label: 'Areas',
+       fields: ['labelAreas', 'infoAreas', 'requiredAreas']
+     },
+     {
+       name: 'location',
+       label: 'Location',
+       fields: ['labelLocation', 'infoLocation', 'displayLocation', 'requiredLocation']
+     },
+     {
+         name: 'Estimate',
+         label: 'Estimate costs',
+         fields: ['labelEstimate', 'infoEstimate', 'displayEstimate', 'requiredEstimate', 'typeEstimate', 'minEstimate', 'maxEstimate']
+     },
+     {
+         name: 'Role',
+         label: 'Role',
+         fields: ['labelRole', 'infoRole', 'displayRole', 'requiredRole', 'typeRole', 'minRole', 'maxRole']
+     },
+     {
+         name: 'Phone',
+         label: 'Phone number',
+         fields: ['labelPhone', 'infoPhone', 'displayPhone', 'requiredPhone', 'minPhone', 'maxPhone']
+     },
+     {
+       name: 'advice',
+       label: 'Tip',
+       fields: ['labelAdvice', 'infoAdvice', 'displayAdvice', 'requiredAdvice', 'minAdvice', 'maxAdvice']
+     },
+     {
+       name: 'submitting',
+       label: 'Submitting',
+       fields: ['buttonTextSubmit', 'buttonTextSave']
+     },
+     {
+       name: 'agreed',
+       label: 'Agreed checkbox',
+       fields: ['agreedLabel', 'agreedRequired']
+     },
+     {
+       name: 'budget',
+       label: 'Budget',
+       fields: ['displayBudget']
+     },
+     {
+       name: 'confirmation',
+       label: 'Confirmation',
+       fields: [
+         'confirmationEnabledUser', 'confirmationTemplateNameUser', 'confirmationSubjectUser', 'confirmationEmailFieldUser', 'confirmationEmailFieldUser', 'confirmationEmailContentUser',
+         'confirmationEnabledAdmin', 'confirmationTemplateNameAdmin', 'confirmationSubjectAdmin', 'confirmationEmailFieldAdmin', 'confirmationEmailFieldAdmin', 'confirmationEmailContentAdmin'
+       ]
+     }
+
+   ]);
 
     require('./lib/helpers.js')(self, options);
     require('./lib/api.js')(self, options);
@@ -184,9 +181,9 @@ module.exports = {
         const resources = activeResource ? [activeResource] : [];
         const googleMapsApiKey = self.apos.settings.getOption(req, 'googleMapsApiKey');
 
-        const isOwner = activeResource ? req.data.openstadUser.id === activeResource.userId : false;
+        const isOwner = activeResource ? req.data.openstadUser && req.data.openstadUser.id === activeResource.userId : false;
         const isReactedTo = activeResource ? (activeResource.yes > 0 || activeResource.no > 0 || activeResource.argumentCount > 0) : false;
-        const isOwnerOrAdmin = (!isReactedTo || !widget.hactiveResourcedminAfterPublicAction && isOwner) || req.data.hasModeratorRights;
+        const isOwnerOrAdmin = ((!isReactedTo || !widget.hideAdminAfterPublicAction) && isOwner) || req.data.hasModeratorRights;
 
         widget.mapConfig = self.getMapConfigBuilder(globalData)
           .setDefaultSettings({

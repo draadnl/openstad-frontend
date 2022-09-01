@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## UNRELEASED
 * Make image size configurable for the image widget
 * Fix HTML injection in search form in the resource overview widget
 * Add a new text style to select in the rich text editor.
@@ -21,6 +21,7 @@
 * Fix resource form input counter
 * Remove hideVotes option from resource representation
 * Move docker builds from travis to github actions
+* Remove global option mapImageFlag
 
 ## v0.23.0
 * Remove gebiedsontwikkelings tool widget
@@ -215,7 +216,6 @@
 * Feature: Better explanations in global newsletter settings
 * Add admin warning to vote counter if vote count is not publicly available
 * Allow public profile status (viewablebyRole) to be edited by the user
-
 
 ## v0.8.3 (2020-11-06)
 * Fix: api/area needs to be called without authentication header
