@@ -4,5 +4,10 @@ module.exports.default = {
     // responsible for serving static assets, managing page templates and
     // configuring user accounts.
 
-    modules: {  }
+    modules: {
+      '@savvycodes/openstad-event-global-settings': {},
+      '@savvycodes/openstad-event-planner-widgets': {},
+      '@savvycodes/openstad-event-browser-widgets': {},
+      '@savvycodes/openstad-event-favorites-widgets': {},
+    }
 }

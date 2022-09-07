@@ -5,6 +5,15 @@
 // all shared within one multisite installation
 
 const contentWidgets = {
+  '@savvycodes/openstad-event-planner': {
+    adminOnly: true,
+  },
+  '@savvycodes/openstad-event-browser': {
+    adminOnly: true,
+  },
+  '@savvycodes/openstad-event-favorites': {
+    adminOnly: true,
+  },
   'agenda': {},
   'accordeon': {},
   'arguments-block': {
