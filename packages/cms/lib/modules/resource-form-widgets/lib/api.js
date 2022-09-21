@@ -15,7 +15,7 @@ module.exports = async function(self, options) {
       const items = self.getAreaItems(item);
 
       items.forEach(async (item) => {
-        if (item.type === 'resource-form' || item.type === 'enquete') {
+        if (item.type === 'resource-form') {
           if (item.confirmationEnabledUser) {
             try {
               await self.addOrUpdateNotification(item, 'User');
