@@ -211,7 +211,7 @@ module.exports = {
                 }
 
                 const resourceSiteConfigKey = `${resource}s`;
-                widget.countdownPeriod = siteConfig[resourceSiteConfigKey] && siteConfig[resourceSiteConfigKey].automaticallyUpdateStatus && siteConfig.ideas && siteConfig.ideas.automaticallyUpdateStatus.afterXDays || 0;
+                widget.countdownPeriod = siteConfig && siteConfig[resourceSiteConfigKey] && siteConfig[resourceSiteConfigKey].automaticallyUpdateStatus && siteConfig.ideas && siteConfig.ideas.automaticallyUpdateStatus.afterXDays || 0;
 
                 if (queryObject.search) {
                     params.search = {
