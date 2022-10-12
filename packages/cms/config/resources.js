@@ -36,6 +36,13 @@ const resources = [
     //config is used in API config
     configKey: 'submission'
   },
+  {
+    label: 'Event',
+    value: 'event',
+    resourceEndPoint: 'event',
+    //config is used in API config
+    configKey: 'event'
+  },
 ]
 
 exports.schemaFormat = resources;

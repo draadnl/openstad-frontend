@@ -12,6 +12,8 @@ resources = resources.map((resource) => {
     resource.showFields = ['displayType'];
   } else if ('user' === resource.value) {
     resource.showFields = ['displayType'];
+  } else if ('event' === resource.value) {
+    resource.showFields = ['displayType'];
   }
 
   return resource;
