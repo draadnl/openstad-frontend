@@ -72,7 +72,7 @@ module.exports = {
                 // Add function for rendering raw string with nunjucks templating engine
                 // Yes this ia a powerful but dangerous feature :), admin only
                 widget.renderString = (data, activeResource) => {
-                    data.activeResource = activeResource;
+                    data.activeResource = activeResource ? activeResource : {};
 
                     try {
                         return self.apos.templates.renderStringForModule(req, widget.rawInput, data, self);

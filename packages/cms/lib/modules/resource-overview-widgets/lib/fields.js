@@ -69,6 +69,11 @@ module.exports = [
         label: 'Raw (create your own template)',
         showFields: ['rawInput']
       },
+      {
+        value: 'rawNoLoop',
+        label: 'Raw without loop (create your own template with loop)',
+        showFields: ['rawInput']
+      },
     ]
   },
   {
