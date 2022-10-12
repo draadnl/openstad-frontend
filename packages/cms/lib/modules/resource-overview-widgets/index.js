@@ -410,6 +410,12 @@ module.exports = {
               record.countdown = widget.countdownPeriod - daysOld;
               return record;
             }) : [];
+            
+            widget.allActiveResources[widget.resource] = response.records ? response.records.map((record) => {
+              let daysOld = parseInt( ( Date.now() - new Date(record.startDate).getTime() ) / ( 24 * 60 * 60 * 1000 ) );
+              record.countdown = widget.countdownPeriod - daysOld;
+              return record;
+            }) : [];
 
             return widget;
         }
