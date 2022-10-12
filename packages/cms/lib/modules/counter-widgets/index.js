@@ -31,6 +31,10 @@ module.exports = {
           value: 'ideasCount',
         },
         {
+          label: 'Event count',
+          value: 'eventCount',
+        },
+        {
           label: 'Vote count',
           value: 'voteCount',
 					showFields: [
@@ -186,6 +190,11 @@ module.exports = {
             count = 0;
           }
           widget.statsUrl = "/stats/site/" + widget.siteId + "/idea/total"
+          break;
+          
+          case 'eventCount':
+          count = 0;
+          widget.statsUrl = "/stats/site/" + widget.siteId + "/event/total"
           break;
 
         case 'voteCount':
