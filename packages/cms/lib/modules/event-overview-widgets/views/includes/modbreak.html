@@ -1,0 +1,13 @@
+{% if event.modBreak %}
+<div  class="mod-break mod-break--grey-bg">
+		{% if data.global.modbreakAuthor %}
+			<b>{{data.global.modbreakAuthor}} | </b>
+		{% endif %}
+
+		<b>{{event.modBreakDate | date( 'D MMM YYYY, HH:mm')}}</b>
+		<br>
+		<p>
+			{{event.modBreak | sanitize | safe | nlbr}}
+		</p>
+</div>
+{% endif %}

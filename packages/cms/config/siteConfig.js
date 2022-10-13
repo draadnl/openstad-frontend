@@ -215,6 +215,9 @@ module.exports = {
         'resource-overview-widgets' : {
           resources: resources
         },
+        'event-overview-widgets' : {
+          resources: resources
+        },
         'resource-form-widgets' : {
           resources: resources
         },

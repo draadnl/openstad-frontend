@@ -102,6 +102,8 @@ const contentWidgets = {
   },
   'resource-overview': {
   },
+  'event-overview': {
+  },
   'resource-form': {
   },
   'resource-representation': {

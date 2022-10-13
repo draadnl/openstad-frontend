@@ -5,6 +5,9 @@ const contentWidgets = {
   'resource-overview': {
     adminOnly: true
   },
+  'event-overview': {
+    adminOnly: true
+  },
   'resource-form': {
     adminOnly: true
   },

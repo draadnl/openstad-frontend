@@ -1,0 +1,245 @@
+{% set isOwner = data.openstadUser.id === event.userId %}
+{% set isReactedTo = (event.yes > 0 or event.no > 0 or event.argumentCount > 0) %}
+{% set notReactedTo =  not isReactedTo %}
+{% set isOwnerOrAdmin = (notReactedTo and isOwner) or data.hasModeratorRights %}
+
+
+{% import 'includes/numberplatebutton.html' as numberPlateButton %}
+
+<script>
+ var imageUrl = {};
+ var aspect = '{{data.widget.gridder_tile_image_aspect_ratio}}' || '1:1';
+ aspect = aspect.split(':');
+ var aspect_width = aspect[0];
+ var aspect_height = aspect[1];
+ if (!aspect_width || !aspect_height) {
+   aspect_width = 1;
+   aspect_height = 1;
+ }
+ function doShowImage(eventId, target) {
+   var div = target.querySelector('div.image');
+   if (div) {
+
+     div.style.height = ( target.offsetWidth / aspect_width ) * aspect_height + 'px';
+     div.setAttribute('data-image-url',  imageUrl[eventId]);
+
+     var img = div.querySelector('div.image-upload');
+
+     if (img) {
+       img.style.backgroundImage = "url(" + imageUrl[eventId] + ")";
+       /*
+      		var factor = target.offsetWidth / 300;
+      		img.style.top    = Math.round( 23 * factor ) + 'px';
+      		img.style.left   = Math.round( 46 * factor ) + 'px';
+      		img.style.width  = Math.round( 210 * factor ) + 'px';
+      		img.style.height = Math.round( 263 * factor ) + 'px';
+      		img.style.backgroundSize = Math.round( ( imageData[eventId].width / 415 ) * 210 * factor ) + 'px ' + Math.round( ( imageData[eventId].height / 520 ) * 263 * factor ) + 'px';
+      		//	 img.style.backgroundPosition = Math.round( ( imageData[eventId].left / 415 ) * 210 * factor ) + 'px ' + Math.round( ( imageData[eventId].top / 520 ) * 263 * factor ) + 'px';
+        */
+       img.style.top    = '0px';
+       img.style.left   = '0px';
+       img.style.width  = '100%';
+       img.style.height = '100%';
+       img.style.backgroundPosition = 'center';
+       img.style.backgroundSize = 'cover';
+     }
+
+   }
+ }
+
+ var isPhone = document.querySelector('body').offsetWidth < 700; // isPhone - todo: betere afvanging
+
+</script>
+{% if data.widget.gridder_open_text_vote_button %}
+<style>
+ .event-overview-container .gridder-show .image-and-vote-button-container .vote-button-container .vote-button::before {
+   content: '{{data.widget.gridder_open_text_vote_button}}'
+ }
+</style>
+{% endif %}
+<ul
+  id="eventList"
+  class="events-list gridder"
+  onclick="eventListClick(event);"
+  {% if data.widget.defaultSorting %}
+  data-default-sort="{{data.widget.defaultSorting}}"
+  {% endif %}
+>
+  <!-- You can load specify which content is loaded by specifying the #ID of the div where the content is  -->
+  {% for event in data.widget.activeEvents %}
+  <li
+    id="event-{{event.id}}"
+    class="gridder-list event-item {% if data.openstadUser.id === event.userId %}owner{% endif %} {{event.status}}"
+    data-griddercontent="#eventContent{{event.id}}"
+    data-createdtime="{{event.createdTime}}"
+    data-likes="{{event.yes}}"
+    data-budget="{{event.budget}}"
+    data-ranking="{{event.extraData.ranking}}"
+    data-eventid="{{event.id}}"
+    data-theme="{{event.extraData.theme}}"
+    data-area="{{event.extraData.area}}"
+  >
+    <div class="image-container" style="position: relative;">
+    	<div class="image">
+    		<div class="image-upload"></div>
+    	</div>
+    	<div class="gridder-mouse-over">
+    		<div class="background">
+    		</div>
+        <div class="vertically-centered">
+      		<a href="#" class="one-button button-more-info{% if userHasVoted %} centered{% endif %}">
+            {{ data.widget.gridder_text_open if data.widget.gridder_text_open else 'Bekijk' }}
+            <span class="sr-only">het plan "{{data.widget.getTitleText(event, data.widget.gridder_use_field_as_title)}}"</span>
+      		</a>
+          {% if data.widget.voting and not userHasVoted %}
+          <a href="#" class="button-vote" onclick="event.preventDefault(); selectIdea({{event.id}})">
+            {{ data.widget.gridder_text_vote_button if data.widget.gridder_text_vote_button else 'Stem' }}
+            <span class="sr-only">op plan "{{data.widget.getTitleText(event, data.widget.gridder_use_field_as_title)}}"</span>
+          </a>
+          {% endif %}
+        </div>
+    	</div>
+      {% if data.widget.displayRanking and event.extraData.ranking %}
+      <div class="ranking"><div class="label">{{event.extraData.ranking}}</div></div>
+      {% endif %}
+      {% if data.widget.displayLabel and event.extraData.label %}
+      <div class="duration"
+        {#
+          style="
+          background-color: {{event.extraData.label.backgroundColor}};
+          background-image: {{event.extraData.label.b}};
+        " #}
+        >
+        {{ event.extraData.label.text }}
+      </div>
+      {% endif %}
+    </div>
+    <div class="info">
+    	<h3 class="title">{{data.widget.getTitleText(event, data.widget.gridder_use_field_as_title)}}</h3>
+    </div>
+
+    <div style="display:none">
+      {% if event.extraData %}
+        {% if data.widget.displayTheme %}
+        <div class="thema">{{event.extraData.theme}}</div>
+        {% endif %}
+        {% if data.widget.displayArea %}
+        <div class="gebied">{{event.extraData.area}}</div>
+        {% endif %}
+			{% endif %}
+			{% if data.widget.useVoteBlockDescription and ( data.widget.vote_block_show_text_1 or data.widget.vote_block_show_text_2 ) %}
+      <div class="voteblock-description">
+        <div class="line-1">{{data.widget.vote_block_show_text_1 and data.widget.getTitleText(event, data.widget.vote_block_show_text_1)}}</div>
+        <div class="line-1">{{data.widget.vote_block_show_text_2 and data.widget.getTitleText(event, data.widget.vote_block_show_text_2)}}</div>
+      </div>
+      {% endif %}
+    </div>
+    <script>
+     imageUrl[{{event.id}}] = "{{data.widget.formatImageUrl(event.extraData.images[0], event.location, data.widget, 500, 500, true, data.cookieConsent)}}";
+     doShowImage({{event.id}}, document.querySelector('#event-{{event.id}}'))
+    </script>
+  </li>{% endfor %}
+</ul>
+
+{% for event in data.widget.activeEvents %}
+<div id="eventContent{{event.id}}" class="gridder-content ">
+  <div class="gridder-inner-container {{event.status}}">
+    <div class="thisIdeaId this-event-id">{{event.id}}</div>
+    <h3 class="phone">{{data.widget.getTitleText(event, data.widget.gridder_use_field_as_title)}}</h3>
+    <div class="image-and-vote-button-container">
+      <div class="image-mask">
+        <div class="image-container">
+          <div class="image" style="/*cursor: url('/modules/openstad-assets/img/vergrootglas.png'), pointer;*/">
+            <div class="fotorama"
+            data-nav="thumbs"
+            data-allowfullscreen="true"
+            data-ratio="400/300"
+            data-fit="cover"
+            data-thumbwidth="105"
+            data-thumbheight="105"
+            data-auto="true"
+            >
+              {% if (event.extraData) and (event.extraData.images) and (event.extraData.images.length > 0) %}
+              {% for image in event.extraData.images %}
+              <a href="{{data.widget.formatImageUrl(image, event.location, data.widget, 1200, 1200, false, data.cookieConsent)}}"></a>
+              {% endfor %}
+              {% else %}
+              <a href="{{data.widget.formatImageUrl(event.extraData.images[0], event.location, data.widget, 1200, 1200, true, data.cookieConsent)}}"></a>
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if data.widget.showVoteCounter %}
+      <div class="vote-button-container hasVoted{% if userHasVoted %} active{% endif %}{% if event.yes > 10000 %} gt10000{% elif event.yes > 1000 %} gt1000{% endif %}">
+        {% set id = 'no-of-votes-hasvoted-' + event.id %}
+        {{numberPlateButton.numberPlateButton(id, 'no-of-votes-hasvoted', data.widget.voteCaption, event.yes, '', 'transparent', data.widget.displayVoteCaption)}}
+        {% if data.widget.voting %}
+        <div class="vote-button"></div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+
+      <div class="vote-button-container hasNotVoted{% if not userHasVoted %} active{% endif %}{% if event.yes > 10000 %} gt10000{% elif event.yes > 1000 %} gt1000{% endif %}" >
+        {% set id = 'no-of-votes-hasnotvoted-' + event.id %}
+        {% if data.widget.showVoteCounter %}
+        {{numberPlateButton.numberPlateButton(id, 'no-of-votes-hasnotvoted', data.widget.voteCaption, event.yes, '', 'transparent', data.widget.displayVoteCaption)}}
+        {% endif %}
+        {% if data.widget.voting %}
+        <a href="#vote-creator-anchor" class="vote-button" onclick="selectIdea({{event.id}})"></a>
+        {% endif %}
+      </div>
+
+    </div>
+    <div class="content">
+      <h3 class="desktop">{{data.widget.getTitleText(event, data.widget.gridder_use_field_as_title)}}</h3>
+
+      {% if data.widget.displaySummary and event.summary %}
+      <div class="summary">{{event.summary | sanitize | safe | nlbr}}</div>
+      {% endif %}
+
+      {% if data.widget.displayDescription and event.description %}
+      <div class="description">{{event.description | sanitize | safe | nlbr }}</div>
+      {% endif %}
+
+      {% if event.extraData.advice %}
+      <b> Tip </b>
+      <div class="tip description">{{event.extraData.advice | sanitize | safe | nlbr}}</div>
+      {% endif %}
+
+      {% include 'includes/modbreak.html' %}
+
+      {% if data.widget.displayEditLinkForModerator and data.hasModeratorRights %}
+      <div class="description"><a href="{{ data.widget.editUrl if data.widget.editUrl else data.global.editIdeaUrl | safeRelativeUrl }}?resourceId={{event.id}}&resourceType={{data.widget.resource}}" target="_blank">Bewerk</a></div>
+      {% endif %}
+
+      <div class="share-spacer"></div>
+
+      {% if data.widget.displayShareButtons %}
+      <div class="share-buttons">
+        <table class="table-center">
+          <tr>
+            <td>
+          		<b class="text">Deel dit:</b>
+            </td>
+            <td>
+              <ul class="share">
+                {% set currentUrlWithId = data.currentUrl + '?eventId=' + event.id %}
+                <li><a class="facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{currentUrlWithId}}">Facebook</a></li>
+                <li><a class="twitter"  target="_blank" href="https://twitter.com/intent/tweet?text={{currentUrlWithId}}">Twitter</a></li>
+                <li><a class="email"    target="_blank" href="mailto:?subject={{data.widget.getTitleText(event, data.widget.gridder_use_field_as_title) | urlencode}}&body={{currentUrlWithId | urlencode}}">Email</a></li>
+                <li><a class="whatsapp" target="_blank" href="https://api.whatsapp.com/send?phone=&text={{currentUrlWithId | urlencode}}&source=&data=">WhatsApp</a></li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endfor %}
