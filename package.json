@@ -19,7 +19,7 @@
   "homepage": "https://github.com/Amsterdam/openstad-frontend#readme",
   "dependencies": {
     "@openstad/cms": "file:packages/cms",
-    "@draadnl/openstad-event-browser-widgets": "0.0.6-carnisse-alpha-1",
+    "@draadnl/openstad-event-browser-widgets": "0.0.6-carnisse-alpha-2",
     "@savvycodes/openstad-event-planner-widgets": "0.0.5-alpha.35",
     "@savvycodes/openstad-event-favorites-widgets": "0.0.5-alpha.35",
     "@savvycodes/openstad-event-global-settings": "0.0.5-alpha.35",
