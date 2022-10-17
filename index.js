@@ -11,7 +11,7 @@ var apos = openstadCms.site({
   modules: {
     '@savvycodes/openstad-event-global-settings': {},
     '@savvycodes/openstad-event-planner-widgets': {},
-    '@savvycodes/openstad-event-browser-widgets': {},
+    '@draadnl/openstad-event-browser-widgets': {},
     '@savvycodes/openstad-event-favorites-widgets': {},
   }
 });

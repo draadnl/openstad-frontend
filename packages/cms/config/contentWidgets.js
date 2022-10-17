@@ -8,7 +8,7 @@ const contentWidgets = {
   '@savvycodes/openstad-event-planner': {
     adminOnly: true,
   },
-  '@savvycodes/openstad-event-browser': {
+  '@draadnl/openstad-event-browser': {
     adminOnly: true,
   },
   '@savvycodes/openstad-event-favorites': {
