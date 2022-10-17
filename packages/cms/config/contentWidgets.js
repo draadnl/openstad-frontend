@@ -5,7 +5,7 @@
 // all shared within one multisite installation
 
 const contentWidgets = {
-  '@savvycodes/openstad-event-planner': {
+  '@draadnl/openstad-event-planner': {
     adminOnly: true,
   },
   '@draadnl/openstad-event-browser': {
