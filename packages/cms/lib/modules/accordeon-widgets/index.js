@@ -22,10 +22,16 @@ module.exports = {
         {
           type: 'singleton',
           name: 'description',
-          label: 'Description',
+          label: 'Description (rich text)',
           widgetType: 'apostrophe-rich-text',
           options: contentWidgets['apostrophe-rich-text'] || {}
-          
+        },
+        {
+          type: 'string',
+          name: 'actionText',
+          label: 'Deprecated: Description (plain text)',
+          help: 'This field is deprecated, please use the rich text field above instead.',
+          textarea: true
         }
       ]
     },
