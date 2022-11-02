@@ -9,7 +9,7 @@ function openstadGup( name, url ) {
 }
 
 function setGetParam(key,value) {
-  if (history.pushState && typeof URLSearchParams !== "undefined") {
+  if ( !window.location.href.includes('translate') && history.pushState && typeof URLSearchParams !== "undefined") {
     var params = new URLSearchParams(window.location.search);
     params.set(key, value);
     var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + params.toString();
