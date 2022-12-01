@@ -212,6 +212,9 @@ module.exports = {
         'resource-representation-widgets' : {
           resources: resources
         },
+        'enquete-widgets' : {
+          resources: resources
+        },
         'resource-overview-widgets' : {
           resources: resources
         },

@@ -15,7 +15,7 @@ module.exports = async function(self, options) {
       const items = self.getAreaItems(item);
 
       items.forEach(async (item) => {
-        if (item.type === 'resource-form') {
+        if (item.type === 'resource-form' || item.type === 'enquete') {
           if (item.confirmationEnabledUser) {
             try {
               await self.addOrUpdateNotification(item, 'User');
@@ -157,7 +157,7 @@ module.exports = async function(self, options) {
       const items = [].concat(...item.area1.items, ...item.area2.items, ...item.area3.items, ...item.area4.items);
 
       items.forEach(async (item) => {
-        if (item.type === 'resource-form') {
+        if (item.type === 'resource-form' || item.type === 'enquete') {
           // Todo: delete template, ruleset and recipient
         }
       });
