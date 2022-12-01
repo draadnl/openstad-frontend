@@ -1,0 +1,52 @@
+<div class="info-container">
+{% if field.descriptionAccordeon %}
+{% set uniqueId = apos.utils.generateId() %}
+    <button
+        class="heading-accordion button"
+        aria-expanded="false"
+        aria-controls="accordion-panel-{{uniqueId}}"
+        tabindex="0"
+        onclick="return false;"
+    >
+        <span class="accordeon-label"> {{field.fieldInfo}} </span>
+    </button>
+{% elseif field.fieldInfo %}
+    <p class="info-title"> {{field.fieldInfo}} </p>
+{% endif %}
+
+{% if field.descriptionAccordeon %}
+    <div id="accordion-panel-{{uniqueId}}" class="accordion-panel" aria-hidden="true">
+
+        {% if field.descriptionText %}
+            <p>{{field.descriptionText}}</p>
+        {% endif %}
+
+        {% if field.descriptionImage %}
+            <img
+                    id="{{field.descriptionImage._id}}"
+                    src="{{apos.attachments.url(field.descriptionImage)}}"
+                    title="{{field.descriptionImage.title}}"
+                    alt="{{field.imageAltText}}"
+            />
+        {% endif %}
+        {% if field.imageCaptionText %}
+            <p class="captoin">{{field.imageCaptionText}}</p>
+        {% endif %}
+
+    </div>
+{% elseif field.descriptionText %}
+    <p class="info-description">{{field.descriptionText}}</p>
+{% endif %}
+
+    {% if not field.descriptionAccordeon and field.descriptionImage %}
+    <img
+            id="{{field.descriptionImage._id}}"
+            src="{{apos.attachments.url(field.descriptionImage)}}"
+            title="{{field.descriptionImage.title}}"
+            alt="{{field.imageAltText}}"
+    />
+    {% endif %}
+    {% if field.imageCaptionText %}
+    <p class="caption">{{field.imageCaptionText}}</p>
+    {% endif %}
+</div>
