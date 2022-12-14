@@ -77,6 +77,9 @@
          site: {
            active: {{true if (data.isAdmin or data.isEditor) else false}}
          },
+         submission: {
+           active: {{true if (data.isAdmin or data.isEditor) else false}}
+         },
          newsletterSignup: {
            active: {{true if (data.isAdmin or data.isEditor or data.isModerator) else false}}
          },
