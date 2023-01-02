@@ -14,6 +14,9 @@ const contentWidgets = {
   '@savvycodes/openstad-event-favorites': {
     adminOnly: true,
   },
+  'event-location': {
+    adminOnly: true
+  },
   'agenda': {},
   'accordeon': {},
   'arguments-block': {

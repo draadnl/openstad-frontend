@@ -1,0 +1,25 @@
+{% if data.activeResource %}
+{% set idea = data.activeResource %}
+{% else %}
+{% set idea = data.idea %}
+{% endif %}
+
+{% if idea.location %}
+{{
+apos.area(data.widget, 'locationArea', {
+	widgets: apos.settings.getOption('contentWidgets')
+})
+}}
+<div id="mapcontainer">
+	{% set editorInputElementId = 'map' %}
+	<div id="nlmaps-holder" style="width: 100%; height: 100%;">
+	  <div id="map-with-buttons-container">
+	    <div class="map-buttons-container">
+	      {% if (data.widget.displayCounter) %}
+	      {{numberPlateButton.numberPlateButton('no-of-locations', data.widget.counterText, data.ideas.length, '#')}}
+	      {% endif %}
+	    </div>
+	  </div>
+	</div>
+</div>
+{% endif %}
