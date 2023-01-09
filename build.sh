@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -eux
-
 sleep 15
 mongo default --eval 'db.createUser({user:"ci",pwd:"test",roles:["readWrite"]});'
 npm install --production
