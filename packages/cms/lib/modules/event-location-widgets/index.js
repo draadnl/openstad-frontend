@@ -59,6 +59,8 @@ module.exports = {
 
               const idea = req.data.activeResource ? req.data.activeResource : null;
               const ideas = idea ? [idea] : [];
+              
+              console.log('<=== idea', idea, req.data.activeResource);
 
               widget.mapConfig = self.getMapConfigBuilder(globalData)
                   .setDefaultSettings({

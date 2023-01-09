@@ -1,4 +1,4 @@
-apos.define('location-widgets', {
+apos.define('event-location-widgets', {
     extend: 'map-widgets',
     construct: function(self, options) {
         self.playAfterlibsLoaded = function($widget, data, options) {
