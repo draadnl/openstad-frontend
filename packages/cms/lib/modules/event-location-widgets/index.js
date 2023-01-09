@@ -79,6 +79,32 @@ module.exports = {
           });
           return superLoad(req, widgets, next);
       }
+      
+      const superOutput = self.output;
+      self.output = function(widget, options) {
+        console.log ('<=== event location output before', options.activeResource);
+        if (options.activeResource) {
+          const idea = options.activeResource;
+          widget.mapConfig = self.getMapConfigBuilder(globalData)
+                  .setDefaultSettings({
+                      mapCenterLat: (idea && idea.location && idea.location.coordinates && idea.location.coordinates[0]) || globalData.mapCenterLat,
+                      mapCenterLng: (idea && idea.location && idea.location.coordinates && idea.location.coordinates[1]) || globalData.mapCenterLng,
+                      mapZoomLevel: 16,
+                      zoomControl: true,
+                      disableDefaultUI : true,
+                      styles: styles
+                  })
+                  .setMarkersByResources(ideas)
+                  .setMarkerStyle(markerStyle)
+                  .setPolygon(req.data.global.mapPolygons || null)
+                  .getConfig()
+          
+          widget.mapConfig = JSON.stringify(widget.mapConfig);
+          
+          console.log ('<=== event location output', widget.mapConfig, options.activeResource);
+        }
+        return superOutput(widget, options);
+      };
 
   }
 };
