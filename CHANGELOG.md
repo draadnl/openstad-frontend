@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Allow arguments-widget and arguments-form-widget to be used outside of a resource page by setting the idea ID in the options.
 * Make image size configurable for the image widget
 * Fix HTML injection in search form in the resource overview widget
 * Add a new text style to select in the rich text editor.
