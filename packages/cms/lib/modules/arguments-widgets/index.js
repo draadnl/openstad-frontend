@@ -98,12 +98,17 @@ module.exports = {
     self.load = async function (req, widgets, next) {
       const promises = widgets.map(async (widget) => {
         if (widget.ideaId) {
-          const resource = await self.apos.openstadApi.getResource(req, req.data.global.siteId, 'idea', widget.ideaId, {includeArguments: 1});
-          widget.ajaxError = null;
-          if (resource) {
-            widget.activeResource = resource
-            widget.activeResourceType = 'idea';
-            widget.activeResourceId = resource.id;
+          try {
+            const resource   = await self.apos.openstadApi.getResource(req, req.data.global.siteId, 'idea', widget.ideaId, {includeArguments: 1});
+            widget.ajaxError = null;
+            if (resource) {
+              widget.activeResource     = resource
+              widget.activeResourceType = 'idea';
+              widget.activeResourceId   = resource.id;
+            }
+          } catch (e) {
+            widget.ajaxError = e;
+            console.error (e, "Error during loading arguments widget for idea ID " + widget.ideaId);
           }
         }
       });
