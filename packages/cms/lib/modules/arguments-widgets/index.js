@@ -108,7 +108,14 @@ module.exports = {
             }
           } catch (e) {
             widget.ajaxError = e;
-            console.error (e, "Error during loading arguments widget for idea ID " + widget.ideaId);
+            console.error ("Error during loading arguments widget for idea ID " + widget.ideaId);
+            widget.activeResource = {
+              id: widget.ideaId,
+              argumentsFor: [],
+              argumentsAgainst: []
+            };
+            widget.activeResourceType = 'idea';
+            widget.activeResourceId   = resource.id;
           }
         }
       });
