@@ -115,7 +115,7 @@ module.exports = {
               argumentsAgainst: []
             };
             widget.activeResourceType = 'idea';
-            widget.activeResourceId   = resource.id;
+            widget.activeResourceId   = widget.ideaId;
           }
         }
       });
