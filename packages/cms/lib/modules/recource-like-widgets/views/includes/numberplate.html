@@ -1,4 +1,4 @@
-{% import '../../../resource-representation-widgets/views/includes/numberplatebutton.html' as numberPlateButton %}
+{% import '../../resource-representation-widgets/views/includes/numberplatebutton.html' as numberPlateButton %}
 
 {% set idea = data.widget.activeResource %}
 
@@ -15,7 +15,8 @@
             <input type="hidden" name="opinion" value="yes"/>
             <input type="hidden" class="redirect-url" name="redirectUrl" value="{{data.currentPathname}}"/>
 
-            {{numberPlateButton.numberPlateButton('no-of-votes-for', '', idea.yes)}}
+            {% if numberPlateButton and numberPlateButton.numberPlateButton %}
+            {{ numberPlateButton.numberPlateButton('no-of-votes-for', '', idea.yes) }}
             <button
                     class="
 										{{'selected' if idea.userVote.opinion == 'yes'}}
@@ -30,6 +31,7 @@
                 {{ data.widget.siteConfig.voteValues[0].label if data.widget.siteConfig.voteValues[0].label else 'voor' }}
                 <span class="sr-only">{{ data.widget.siteConfig.voteValues[0].screenReaderAddition if data.widget.siteConfig.voteValues[0].screenReaderAddition else 'dit plan stemmen' }}</span>
             </button>
+            {% endif %}
         </form>
 
         <div style="clear: both;"></div>
@@ -40,7 +42,8 @@
             <input type="hidden" name="opinion" value="no"/>
             <input type="hidden" class="redirect-url" name="redirectUrl" value="{{data.currentPathname}}"/>
 
-            {{numberPlateButton.numberPlateButton('no-of-votes-against', '', idea.no)}}
+            {% if numberPlateButton and numberPlateButton.numberPlateButton %}
+            {{ numberPlateButton.numberPlateButton('no-of-votes-against', '', idea.no) }}
             <button
                     class="
 									{{'selected' if idea.userVote.opinion == 'no'}}
@@ -57,13 +60,14 @@
                 {{ data.widget.siteConfig.voteValues[1].label if data.widget.siteConfig.voteValues[1].label else 'tegen' }}
                 <span class="sr-only">{{ data.widget.siteConfig.voteValues[1].screenReaderAddition if data.widget.siteConfig.voteValues[1].screenReaderAddition else 'dit plan stemmen' }}</span>
             </button>
-            <div style="clear: both;"></div>
+            {% endif %}
         </form>
         {% endif %}
     </div>
     {% else %}
     <div class="vote disabled">
-        {{numberPlateButton.numberPlateButton('no-of-votes-for', '', idea.yes)}}
+        {% if numberPlateButton and numberPlateButton.numberPlateButton %}
+        {{ numberPlateButton.numberPlateButton('no-of-votes-for', '', idea.yes) }}
         <button disabled="true" class="{{'selected' if userVote.opinion == 'yes'}} idea-status-{{idea.status}}"
                 type="button" name="opinion" value="yes" data-count="{{idea.yes}}">
             {{ data.widget.siteConfig.voteValues[0].label if data.widget.siteConfig.voteValues[0].label else 'voor' }}
@@ -77,6 +81,7 @@
             {{ data.widget.siteConfig.voteValues[1].label if data.widget.siteConfig.voteValues[0].label else 'tegen' }}
         </button>
         <div style="clear: both;"></div>
+        {% endif %}
         {% endif %}
     </div>
     {% endif %}
