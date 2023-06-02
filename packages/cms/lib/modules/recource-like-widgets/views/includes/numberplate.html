@@ -35,7 +35,7 @@
         </form>
 
         <div style="clear: both;"></div>
-        {% if data.widget.siteConfig.voteValues.length > 1 %}
+        {% if data.widget.displayDislikeButton %}
         <form id="idea-vote-form-no" method="POST" action="{{data.siteUrl}}/api/site/{{data.global.siteId}}/vote"
               class="idea-vote-form ajax-form ajax-refresh-after-submit {{ 'logged-in' if data.loggedIn else 'not-logged-in' }} vote">
             <input type="hidden" name="ideaId" value="{{idea.id}}"/>
@@ -63,6 +63,18 @@
             {% endif %}
         </form>
         {% endif %}
+        <div style="clear: both;"></div>
+
+        {% if data.widget.siteConfig.minimumYesVotes and data.widget.displayLikeBar %}
+            <div class="ideaProgress">
+                <div class="progress">
+                    <div class="bar {{idea.status}}" style="width: {{idea.progress}}%;">
+                        <span class="sr-only">Aantal stemmen voor het plan: {{idea.yes}} van de {{data.global.siteConfig.ideas.minimumYesVotes}}.</span>
+                    </div>
+                </div>
+            </div>
+        <div style="clear: both;"></div>
+        {% endif %}
     </div>
     {% else %}
     <div class="vote disabled">
@@ -73,7 +85,7 @@
             {{ data.widget.siteConfig.voteValues[0].label if data.widget.siteConfig.voteValues[0].label else 'voor' }}
         </button>
         <div style="clear: both;"></div>
-        {% if data.widget.siteConfig.voteValues.length > 1 %}{# TODO: dit moet generieker de waarden uit de api
+        {% if data.widget.displayDislikeButton %}{# TODO: dit moet generieker de waarden uit de api
         gebruiken #}
         {{numberPlateButton.numberPlateButton('no-of-votes-against', '', idea.no)}}
         <button disabled="true" class="{{'selected' if userVote.opinion == 'no'}} idea-status-{{idea.status}}"
@@ -82,6 +94,17 @@
         </button>
         <div style="clear: both;"></div>
         {% endif %}
+        {% endif %}
+
+        {% if data.widget.siteConfig.minimumYesVotes and data.widget.displayLikeBar %}
+            <div class="ideaProgress">
+                <div class="progress">
+                    <div class="bar {{idea.status}}" style="width: {{idea.progress}}%;">
+                        <span class="sr-only">Aantal stemmen voor het plan: {{idea.yes}} van de {{data.global.siteConfig.ideas.minimumYesVotes}}.</span>
+                    </div>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
         {% endif %}
     </div>
     {% endif %}

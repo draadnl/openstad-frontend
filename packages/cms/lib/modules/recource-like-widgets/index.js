@@ -27,8 +27,43 @@ const fields = [
       {
         label: 'Default likes/dislikes',
         value: 'numberplate',
+        showFields: ['displayDislikeButton', 'displayLikeBar']
       }
     ]
+  },
+  {
+    type: 'boolean',
+    name: 'displayDislikeButton',
+    label: 'Show dislike button?',
+    help: '',
+    choices: [
+      {
+        label: 'No',
+        value: false,
+      },
+      {
+        label: 'Yes',
+        value: true,
+      }
+    ],
+    def: false
+  },
+  {
+    type: 'boolean',
+    name: 'displayLikeBar',
+    label: 'Show like bar?',
+    help: '',
+    choices: [
+      {
+        label: 'No',
+        value: false,
+      },
+      {
+        label: 'Yes',
+        value: true,
+      }
+    ],
+    def: false
   },
   {
     type:  'string',
