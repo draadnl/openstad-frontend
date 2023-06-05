@@ -96,7 +96,7 @@
         {% endif %}
         {% endif %}
 
-        {% if data.widget.siteConfig.minimumYesVotes and data.widget.displayLikeBar %}
+        {% if data.global.siteConfig and data.global.siteConfig.ideas.minimumYesVotes and data.widget.displayLikeBar %}
             <div class="ideaProgress">
                 <div class="progress">
                     <div class="bar {{idea.status}}" style="width: {{idea.progress}}%;">
