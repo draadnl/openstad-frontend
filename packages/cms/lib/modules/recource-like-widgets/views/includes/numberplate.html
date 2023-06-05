@@ -28,8 +28,8 @@
                     data-return-to="{{data.currentPathname}}?voteOpinion=yes&ideaId={{idea.id}}&redirectUrl={{data.currentPathname}}"
                     type="submit" name="opinion" value="yes" data-count="{{idea.yes}}"
             >
-                {{ data.widget.siteConfig.voteValues[0].label if data.widget.siteConfig.voteValues[0].label else 'voor' }}
-                <span class="sr-only">{{ data.widget.siteConfig.voteValues[0].screenReaderAddition if data.widget.siteConfig.voteValues[0].screenReaderAddition else 'dit plan stemmen' }}</span>
+                {{ data.global.siteConfig.votes.voteValues[0].label if data.global.siteConfig.votes.voteValues[0].label else 'voor' }}
+                <span class="sr-only">{{ data.global.siteConfig.votes.voteValues[0].screenReaderAddition if data.global.siteConfig.votes.voteValues[0].screenReaderAddition else 'dit plan stemmen' }}</span>
             </button>
             {% endif %}
         </form>
@@ -57,15 +57,15 @@
                     value="no"
                     data-count="{{idea.no}}"
             >
-                {{ data.widget.siteConfig.voteValues[1].label if data.widget.siteConfig.voteValues[1].label else 'tegen' }}
-                <span class="sr-only">{{ data.widget.siteConfig.voteValues[1].screenReaderAddition if data.widget.siteConfig.voteValues[1].screenReaderAddition else 'dit plan stemmen' }}</span>
+                {{ data.global.siteConfig.votes.voteValues[1].label if data.global.siteConfig.votes.voteValues[1].label else 'tegen' }}
+                <span class="sr-only">{{ data.global.siteConfig.votes.voteValues[1].screenReaderAddition if data.global.siteConfig.votes.voteValues[1].screenReaderAddition else 'dit plan stemmen' }}</span>
             </button>
             {% endif %}
         </form>
         {% endif %}
         <div style="clear: both;"></div>
 
-        {% if data.widget.siteConfig.minimumYesVotes and data.widget.displayLikeBar %}
+        {% if data.global.siteConfig and data.global.siteConfig.ideas.minimumYesVotes and data.widget.displayLikeBar %}
             <div class="ideaProgress">
                 <div class="progress">
                     <div class="bar {{idea.status}}" style="width: {{idea.progress}}%;">
@@ -82,7 +82,7 @@
         {{ numberPlateButton.numberPlateButton('no-of-votes-for', '', idea.yes) }}
         <button disabled="true" class="{{'selected' if userVote.opinion == 'yes'}} idea-status-{{idea.status}}"
                 type="button" name="opinion" value="yes" data-count="{{idea.yes}}">
-            {{ data.widget.siteConfig.voteValues[0].label if data.widget.siteConfig.voteValues[0].label else 'voor' }}
+            {{ data.global.siteConfig.votes.voteValues[0].label if data.global.siteConfig.votes.voteValues[0].label else 'voor' }}
         </button>
         <div style="clear: both;"></div>
         {% if data.widget.displayDislikeButton %}{# TODO: dit moet generieker de waarden uit de api
@@ -90,7 +90,7 @@
         {{numberPlateButton.numberPlateButton('no-of-votes-against', '', idea.no)}}
         <button disabled="true" class="{{'selected' if userVote.opinion == 'no'}} idea-status-{{idea.status}}"
                 type="button" name="opinion" value="no" data-count="{{idea.no}}">
-            {{ data.widget.siteConfig.voteValues[1].label if data.widget.siteConfig.voteValues[0].label else 'tegen' }}
+            {{ data.global.siteConfig.votes.voteValues[1].label if data.global.siteConfig.votes.voteValues[0].label else 'tegen' }}
         </button>
         <div style="clear: both;"></div>
         {% endif %}
