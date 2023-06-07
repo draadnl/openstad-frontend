@@ -34,6 +34,36 @@ module.exports = {
 
         const superOutput = self.output;
 
+        const superLoad = self.load;
+        self.load = (req, widgets, callback) => {
+            widgets.forEach((widget) => {
+                widget.ideas = req.data.ideas ? req.data.ideas : [];
+            })
+
+            self.filterIdeas(widget);
+
+            return superLoad(req, widgets, callback);
+        }
+
+        self.filterIdeas = (widget) => {
+            // exclude ideas with a certain status
+            if (widget.filterExcludeStatus) {
+                const excludeStatus = widget.filterExcludeStatus.split(',').map(function(item) {
+                    return item.trim().toUpperCase();
+                });
+
+                widget.ideas = widget.ideas && excludeStatus.length > 0 ? widget.ideas.filter(idea => idea && idea.status && excludeStatus.indexOf(idea.status) === -1) : widget.ideas;
+            }
+
+            // only include ideas with a certain status
+            if (widget.filterIncludeStatus) {
+                const includeStatus = widget.filterIncludeStatus.split(',').map(function(item) {
+                    return item.trim().toUpperCase();
+                });
+
+                widget.ideas = widget.ideas && includeStatus.length > 0 ? widget.ideas.filter(idea => idea && idea.status && includeStatus.indexOf(idea.status) !== -1) : widget.ideas;
+            }
+        };
 
         self.output = function (widget, options) {
             const siteConfig = options.siteConfig;
