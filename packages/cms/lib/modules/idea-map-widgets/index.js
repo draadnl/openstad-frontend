@@ -99,6 +99,16 @@ module.exports = {
       name: 'filterIncludeThemes',
       label: 'Only show idea including this theme: (theme names, comma seperated)',
     },
+    {
+      type: 'string',
+      name: 'filterExcludeStatus',
+      label: 'Exclude ideas with this status: (status names, comma seperated)',
+    },
+    {
+      type: 'string',
+      name: 'filterIncludeStatus',
+      label: 'Only show idea with this status: (status names, comma seperated)',
+    },
   ],
   construct: function(self, options) {
     options.arrangeFields = (options.arrangeFields || []).concat([
@@ -120,7 +130,7 @@ module.exports = {
       {
         name: 'content',
         label: 'Content',
-        fields: ['filterIdeas', 'filterExcludeThemes', 'filterIncludeThemes']
+        fields: ['filterIdeas', 'filterExcludeThemes', 'filterIncludeThemes', 'filterExcludeStatus', 'filterIncludeStatus']
       }
     ]);
 
@@ -157,6 +167,24 @@ module.exports = {
          });
 
          widget.ideas = includeThemes.length > 0 ? widget.ideas.filter(idea => idea && idea.extraData && idea.extraData && includeThemes.indexOf(idea.extraData.theme)  !== -1) : widget.ideas;
+      }
+
+      // exclude ideas with a certain status
+      if (widget.filterExcludeStatus) {
+        const excludeStatus = widget.filterExcludeStatus.split(',').map(function(item) {
+          return item.trim().toUpperCase();
+        });
+
+        widget.ideas = widget.ideas && excludeStatus.length > 0 ? widget.ideas.filter(idea => idea && idea.status && excludeStatus.indexOf(idea.status) === -1) : widget.ideas;
+      }
+
+      // only include ideas with a certain status
+      if (widget.filterIncludeStatus) {
+        const includeStatus = widget.filterIncludeStatus.split(',').map(function(item) {
+          return item.trim().toUpperCase();
+        });
+
+        widget.ideas = widget.ideas && includeStatus.length > 0 ? widget.ideas.filter(idea => idea && idea.status && includeStatus.indexOf(idea.status) !== -1) : widget.ideas;
       }
     }
 
