@@ -60,7 +60,7 @@ module.exports = (self, options) => {
         {
             name: 'include_exclude',
             label: 'Include & Exclude items',
-            fields: ['filterExcludeThemes', 'filterIncludeThemes', 'filterResources']
+            fields: ['filterExcludeThemes', 'filterIncludeThemes', 'filterExcludeStatus', 'filterIncludeStatus', 'filterResources']
         },
         {
             name: 'status_labels',
