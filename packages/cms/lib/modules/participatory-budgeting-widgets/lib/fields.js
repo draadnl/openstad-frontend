@@ -80,6 +80,16 @@ const fields = [
     ]
   },
   {
+    type: 'string',
+    name: 'filterExcludeStatus',
+    label: 'Exclude ideas with this status: (status names, comma seperated)',
+  },
+  {
+    type: 'string',
+    name: 'filterIncludeStatus',
+    label: 'Only show idea with this status: (status names, comma seperated)',
+  },
+  {
     name: 'maxIdeas',
     type: 'integer',
     label: 'Maximum selectable ideas',
