@@ -38,9 +38,8 @@ module.exports = {
         self.load = (req, widgets, callback) => {
             widgets.forEach((widget) => {
                 widget.ideas = req.data.ideas ? req.data.ideas : [];
+                self.filterIdeas(widget);
             })
-
-            self.filterIdeas(widget);
 
             return superLoad(req, widgets, callback);
         }
