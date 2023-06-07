@@ -641,6 +641,16 @@ module.exports = [
   },
   {
     type: 'string',
+    name: 'filterExcludeStatus',
+    label: 'Exclude ideas with this status: (status names, comma seperated)',
+  },
+  {
+    type: 'string',
+    name: 'filterIncludeStatus',
+    label: 'Only show idea with this status: (status names, comma seperated)',
+  },
+  {
+    type: 'string',
     name: 'resultCountText',
     label: 'Text for amount of results',
     help: 'Example: You are seeing <b>[visibleCount]</b> of in total [totalCount] articles'
