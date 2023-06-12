@@ -187,6 +187,21 @@ data-default-sort="{{data.widget.defaultSorting}}"
 							{{idea.description | sanitize | safe}}
 						</div>
 						{% endif %}
+						
+						{% if idea.modBreak %}
+						<div id="modBreak">
+							{% if data.global.modbreakAuthor %}
+							<b>{{data.global.modbreakAuthor}} | </b>
+							{% endif %}
+
+							<b>{{idea.modBreakDate | date( 'D MMM YYYY, HH:mm')}}</b>
+							<br>
+							<p>
+								{{idea.modBreak | sanitize | safe | nlbr}}
+							</p>
+						</div>
+						{% endif %}
+
 						{% if data.hasModeratorRights %}
 						<div class="description"><a href="{{data.siteUrl}}{{data.global.editIdeaUrl}}?resourceId={{idea.id}}&resourceType=idea" target="_blank">Bewerk dit plan</a></div>
 						{% endif %}
