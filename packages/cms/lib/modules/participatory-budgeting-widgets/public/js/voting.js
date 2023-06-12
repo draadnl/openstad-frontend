@@ -368,7 +368,7 @@ if (votingContainer !== null) {
 	  }
 
 	  if (currentStep == 7) {
-		  window.location.href = authServerLogoutUrl ? authServerLogoutUrl : currentPath;
+		  // window.location.href = authServerLogoutUrl ? authServerLogoutUrl : currentPath;
 	  }
 
   }
@@ -1119,16 +1119,16 @@ if (votingContainer !== null) {
 			  //nextStep();
 
 
-			  logout({
-				  success: function(data) {
-					  addToClassName(document.querySelector('#waitLayer'), 'hidden');
-					  nextStep();
-				  },
-				  error: function(error) {
-					  addToClassName(document.querySelector('#waitLayer'), 'hidden');
-					  nextStep();
-				  }
-			  });
+			  // logout({
+				//   success: function(data) {
+				// 	  addToClassName(document.querySelector('#waitLayer'), 'hidden');
+				// 	  nextStep();
+				//   },
+				//   error: function(error) {
+				// 	  addToClassName(document.querySelector('#waitLayer'), 'hidden');
+				// 	  nextStep();
+				//   }
+			  // });
 
       },
       error: function(error) {
