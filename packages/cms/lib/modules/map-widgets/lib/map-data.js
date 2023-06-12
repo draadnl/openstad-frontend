@@ -2,23 +2,16 @@
 
 const getIconUrl = function(status, theme, themes) {
     // Todo: refactor this check
-    const flagUrl = getFlagUrlByTheme(theme, themes);
-
-    if (flagUrl) {
-      return flagUrl;
-    }
-
-    const flag = getFlagByTheme(theme, themes);
-    if (flag) {
-      return getMarkerUrlBasedOnTheme(status, flag);
-    }
-
-    if(status == 'DONE'  || status == 'ACCEPTED' || status == 'BUSY') {
-        return '/modules/openstad-assets/img/idea/flag-blue.png';
-    } else if ( status == 'CLOSED'  || status == 'DENIED') {
-        return '/modules/openstad-assets/img/idea/flag-gray.png';
+    if (status == 'DONE') {
+        return '/modules/openstad-assets/img/idea/flag-orange.png';
+    } else if (status == 'OPEN') {
+        return '/modules/openstad-assets/img/idea/flag-dark-cyan.png';
+    } else if (status == 'BUSY') {
+        return '/modules/openstad-assets/img/idea/flag-dark-purple.png';
+    } else if (status == 'DENIED') {
+        return '/modules/openstad-assets/img/idea/flag-anthracite.png';
     } else {
-        return '/modules/openstad-assets/img/idea/flag-red.png';
+        return '/modules/openstad-assets/img/idea/flag-blue.png';
     }
 }
 
