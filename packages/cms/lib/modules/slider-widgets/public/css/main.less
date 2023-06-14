@@ -88,26 +88,21 @@
     }
 
     button.rotation {
-        position: absolute;
-        cursor: pointer;
-        width: 40px;
-        height: 40px;
-        margin-right: 0;
-        bottom: 10px;
         left: 50%;
         -webkit-transform: translateX(-50%);
         transform: translateX(-50%);
     }
 
-    button.previous, button.next {
+    button.previous, button.next, button.rotation {
         position: absolute;
         cursor: pointer;
         width: 40px;
         height: 40px;
-        bottom: 0;
+        bottom: auto;
         margin: 0;
         border: none;
         padding: 0;
+        top: 360px;
 
         svg {
             width: 40px;
@@ -122,4 +117,27 @@
     button.next {
         right: 0;
     }
+}
+
+.a11y-slider-sr-only {
+    position: absolute;
+    left: -9999rem;
+    top: 2.5rem;
+    z-index: 999999999;
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: underline;
+}
+
+.a11y-slider-sr-only:focus {
+    display: block;
+    left: 6px;
+    top: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: normal;
+    padding: 15px 23px 14px;
+    z-index: 100000;
+    right: auto;
 }

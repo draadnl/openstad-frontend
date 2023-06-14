@@ -80,7 +80,14 @@
                     $slider.on('mouseenter', pauseSlides).on('mouseleave', startSlides);
                 }
 
-                $skipButton.on('click', function () {
+                $skipButton.on('keydown', function(event) {
+                    if (event.keyCode === 13 || event.keyCode === 32) {
+                        event.preventDefault();
+                        skipToNextFocusableElement();
+                    }
+                });
+
+                function skipToNextFocusableElement () {
                     var $currentElement = $slider;
                     var $nextFocusableElement = findNextFocusableElement($currentElement);
 
@@ -92,16 +99,14 @@
                     if ($nextFocusableElement.length > 0) {
                         $nextFocusableElement.focus();
                     }
-                });
+                }
 
                 function findNextFocusableElement($element) {
-                    var $nextFocusableElement = $element.nextAll(':focusable').first();
-
-                    if ($nextFocusableElement.length === 0) {
-                        $nextFocusableElement = $element.parent().nextAll(':focusable').find(':focusable').first();
+                    var $nextElement = $element.nextAll(':focusable').first();
+                    if ($nextElement.length === 0) {
+                        $nextElement = $element.parent().nextAll(':focusable').first();
                     }
-
-                    return $nextFocusableElement;
+                    return $nextElement;
                 }
 
                 function pauseSlides() {
@@ -121,20 +126,20 @@
                 function startAutoPlay() {
                     if (!isAutoPlayEnabled) {
                         isAutoPlayEnabled = true;
-                        autoPlayInterval = setInterval(goToNextSlide, 3000);
                         $slidesContainer.attr('aria-live', 'polite');
                         $startButton.hide();
                         $pauseButton.show();
+                        autoPlayInterval = setInterval(goToNextSlide, 3000);
                     }
                 }
 
                 function pauseAutoPlay() {
                     if (isAutoPlayEnabled) {
                         isAutoPlayEnabled = false;
-                        clearInterval(autoPlayInterval);
-                        $slidesContainer.attr('aria-live', 'off');
                         $pauseButton.hide();
                         $startButton.show();
+                        clearInterval(autoPlayInterval);
+                        $slidesContainer.attr('aria-live', 'off');
                     }
                 }
 
