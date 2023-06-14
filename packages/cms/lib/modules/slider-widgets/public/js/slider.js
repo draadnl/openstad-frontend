@@ -90,7 +90,7 @@
                 }
 
                 function startSlides() {
-                    if (isAutoPlayEnabled && hoverOut) {
+                    if (isAutoPlayEnabled || hoverOut) {
                         hoverOut = true;
                         autoPlayInterval = setInterval(goToNextSlide, 3000);
                         $slidesContainer.attr('aria-live', 'polite');
