@@ -48,7 +48,7 @@
             $('.automatic-slider').each(function () {
                 var $slider = $(this);
                 var $slides = $slider.find('.slide-item');
-                var $slidesContainer = $slider.find('.slide-item');
+                var $slidesContainer = $slider.find('.slide-items');
                 var currentSlide = 0;
                 var autoPlayInterval;
                 var $pauseButton = $slider.find('.rotation.pause');
@@ -56,6 +56,7 @@
                 var $nextButton = $slider.find('.next');
                 var $prevButton = $slider.find('.previous');
                 var $skipButton = $slider.find('.a11y-slider-sr-only');
+                var isAutoPlayEnabled = false;
 
                 if ($slides.length < 2) {
                     $slider.find('.button').hide();
@@ -70,25 +71,40 @@
                         enableOrDisableAutoRotation(true);
                     } else {
                         enableOrDisableAutoRotation(false);
-                        autoPlay();
+                        startAutoPlay();
                     }
 
                     setAccessibleStyling(true);
 
-                    $slider.on('focusin', stopAutoPlay).on('focusout', autoPlay);
-                    $slider.on('mouseenter', stopAutoPlay).on('mouseleave', autoPlay);
+                    $slider.on('focusin', stopAutoPlay).on('focusout', startAutoPlay);
+                    $slider.on('mouseenter', stopAutoPlay).on('mouseleave', startAutoPlay);
                 }
 
                 $skipButton.on('click', function () {
                     $slider.parentsUntil(':focusable').nextAll(':focusable').first().focus();
                 });
 
+                function toggleAutoPlay() {
+                    if (isAutoPlayEnabled) {
+                        stopAutoPlay();
+                        $slidesContainer.attr('aria-live', 'off');
+                        $startButton.hide();
+                        $pauseButton.show();
+                    } else {
+                        startAutoPlay();
+                        $slidesContainer.attr('aria-live', 'polite');
+                        $pauseButton.hide();
+                        $startButton.show();
+                    }
+                    isAutoPlayEnabled = !isAutoPlayEnabled;
+                }
+
                 function goToPreviousSlide() {
                     stopAutoPlay();
                     $slides.eq(currentSlide).removeClass('active');
                     currentSlide = (currentSlide === 0) ? $slides.length - 1 : currentSlide - 1;
                     $slides.eq(currentSlide).addClass('active');
-                    setTimeout(autoPlay, 100);
+                    setTimeout(startAutoPlay, 3000);
                 }
 
                 function goToNextSlide() {
@@ -96,29 +112,15 @@
                     $slides.eq(currentSlide).removeClass('active');
                     currentSlide = (currentSlide === $slides.length - 1) ? 0 : currentSlide + 1;
                     $slides.eq(currentSlide).addClass('active');
-                    setTimeout(autoPlay, 100);
+                    setTimeout(startAutoPlay, 3000);
                 }
 
-                function autoPlay() {
+                function startAutoPlay() {
                     autoPlayInterval = setInterval(goToNextSlide, 3000);
                 }
 
                 function stopAutoPlay() {
                     clearInterval(autoPlayInterval);
-                }
-
-                function toggleAutoPlay() {
-                    if ($pauseButton.is(':visible')) {
-                        $slidesContainer.attr('aria-live', 'polite');
-                        autoPlay();
-                        $pauseButton.hide();
-                        $startButton.show();
-                    } else {
-                        $slidesContainer.attr('aria-live', 'off');
-                        stopAutoPlay();
-                        $startButton.hide();
-                        $pauseButton.show();
-                    }
                 }
 
                 function enableOrDisableAutoRotation(disable) {
