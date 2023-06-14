@@ -59,6 +59,8 @@
                 var $skipButton = $slider.find('.a11y-slider-sr-only');
                 var isAutoPlayEnabled = false;
 
+                $slider.closest('.apos-area-widget-wrapper').after('<span id="#skip-slider"></span>');
+
                 if ($slides.length < 2) {
                     $slider.find('.button').hide();
                 } else {
@@ -83,7 +85,8 @@
                 $skipButton.on('keydown', function(event) {
                     if (event.keyCode === 13 || event.keyCode === 32) {
                         event.preventDefault();
-                        skipToNextFocusableElement();
+
+                        $('#skip-slider').focus();
                     }
                 });
 
@@ -129,6 +132,7 @@
                         $slidesContainer.attr('aria-live', 'polite');
                         $startButton.hide();
                         $pauseButton.show();
+                        clearInterval(autoPlayInterval);
                         autoPlayInterval = setInterval(goToNextSlide, 3000);
                     }
                 }
