@@ -48,9 +48,11 @@
             $('.automatic-slider').each(function () {
                 var $slider = $(this);
                 var $slides = $slider.find('.slide-item');
+                var $slidesContainer = $slider.find('.slide-item');
                 var currentSlide = 0;
                 var autoPlayInterval;
-                var $pauseButton = $slider.find('.rotation');
+                var $pauseButton = $slider.find('.rotation.pause');
+                var $startButton = $slider.find('.rotation.play');
                 var $nextButton = $slider.find('.next');
                 var $prevButton = $slider.find('.previous');
                 var $skipButton = $slider.find('.a11y-slider-sr-only');
@@ -61,6 +63,7 @@
                     $nextButton.on('click', goToNextSlide);
                     $prevButton.on('click', goToPreviousSlide);
                     $pauseButton.on('click', toggleAutoPlay);
+                    $startButton.on('click', toggleAutoPlay);
 
                     var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                     if (prefersReducedMotion) {
@@ -105,26 +108,26 @@
                 }
 
                 function toggleAutoPlay() {
-                    if ($pauseButton.hasClass('pause')) {
-                        $pauseButton.removeClass('pause');
-                        $pauseButton.addClass('play');
-                        $pauseButton.attr('aria-label', 'Start automatische slide show');
-                        $pauseButton.attr('aria-live', 'polite');
+                    if ($pauseButton.is(':visible')) {
+                        $slidesContainer.attr('aria-live', 'polite');
                         autoPlay();
+                        $pauseButton.hide();
+                        $startButton.show();
                     } else {
-                        $pauseButton.removeClass('play');
-                        $pauseButton.addClass('pause');
-                        $pauseButton.attr('aria-label', 'Stop automatische slide show');
-                        $pauseButton.attr('aria-live', 'off');
+                        $slidesContainer.attr('aria-live', 'off');
                         stopAutoPlay();
+                        $startButton.hide();
+                        $pauseButton.show();
                     }
                 }
 
                 function enableOrDisableAutoRotation(disable) {
                     if (disable) {
                         $pauseButton.hide();
+                        $startButton.hide();
                     } else {
                         $pauseButton.show();
+                        $startButton.show();
                     }
                 }
 
