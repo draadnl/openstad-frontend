@@ -81,8 +81,28 @@
                 }
 
                 $skipButton.on('click', function () {
-                    $slider.parentsUntil(':focusable').nextAll(':focusable').first().focus();
+                    var $currentElement = $slider;
+                    var $nextFocusableElement = findNextFocusableElement($currentElement);
+
+                    while ($nextFocusableElement.length === 0 && $currentElement.length > 0) {
+                        $currentElement = $currentElement.parent();
+                        $nextFocusableElement = findNextFocusableElement($currentElement);
+                    }
+
+                    if ($nextFocusableElement.length > 0) {
+                        $nextFocusableElement.focus();
+                    }
                 });
+
+                function findNextFocusableElement($element) {
+                    var $nextFocusableElement = $element.nextAll(':focusable').first();
+
+                    if ($nextFocusableElement.length === 0) {
+                        $nextFocusableElement = $element.parent().nextAll(':focusable').find(':focusable').first();
+                    }
+
+                    return $nextFocusableElement;
+                }
 
                 function pauseSlides() {
                     if (isAutoPlayEnabled) {
@@ -103,8 +123,8 @@
                         isAutoPlayEnabled = true;
                         autoPlayInterval = setInterval(goToNextSlide, 3000);
                         $slidesContainer.attr('aria-live', 'polite');
-                        $pauseButton.hide();
-                        $startButton.show();
+                        $startButton.hide();
+                        $pauseButton.show();
                     }
                 }
 
@@ -113,8 +133,8 @@
                         isAutoPlayEnabled = false;
                         clearInterval(autoPlayInterval);
                         $slidesContainer.attr('aria-live', 'off');
-                        $startButton.hide();
-                        $pauseButton.show();
+                        $pauseButton.hide();
+                        $startButton.show();
                     }
                 }
 
