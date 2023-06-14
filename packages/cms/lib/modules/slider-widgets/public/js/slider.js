@@ -60,8 +60,6 @@
                 var $skipButton = $slider.find('.a11y-slider-sr-only');
                 var isAutoPlayEnabled = false;
 
-                $slider.closest('.apos-area-widget-wrapper').after('<span id="#skip-slider"></span>');
-
                 if ($slides.length < 2) {
                     $slider.find('.button').hide();
                 } else {
@@ -82,14 +80,6 @@
 
                     $slider.on('mouseenter', pauseSlides).on('mouseleave', startSlides);
                 }
-
-                $skipButton.on('keydown', function(event) {
-                    if (event.keyCode === 13 || event.keyCode === 32) {
-                        event.preventDefault();
-
-                        $('#skip-slider').focus();
-                    }
-                });
 
                 function pauseSlides() {
                     if (isAutoPlayEnabled) {
