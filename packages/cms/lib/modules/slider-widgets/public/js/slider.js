@@ -52,6 +52,7 @@
                 var $slidesContainer = $slider.find('.slide-items');
                 var currentSlide = 0;
                 var autoPlayInterval;
+                var hoverOut = true;
                 var $pauseButton = $slider.find('.rotation.pause');
                 var $startButton = $slider.find('.rotation.play');
                 var $nextButton = $slider.find('.next');
@@ -90,37 +91,17 @@
                     }
                 });
 
-                function skipToNextFocusableElement () {
-                    var $currentElement = $slider;
-                    var $nextFocusableElement = findNextFocusableElement($currentElement);
-
-                    while ($nextFocusableElement.length === 0 && $currentElement.length > 0) {
-                        $currentElement = $currentElement.parent();
-                        $nextFocusableElement = findNextFocusableElement($currentElement);
-                    }
-
-                    if ($nextFocusableElement.length > 0) {
-                        $nextFocusableElement.focus();
-                    }
-                }
-
-                function findNextFocusableElement($element) {
-                    var $nextElement = $element.nextAll(':focusable').first();
-                    if ($nextElement.length === 0) {
-                        $nextElement = $element.parent().nextAll(':focusable').first();
-                    }
-                    return $nextElement;
-                }
-
                 function pauseSlides() {
                     if (isAutoPlayEnabled) {
                         clearInterval(autoPlayInterval);
                         $slidesContainer.attr('aria-live', 'off');
+                        hoverOut = false;
                     }
                 }
 
                 function startSlides() {
-                    if (isAutoPlayEnabled) {
+                    if (isAutoPlayEnabled && hoverOut) {
+                        hoverOut = true;
                         autoPlayInterval = setInterval(goToNextSlide, 3000);
                         $slidesContainer.attr('aria-live', 'polite');
                     }
@@ -134,6 +115,7 @@
                         $pauseButton.show();
                         clearInterval(autoPlayInterval);
                         autoPlayInterval = setInterval(goToNextSlide, 3000);
+                        hoverOut = false;
                     }
                 }
 
