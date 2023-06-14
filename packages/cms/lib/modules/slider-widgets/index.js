@@ -94,6 +94,30 @@ module.exports = {
                 },
             ]
         },
+        {
+            name: 'automaticSlider',
+            label: 'Does the slider automatically slide?',
+            type: 'boolean',
+            choices: [
+                {
+                    label: 'No',
+                    value: false,
+                },
+                {
+                    label: 'Yes',
+                    value: true,
+                    showFields: [
+                        'automaticSliderTitle'
+                    ],
+                }
+            ],
+            def: false
+        },
+        {
+            name: 'automaticSliderTitle',
+            label: 'Title of the slider (for accessibility purposes)',
+            type: 'string',
+        },
         styleSchema.definition('containerStyles', 'Styles for the container')
     ],
     construct: function (self, options) {

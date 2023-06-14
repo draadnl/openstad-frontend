@@ -1,30 +1,96 @@
 <style>
     {{data.widget.formattedContainerStyles}}
 </style>
+{% if automaticSlider %}
+<div id="{{data.widget.containerId}}" class="automatic-slider" aria-roledescription="carousel" aria-label="">
+    <button class="a11y-slider-sr-only" type="button" tabindex="0">Click to skip slider carousel</button>
+    <div class="controls">
+        <button type="button" class="rotation pause" aria-label="Stop automatische slide show">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 30 30" version="1.1">
+                <title>button-pause</title>
+                <g id="2023-design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="Group-32">
+                        <polygon id="Path" fill="#E8B2ED" fill-rule="nonzero" points="0 0 30 0 30 30 0 30"/>
+                        <rect id="Rectangle" fill="#000000" x="17" y="9" width="2" height="12"/>
+                        <rect id="Rectangle-Copy-8" fill="#000000" x="11" y="9" width="2" height="12"/>
+                    </g>
+                </g>
+            </svg>
+        </button>
 
-<div id="{{data.widget.containerId}}" class="slider">
-{% if data.widget.items %}
-    <ul class="slide-items">
+        <button type="button" class="previous" aria-controls="myCarousel-items" aria-label="Vorige slide">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 30 30" version="1.1">
+                <title>button-left</title>
+                <g id="2023-design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="button-left" fill-rule="nonzero">
+                        <polygon id="Path" fill="#E8B2ED" points="0 0 30 0 30 30 0 30"/>
+                        <polygon id="Path" fill="#000000" points="16.778 9.509 18 10.728 13.353 15.363 18 19.997 16.778 21.216 10.907 15.363"/>
+                    </g>
+                </g>
+            </svg>
+        </button>
+
+        <button type="button" class="next" aria-controls="myCarousel-items" aria-label="Volgende slide">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 30 30" version="1.1">
+                <title>button-right</title>
+                <g id="2023-design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="button-right" fill-rule="nonzero">
+                        <polygon id="Path" fill="#E8B2ED" points="0 0 30 0 30 30 0 30"/>
+                        <polygon id="Path" fill="#000000" transform="translate(15,4535, 15,3625) rotate(-360) translate(-15,4535, -15,3625)" points="13.129 9.509 19 15.3625 13.129 21.216 11.907 19.997 16.554 15.3625 11.907 10.728"/>
+                    </g>
+                </g>
+            </svg>
+        </button>
+    </div>
+    {% if data.widget.items %}
+    <div class="slide-items a11y-slider" aria-live="off">
         {% for item in data.widget.items %}
-            <li class="slide-item">
-                <div class="image-container">
-                    <div class="imgdiv"
-                        style="background-image: url({{ apos.attachments.url(item.image, {size: item.displaySize}) }})"
-                    >
-                        <img class="button button-left" src="{{data.siteUrl}}/modules/openstad-assets/img/button-arrow-blue.svg" />
-                        <img class="button button-right" src="{{data.siteUrl}}/modules/openstad-assets/img/button-arrow-blue.svg" />
-
-                    </div>
+        <div class="slide-item" role="group" aria-roledescription="slide">
+            <div class="image-container">
+                <img class="slide-image" src="{{ apos.attachments.url(item.image, {size: item.displaySize}) }}" alt="{{ item.title | sanitize | safe }}" />
+                <div class="button-container">
+                    <img class="button button-left" src="{{data.siteUrl}}/modules/openstad-assets/img/button-arrow-blue.svg" alt="Previous Slide" />
+                    <img class="button button-right" src="{{data.siteUrl}}/modules/openstad-assets/img/button-arrow-blue.svg" alt="Next Slide" />
                 </div>
-                <h4>{{ item.title | sanitize | safe}}</h4>
-                <p>{{item.description | sanitize | safe}} </p>
-                {# <p>{{ item.description.items[0].content | sanitize | safe}}</p> #}
+            </div>
+            <h3>{{ item.title | sanitize | safe}}</h3>
+            <p>{{item.description | sanitize | safe}}</p>
+            {# <p>{{ item.description.items[0].content | sanitize | safe}}</p> #}
 
-                {% if item.linkUrl %}
-                <a href="{{item.linkUrl}}" class="link-caret--blue block">{{item.linkTitle}}</a>
-                {% endif %}
-            </li>
+            {% if item.linkUrl %}
+            <a href="{{item.linkUrl}}" class="link-caret--blue block">{{item.linkTitle}}</a>
+            {% endif %}
+        </div>
         {% endfor %}
-    </ul>
-{% endif %}
+    </div>
+    {% endif %}
 </div>
+
+{% else %}
+    <div id="{{data.widget.containerId}}" class="slider">
+        {% if data.widget.items %}
+            <ul class="slide-items">
+                {% for item in data.widget.items %}
+                    <li class="slide-item">
+                        <div class="image-container">
+                            <div class="imgdiv"
+                                style="background-image: url({{ apos.attachments.url(item.image, {size: item.displaySize}) }})"
+                            >
+                                <img class="button button-left" src="{{data.siteUrl}}/modules/openstad-assets/img/button-arrow-blue.svg" />
+                                <img class="button button-right" src="{{data.siteUrl}}/modules/openstad-assets/img/button-arrow-blue.svg" />
+
+                            </div>
+                        </div>
+                        <h4>{{ item.title | sanitize | safe}}</h4>
+                        <p>{{item.description | sanitize | safe}} </p>
+                        {# <p>{{ item.description.items[0].content | sanitize | safe}}</p> #}
+
+                        {% if item.linkUrl %}
+                        <a href="{{item.linkUrl}}" class="link-caret--blue block">{{item.linkTitle}}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endif %}
