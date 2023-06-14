@@ -52,12 +52,11 @@
                 var $slidesContainer = $slider.find('.slide-items');
                 var currentSlide = 0;
                 var autoPlayInterval;
-                var hoverOut = true;
+                var pauseClicked = false;
                 var $pauseButton = $slider.find('.rotation.pause');
                 var $startButton = $slider.find('.rotation.play');
                 var $nextButton = $slider.find('.next');
                 var $prevButton = $slider.find('.previous');
-                var $skipButton = $slider.find('.a11y-slider-sr-only');
                 var isAutoPlayEnabled = false;
 
                 if ($slides.length < 2) {
@@ -85,16 +84,16 @@
                     if (isAutoPlayEnabled) {
                         clearInterval(autoPlayInterval);
                         $slidesContainer.attr('aria-live', 'off');
-                        hoverOut = false;
                     }
                 }
 
                 function startSlides() {
-                    if (isAutoPlayEnabled || hoverOut) {
-                        hoverOut = true;
+                    if (isAutoPlayEnabled && !pauseClicked) {
                         autoPlayInterval = setInterval(goToNextSlide, 3000);
                         $slidesContainer.attr('aria-live', 'polite');
                     }
+
+                    pauseClicked = false;
                 }
 
                 function startAutoPlay() {
@@ -105,7 +104,6 @@
                         $pauseButton.show();
                         clearInterval(autoPlayInterval);
                         autoPlayInterval = setInterval(goToNextSlide, 3000);
-                        hoverOut = false;
                     }
                 }
 
@@ -116,6 +114,7 @@
                         $startButton.show();
                         clearInterval(autoPlayInterval);
                         $slidesContainer.attr('aria-live', 'off');
+                        pauseClicked = true;
                     }
                 }
 
