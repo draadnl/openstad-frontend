@@ -48,6 +48,7 @@
             $('.automatic-slider').each(function () {
                 var $slider = $(this);
                 var $slides = $slider.find('.slide-item');
+                $slides.eq(0).addClass('active');
                 var $slidesContainer = $slider.find('.slide-items');
                 var currentSlide = 0;
                 var autoPlayInterval;
@@ -63,8 +64,8 @@
                 } else {
                     $nextButton.on('click', goToNextSlide);
                     $prevButton.on('click', goToPreviousSlide);
-                    $pauseButton.on('click', toggleAutoPlay);
-                    $startButton.on('click', toggleAutoPlay);
+                    $pauseButton.on('click', pauseAutoPlay);
+                    $startButton.on('click', startAutoPlay);
 
                     var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                     if (prefersReducedMotion) {
@@ -76,51 +77,53 @@
 
                     setAccessibleStyling(true);
 
-                    $slider.on('focusin', stopAutoPlay).on('focusout', startAutoPlay);
-                    $slider.on('mouseenter', stopAutoPlay).on('mouseleave', startAutoPlay);
+                    $slider.on('focusin', pauseAutoPlay).on('focusout', startAutoPlay);
+                    $slider.on('mouseenter', pauseAutoPlay).on('mouseleave', startAutoPlay);
                 }
 
                 $skipButton.on('click', function () {
                     $slider.parentsUntil(':focusable').nextAll(':focusable').first().focus();
                 });
 
-                function toggleAutoPlay() {
-                    if (isAutoPlayEnabled) {
-                        stopAutoPlay();
-                        $slidesContainer.attr('aria-live', 'off');
-                        $startButton.hide();
-                        $pauseButton.show();
-                    } else {
-                        startAutoPlay();
+                function startAutoPlay() {
+                    if (!isAutoPlayEnabled) {
+                        isAutoPlayEnabled = true;
+                        autoPlayInterval = setInterval(goToNextSlide, 3000);
                         $slidesContainer.attr('aria-live', 'polite');
                         $pauseButton.hide();
                         $startButton.show();
                     }
-                    isAutoPlayEnabled = !isAutoPlayEnabled;
+                }
+
+                function pauseAutoPlay() {
+                    if (isAutoPlayEnabled) {
+                        isAutoPlayEnabled = false;
+                        clearInterval(autoPlayInterval);
+                        $slidesContainer.attr('aria-live', 'off');
+                        $startButton.hide();
+                        $pauseButton.show();
+                    }
                 }
 
                 function goToPreviousSlide() {
-                    stopAutoPlay();
                     $slides.eq(currentSlide).removeClass('active');
                     currentSlide = (currentSlide === 0) ? $slides.length - 1 : currentSlide - 1;
                     $slides.eq(currentSlide).addClass('active');
-                    setTimeout(startAutoPlay, 3000);
+                    resetAutoPlayInterval();
                 }
 
                 function goToNextSlide() {
-                    stopAutoPlay();
                     $slides.eq(currentSlide).removeClass('active');
                     currentSlide = (currentSlide === $slides.length - 1) ? 0 : currentSlide + 1;
                     $slides.eq(currentSlide).addClass('active');
-                    setTimeout(startAutoPlay, 3000);
+                    resetAutoPlayInterval();
                 }
 
-                function startAutoPlay() {
-                    autoPlayInterval = setInterval(goToNextSlide, 3000);
-                }
-
-                function stopAutoPlay() {
-                    clearInterval(autoPlayInterval);
+                function resetAutoPlayInterval() {
+                    if (isAutoPlayEnabled) {
+                        clearInterval(autoPlayInterval);
+                        autoPlayInterval = setInterval(goToNextSlide, 3000);
+                    }
                 }
 
                 function enableOrDisableAutoRotation(disable) {
