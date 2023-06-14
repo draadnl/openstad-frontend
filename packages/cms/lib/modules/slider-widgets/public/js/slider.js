@@ -50,13 +50,16 @@
                 var $slides = $slider.find('.slide-item');
                 var currentSlide = 0;
                 var autoPlayInterval;
-                var $pauseButton = $slider.find('.pause');
+                var $pauseButton = $slider.find('.rotation');
+                var $nextButton = $slider.find('.next');
+                var $prevButton = $slider.find('.previous');
+                var $skipButton = $slider.find('.a11y-slider-sr-only');
 
                 if ($slides.length < 2) {
                     $slider.find('.button').hide();
                 } else {
-                    $slider.find('.previous').on('click', goToPreviousSlide);
-                    $slider.find('.next').on('click', goToNextSlide);
+                    $nextButton.on('click', goToNextSlide);
+                    $prevButton.on('click', goToPreviousSlide);
                     $pauseButton.on('click', toggleAutoPlay);
 
                     var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -73,10 +76,12 @@
                     $slider.on('mouseenter', stopAutoPlay).on('mouseleave', autoPlay);
                 }
 
-                var skipButton = $slider.find('.a11y-slider-sr-only');
-
-                skipButton.on('click', function() {
+                $skipButton.on('click', function () {
                     var target = $slider.nextAll(':focusable').first();
+
+                    if (target.length === 0) {
+                        target = $slider.parent().nextAll(':focusable').first();
+                    }
 
                     if (target.length > 0) {
                         target.focus();

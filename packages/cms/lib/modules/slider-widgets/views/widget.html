@@ -2,7 +2,7 @@
     {{data.widget.formattedContainerStyles}}
 </style>
 {% if data.widget.automaticSlider %}
-<div id="{{data.widget.containerId}}" class="automatic-slider" aria-roledescription="carousel" aria-label="">
+<div id="{{data.widget.containerId}}" class="automatic-slider" aria-roledescription="carousel" aria-label="{{data.widget.automaticSliderTitle}}">
     <button class="a11y-slider-sr-only" type="button" tabindex="0">Click to skip slider carousel</button>
     <div class="controls">
         <button type="button" class="rotation pause" aria-label="Stop automatische slide show">
@@ -48,10 +48,6 @@
         <div class="slide-item" role="group" aria-roledescription="slide">
             <div class="image-container">
                 <img class="slide-image" src="{{ apos.attachments.url(item.image, {size: item.displaySize}) }}" alt="{{ item.title | sanitize | safe }}" />
-                <div class="button-container">
-                    <img class="button button-left" src="{{data.siteUrl}}/modules/openstad-assets/img/button-arrow-blue.svg" alt="Previous Slide" />
-                    <img class="button button-right" src="{{data.siteUrl}}/modules/openstad-assets/img/button-arrow-blue.svg" alt="Next Slide" />
-                </div>
             </div>
             <h3>{{ item.title | sanitize | safe}}</h3>
             <p>{{item.description | sanitize | safe}}</p>
