@@ -77,27 +77,23 @@
                 }
 
                 $skipButton.on('click', function () {
-                    var target = $slider.nextAll(':focusable').first();
-
-                    if (target.length === 0) {
-                        target = $slider.parent().nextAll(':focusable').first();
-                    }
-
-                    if (target.length > 0) {
-                        target.focus();
-                    }
+                    $slider.parentsUntil(':focusable').nextAll(':focusable').first().focus();
                 });
 
                 function goToPreviousSlide() {
+                    stopAutoPlay();
                     $slides.eq(currentSlide).removeClass('active');
                     currentSlide = (currentSlide === 0) ? $slides.length - 1 : currentSlide - 1;
                     $slides.eq(currentSlide).addClass('active');
+                    setTimeout(autoPlay, 100);
                 }
 
                 function goToNextSlide() {
+                    stopAutoPlay();
                     $slides.eq(currentSlide).removeClass('active');
                     currentSlide = (currentSlide === $slides.length - 1) ? 0 : currentSlide + 1;
                     $slides.eq(currentSlide).addClass('active');
+                    setTimeout(autoPlay, 100);
                 }
 
                 function autoPlay() {
