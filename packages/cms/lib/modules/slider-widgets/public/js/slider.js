@@ -77,13 +77,27 @@
 
                     setAccessibleStyling(true);
 
-                    $slider.on('focusin', pauseAutoPlay).on('focusout', startAutoPlay);
-                    $slider.on('mouseenter', pauseAutoPlay).on('mouseleave', startAutoPlay);
+                    $slider.on('focusin', pauseSlides).on('focusout', startSlides);
+                    $slider.on('mouseenter', pauseSlides).on('mouseleave', startSlides);
                 }
 
                 $skipButton.on('click', function () {
                     $slider.parentsUntil(':focusable').nextAll(':focusable').first().focus();
                 });
+
+                function pauseSlides() {
+                    if (!isAutoPlayEnabled) {
+                        clearInterval(autoPlayInterval);
+                        $slidesContainer.attr('aria-live', 'off');
+                    }
+                }
+
+                function startSlides() {
+                    if (isAutoPlayEnabled) {
+                        autoPlayInterval = setInterval(goToNextSlide, 3000);
+                        $slidesContainer.attr('aria-live', 'polite');
+                    }
+                }
 
                 function startAutoPlay() {
                     if (!isAutoPlayEnabled) {
