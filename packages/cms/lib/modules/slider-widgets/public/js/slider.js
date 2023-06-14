@@ -77,7 +77,6 @@
 
                     setAccessibleStyling(true);
 
-                    $slider.on('focusin', pauseSlides).on('focusout', startSlides);
                     $slider.on('mouseenter', pauseSlides).on('mouseleave', startSlides);
                 }
 
@@ -86,7 +85,7 @@
                 });
 
                 function pauseSlides() {
-                    if (!isAutoPlayEnabled) {
+                    if (isAutoPlayEnabled) {
                         clearInterval(autoPlayInterval);
                         $slidesContainer.attr('aria-live', 'off');
                     }
@@ -123,21 +122,12 @@
                     $slides.eq(currentSlide).removeClass('active');
                     currentSlide = (currentSlide === 0) ? $slides.length - 1 : currentSlide - 1;
                     $slides.eq(currentSlide).addClass('active');
-                    resetAutoPlayInterval();
                 }
 
                 function goToNextSlide() {
                     $slides.eq(currentSlide).removeClass('active');
                     currentSlide = (currentSlide === $slides.length - 1) ? 0 : currentSlide + 1;
                     $slides.eq(currentSlide).addClass('active');
-                    resetAutoPlayInterval();
-                }
-
-                function resetAutoPlayInterval() {
-                    if (isAutoPlayEnabled) {
-                        clearInterval(autoPlayInterval);
-                        autoPlayInterval = setInterval(goToNextSlide, 3000);
-                    }
                 }
 
                 function enableOrDisableAutoRotation(disable) {
