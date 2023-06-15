@@ -1118,17 +1118,8 @@ if (votingContainer !== null) {
 			  availableBudgetAmount = initialAvailableBudget;
 			  //nextStep();
 
-
-			  // logout({
-				//   success: function(data) {
-				// 	  addToClassName(document.querySelector('#waitLayer'), 'hidden');
-				// 	  nextStep();
-				//   },
-				//   error: function(error) {
-				// 	  addToClassName(document.querySelector('#waitLayer'), 'hidden');
-				// 	  nextStep();
-				//   }
-			  // });
+			  addToClassName(document.querySelector('#waitLayer'), 'hidden');
+			  nextStep();
 
       },
       error: function(error) {
