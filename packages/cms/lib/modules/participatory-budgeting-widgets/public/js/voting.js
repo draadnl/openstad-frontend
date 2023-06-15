@@ -368,7 +368,7 @@ if (votingContainer !== null) {
 	  }
 
 	  if (currentStep == 7) {
-		  // window.location.href = authServerLogoutUrl ? authServerLogoutUrl : currentPath;
+		  window.location.reload();
 	  }
 
   }
