@@ -157,7 +157,15 @@
 			<h1>{{idea.title}}</h1>
 
 			<div id="author">
-				<strong>Door: {{idea.user.firstName}} {{idea.user.lastName}}</strong><br>
+				{% if data.siteId == 15 %}
+					{% if idea.user.role == admin %}
+					<strong>Voorgesteld tijdens de schouw</strong><br>
+					{% else %}
+					<strong>Ingediend door inwoner</strong><br>
+					{% endif %}
+				{% else %}
+					<strong>Door: {{idea.user.firstName}} {{idea.user.lastName}}</strong><br>
+				{% endif %}
 				{{idea.startDate | date('LL')}}
 			</div>
 			{% include 'includes/modbreak.html' %}
