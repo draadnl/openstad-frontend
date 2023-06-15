@@ -123,6 +123,19 @@ data-default-sort="{{data.widget.defaultSorting}}"
 							{{idea.description | sanitize | safe}}
 						</div>
             {% endif %}
+						{% if idea.modBreak %}
+						<div id="modBreak">
+							{% if data.global.modbreakAuthor %}
+							<b>{{data.global.modbreakAuthor}} | </b>
+							{% endif %}
+
+							<b>{{idea.modBreakDate | date( 'D MMM YYYY, HH:mm')}}</b>
+							<br>
+							<p>
+								{{idea.modBreak | sanitize | safe | nlbr}}
+							</p>
+						</div>
+						{% endif %}
 					</div>
 					{% if not (data.widget.votingType == 'budgeting-per-theme' or data.widget.votingType == 'count-per-theme') %}
 					<div class="share-buttons">
