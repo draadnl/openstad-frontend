@@ -157,7 +157,7 @@
 			<h1>{{idea.title}}</h1>
 
 			<div id="author">
-				{% if data.siteId == 15 %}
+				{% if data.activeResource.siteId == 15 %}
 					{% if idea.user.role == admin %}
 					<strong>Voorgesteld tijdens de schouw</strong><br>
 					{% else %}
