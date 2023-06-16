@@ -17,12 +17,12 @@ module.exports = {
             {
                 name: 'display-options',
                 label: 'Display options',
-                fields: ['displayRanking', 'displayBudgetLabel', 'showVoteCount', 'unavailableButton','displayOriginalIdeaUrl', 'originalIdeaUrl']
+                fields: ['displayRanking', 'displayBudgetLabel', 'showVoteCount', 'unavailableButton', 'filterIncludeStatus', 'filterExcludeStatus', 'displayOriginalIdeaUrl', 'originalIdeaUrl']
             },
             {
                 name: 'sorting-options',
                 label: 'Sorting options',
-                fields: ['selectedSorting', 'defaultSorting', 'filterIncludeStatus', 'filterExcludeStatus']
+                fields: ['selectedSorting', 'defaultSorting']
             },
             {
                 name: 'explanation-texts',
