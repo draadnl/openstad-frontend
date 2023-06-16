@@ -90,7 +90,7 @@ module.exports = {
                 widget.ideas = widget.ideas && excludeStatus.length > 0 ? widget.ideas.filter(idea => idea && idea.status && excludeStatus.indexOf(idea.status) === -1) : widget.ideas;
             }
 
-            // only include ideas with a certain status
+            // only include ideas with a certain status 
             if (widget.filterIncludeStatus) {
                 const includeStatus = widget.filterIncludeStatus.split(',').map(function(item) {
                     return item.trim().toUpperCase();
