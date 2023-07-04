@@ -57,7 +57,7 @@ module.exports = [
 			{
 				label: 'Standaard',
 				value: 'default',
-        showFields: ['choicesPreferenceTitle','choicesNoPreferenceYetTitle'],
+        showFields: ['choicesPreferenceTitle','choicesNoPreferenceYetTitle', 'choicesInBetweenPreferenceTitle'],
 			},
 			{
 				label: 'Van min naar plus 100',
