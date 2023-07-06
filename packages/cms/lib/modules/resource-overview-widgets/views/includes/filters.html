@@ -16,7 +16,7 @@
     {% include 'includes/controls/area.html' %}
     {% include 'includes/controls/theme.html' %}
 
-    {% if data.widget.itemsInTopFilterBar <= 1 %}
+    {% if data.widget.itemsInTopFilterBar <= or data.widget.allItemsInOneBar %}
     {% include 'includes/controls/sort.html' %}
     {% endif %}
   </div>
@@ -24,7 +24,7 @@
     {% include 'includes/controls/tags.html' %}
   </div>
   <div class="resource-filter-row">
-    {% if data.widget.itemsInTopFilterBar > 1 %}
+    {% if data.widget.itemsInTopFilterBar > 1 and not data.widget.allItemsInOneBar %}
     {% include 'includes/controls/sort.html' %}
     {% endif %}
 

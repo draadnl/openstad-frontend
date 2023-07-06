@@ -573,6 +573,22 @@ module.exports = [
     def: true
   },
   {
+    name: 'allItemsInOneBar',
+    label: 'Display filter and sorting in one bar?',
+    type: 'boolean',
+    choices: [
+      {
+        label: 'Yes',
+        value: true
+      },
+      {
+        label: 'No',
+        value: false,
+      }
+    ],
+    def: false
+  },
+  {
     type: 'string',
     name: 'filterExcludeThemes',
     label: 'Exclude ideas with this theme'
