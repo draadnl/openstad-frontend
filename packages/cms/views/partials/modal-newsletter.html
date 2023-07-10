@@ -109,21 +109,21 @@
         {% endfor %}
         {% else %}
         <div class="form-field" style="margin-bottom: 10px">
-          <label>  {{ __('Name') }} </label>
+          <label for="newsletter-firstname">  {{ __('Name') }} </label>
           <br />
-          <input type="text" class="input-field" required name="firstName" />
+          <input type="text" class="input-field" required name="firstName" id="newsletter-firstname"/>
         </div>
         <div class="form-field">
-          <label>  {{ __('Email') }} </label>
+          <label for="newsletter-email">  {{ __('Email') }} </label>
           <br />
-          <input type="email" class="input-field" required name="email" />
+          <input type="email" class="input-field" required name="email" id="newsletter-email"/>
         </div>
         {% endif %}
 
         {% if data.global.useCaptchaForNewsletter !== false %}
           <div class="form-field">
 
-            <img loading="lazy" src="{{data.siteUrl}}/modules/openstad-captcha/captcha" class="captcha-img" width="200" />
+            <img loading="lazy" src="{{data.siteUrl}}/modules/openstad-captcha/captcha" class="captcha-img" width="200" alt="Captcha"/>
             <br />
             <a href="#" class="captcha-refresh">
               <small class="underline">
@@ -135,7 +135,7 @@
               </small>
             </a>
             <br />
-            <label>
+            <label for="newsletter-areyouabot">
              {% if data.global.captchaLabel %}
                 {{data.global.captchaLabel}}
              {% else %}
@@ -143,7 +143,7 @@
              {% endif %}
             </label>
             <br />
-            <input type="text" class="input-field" required name="areYouABot" />
+            <input type="text" class="input-field" required name="areYouABot" id="newsletter-areyouabot"/>
           </div>
         {% endif %}
 
@@ -159,7 +159,7 @@
           {{ data.global.newsletterModalCancel or __('Cancel') }}
         </a>
         <a href="#closed" class="content-modal-close" >
-          <img src="{{appUrl}}/modules/openstad-assets/img/close.svg" width="13" height="13"/>
+          <img src="{{appUrl}}/modules/openstad-assets/img/close.svg" width="13" height="13" alt="Close modal"/>
         </a>
 
       </form>
