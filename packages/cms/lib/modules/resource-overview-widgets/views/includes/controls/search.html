@@ -4,10 +4,10 @@
   <input type="text" placeholder="Zoeken" name="search" value="{{data.query.search}}" id="resource-overview-search" class="search openstad-ajax-refresh-input" onkeyup="console.log(this); $(this).siblings('button').addClass('active'); $(this).siblings('.search-reset').removeClass('active');">
 
   <a type="submit" class="search-reset openstad-ajax-refresh-click {{'active' if data.query.search}}" data-reset-search="1">
-    <img src="{{appUrl}}/modules/openstad-assets/img/close.svg" width="16" height="16" />
+    <img src="{{appUrl}}/modules/openstad-assets/img/close.svg" width="16" height="16" alt="Reset"/>
   </a>
   <button type="submit"  class="{{'active' if not data.query.search}}" >
-    <img src="{{appUrl}}/modules/openstad-assets/img/search.svg" width="16" height="16" />
+    <img src="{{appUrl}}/modules/openstad-assets/img/search.svg" width="16" height="16" alt="Search"/>
   </button>
 </div>
 {% endif %}
