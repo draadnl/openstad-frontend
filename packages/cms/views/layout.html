@@ -93,6 +93,7 @@
  var userIsLoggedIn = {{true if data.loggedIn else false}};
  var freshLogIn = {{true if data.query.freshLogIn else false}};
 </script>
+<script>document.addEventListener("DOMContentLoaded",function(){document.querySelector("html").lang="nl";});</script>
 
 {% if data.global.siteConfig.ideas.minimumYesVotes %}
 {# for now like this, this is old solution, better to just output as html#}
