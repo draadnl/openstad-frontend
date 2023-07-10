@@ -93,9 +93,9 @@
 	      {% for field in data.global.newsletterModalFormFields %}
         {% if field.inputType == 'text' %}
         <div class="form-field">
-          <label>{{field.title}}</label>
+          <label for="newsletter-field-{{field.title}}">{{field.title}}</label>
           <br />
-          <input type="text" class="input-field" {% if field.required %}required{% endif %} name="{{field.name}}" placeholder="{{field.placeholder}}" />
+          <input type="text" class="input-field" {% if field.required %}required{% endif %} name="{{field.name}}" placeholder="{{field.placeholder}}" id="newsletter-field-{{field.title}}"/>
         </div>
         {% endif %}
         {% if field.inputType == 'checkbox' %}
