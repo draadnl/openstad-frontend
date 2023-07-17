@@ -22,12 +22,20 @@ $(document).ready(function () {
 
        //format the day count
        value000 = parseInt(daysLeft1/100) || 0;
-       value00  = parseInt(daysLeft1/10) - value000;
+       value00  = parseInt((daysLeft1 - (value000*100))/10);
        value0   = daysLeft1 - value000 * 100 - value00 * 10;
+       if (value000) {
+         $dateBar.find('.end-date-number-plate-000-1').html(value000);
+       } else {
+         $dateBar.find('.end-date-number-plate-000-1').remove();
+       }
        $dateBar.find('.end-date-number-plate-00-1').html(value00);
        $dateBar.find('.end-date-number-plate-0-1').html(value0);
       } else {
         endDateText = $dateBar.attr('data-after-date');
+        
+        
+       $dateBar.find('.end-date-number-plate-000-1').remove();
 
        $dateBar.find('.end-date-bar-start-text-1').html( endDateText);
        $dateBar.find('.end-date-bar-end-text-1').html('dagen');
