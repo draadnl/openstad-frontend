@@ -33,6 +33,8 @@ ENV S3_KEY=""
 ENV S3_SECRET=""
 ENV S3_BUCKET=""
 
+ENV NODE_OPTIONS="--max-old-space-size=3584"
+
 
 # Install all base dependencies.
 RUN apk add --no-cache --update openssl g++ make python musl-dev git bash
