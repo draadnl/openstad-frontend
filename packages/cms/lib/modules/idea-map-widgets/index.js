@@ -185,7 +185,7 @@ module.exports = {
               mapCenterLat: globalData.mapCenterLat,
               mapCenterLng: globalData.mapCenterLng,
               mapZoomLevel: globalData.mapZoomLevel,
-              maxZoomLevel: Math.min(globalData.mapZoomLevel + 3, 22),
+              maxZoom: Math.min(globalData.mapZoomLevel + 3, 22),
               styles: styles,
               useMarkerLinks: widget.useMarkerLinks,
               googleMapsApiKey: googleMapsApiKey,
