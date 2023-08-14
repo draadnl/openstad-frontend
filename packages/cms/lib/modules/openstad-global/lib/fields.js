@@ -291,7 +291,7 @@ module.exports = [
     type: 'range',
     label: 'Map zoom level',
     min: 12,
-    max: 17,
+    max: 22,
     step: 1 // optional
   },
   {
