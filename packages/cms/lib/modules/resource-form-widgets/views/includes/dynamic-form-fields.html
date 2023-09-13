@@ -26,9 +26,10 @@
             <p> {{field.fieldInfo}} </p>
 
             {% if field.fieldDescription %}
-            <div class="form-field-description">
-                {{ field.fieldDescription  | sanitize | safe | nlbr }}
-            </div>
+                <div class="form-field-description">
+                    {{ field.fieldDescription  | sanitize | safe | nlbr }}
+                </div>
+            {% endif %}
 
             {% include 'includes/fields/' + field.type + '.html' ignore missing %}
         </div>
