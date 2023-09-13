@@ -21,9 +21,17 @@ $(document).ready(function () {
        $dateBar.find('.end-date-bar-end-text-1').html('dagen');
 
        //format the day count
-       value000 = parseInt(daysLeft1/100) || 0;
-       value00  = parseInt(daysLeft1/10) - value000;
-       value0   = daysLeft1 - value000 * 100 - value00 * 10;
+       value000 = parseInt(daysLeft1 / 100) || 0;
+       const remaining = daysLeft1 % 100;
+       value00 = parseInt(remaining / 10) || 0;
+       value0 = remaining % 10;
+
+      if (value000 !== 0) {
+        $dateBar.find('.end-date-number-plate-000-1').html(value000);
+      } else {
+        $dateBar.find('.end-date-number-plate-000-1').hide();
+      }
+
        $dateBar.find('.end-date-number-plate-00-1').html(value00);
        $dateBar.find('.end-date-number-plate-0-1').html(value0);
       } else {
@@ -31,6 +39,7 @@ $(document).ready(function () {
 
        $dateBar.find('.end-date-bar-start-text-1').html( endDateText);
        $dateBar.find('.end-date-bar-end-text-1').html('dagen');
+       $dateBar.find('.end-date-number-plate-000-1').html(0).hide();
        $dateBar.find('.end-date-number-plate-00-1').html(0);
        $dateBar.find('.end-date-number-plate-0-1').html(0);
       }
