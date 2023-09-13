@@ -271,6 +271,12 @@ const fields = [
             label: 'Info',
           },
           {
+            name: 'fieldDescription',
+            type: 'string',
+            label: 'Description',
+            textarea: true,
+          },
+          {
             name: 'fieldValue',
             type: 'string',
             label: 'Default value (will be overwritten by url and resource value)',

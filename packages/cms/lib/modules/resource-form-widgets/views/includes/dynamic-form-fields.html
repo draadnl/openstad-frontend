@@ -24,6 +24,13 @@
         {% if not field.onlyForModerator or (field.onlyForModerator and data.hasModeratorRights) %}
         <div class="form-field-container">
             <p> {{field.fieldInfo}} </p>
+
+            {% if field.fieldDescription %}
+                <div class="form-field-description">
+                    {{ field.fieldDescription  | sanitize | safe | nlbr }}
+                </div>
+            {% endif %}
+
             {% include 'includes/fields/' + field.type + '.html' ignore missing %}
         </div>
         <br />
