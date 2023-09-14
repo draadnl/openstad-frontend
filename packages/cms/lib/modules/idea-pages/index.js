@@ -125,7 +125,13 @@ module.exports = {
             redirectUrl = sitePrefix && redirectUrl.startsWith(sitePrefix) ? redirectUrl.replace(sitePrefix, '') : redirectUrl;
             // in case full url is prefixed remove it, otherwise will also cause issues
             redirectUrl = siteUrl && redirectUrl.startsWith(siteUrl) ? redirectUrl.replace(siteUrl, '') : redirectUrl;
-            redirectUrl = siteUrl + redirectUrl;
+            
+            // Make sure that we have a leading slash so that the redirect cannot be redirected to another domain
+            if (redirectUrl.startsWith('/')) {
+                redirectUrl = siteUrl + redirectUrl;
+            } else {
+                redirectUrl = siteUrl + '/' + redirectUrl;
+            }
             req.redirectUrl = redirectUrl;
 
             req.data.formToSubmit = {
