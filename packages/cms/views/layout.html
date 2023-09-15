@@ -136,6 +136,9 @@
 {% else %}
 {% set logoLink = appUrl %}
 {% endif %}
+{% if logoLink === '/' %}
+{% set logoLink = '' %}
+{% endif %}
 
 {{ apos.cookieWarning.renderCookieWarning() | safe }}
 <a href="#main" class="skip-to-content-link">{{ __('Spring naar inhoud') }}</a>
