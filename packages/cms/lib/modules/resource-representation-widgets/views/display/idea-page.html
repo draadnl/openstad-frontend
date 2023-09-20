@@ -252,7 +252,7 @@
 			{{(idea.description or '') | sanitize | safe | nlbr}}
 			{% endif %}
 		</div>
-		{% if idea.location %}
+		{% if data.widget.displayMap and idea.location %}
 		<br/><br/>
 		<div id="mapcontainer">
 			{% include 'includes/openstad-map.html' %}
