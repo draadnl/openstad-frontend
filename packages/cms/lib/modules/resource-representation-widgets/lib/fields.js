@@ -16,6 +16,7 @@ const fields = [
         'showFields' : [
           'showShareButtons',
           'displayRanking',
+          'displayMap',
           'shareChannelsSelection',
           'defaultImage',
           'hideStatus',
@@ -91,6 +92,22 @@ const fields = [
       }
     ],
     def: false
+  },
+  {
+    name: 'displayMap',
+    label: 'Display map?',
+    type: 'boolean',
+    choices: [
+      {
+        label: 'Yes',
+        value: true,
+      },
+      {
+        label: 'No',
+        value: false,
+      }
+    ],
+    def: true
   },
    {
     type: 'string',
