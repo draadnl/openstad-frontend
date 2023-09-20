@@ -1,14 +1,10 @@
-/**
- * GENERIC form contact widget wi, developed in Den Haag,
- * Currently only show if beta widgets are on, not properly tested!!!
- */
 const rp          = require('request-promise');
 const styleSchema = require('../../../config/styleSchema.js').default;
 const mapFormValidations = require('./mapFormValidations');
 
 module.exports = {
     extend:    'apostrophe-widgets',
-    label:     'Form (deprecated)',
+    label:     'Form',
     addFields: [
         {
             type: 'string',
@@ -232,6 +228,8 @@ module.exports = {
                 bodyData[req.body.imageInputKey] = image.url;
             }
 
+            var activeResource = req.data.activeResource;
+
             body.submittedData     = bodyData;
             body.titles            = req.body.title;
             body.sendMail          = req.body.sendMail;
@@ -239,6 +237,7 @@ module.exports = {
             body.emailSubject      = req.body.emailSubject;
             body.emailSubjectAdmin = req.body.emailSubjectAdmin;
             body.formId            = req.body.formId;
+            body.recipient = activeResource && activeResource.user && activeResource.user.email ? activeResource.user.email : null;
 
             const options = {
                 method:  'POST',
