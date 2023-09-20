@@ -30,8 +30,6 @@
 
 		{% include 'field-'+field.inputType+'.html' %}
 	{% endfor %}
-	{% set idea = data.activeResource %}
-
 	<input type="hidden" name="sendMail" value="{{data.widget.sendMail}}" />
 	<input type="hidden" name="emailTemplate" value="{{data.widget.emailTemplate}}" />
 	<input type="hidden" name="emailAdminTemplate" value="{{data.widget.emailAdminTemplate}}" />
