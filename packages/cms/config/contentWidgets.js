@@ -119,10 +119,6 @@ const contentWidgets = {
   'translation': {},
   'openstad-user-remove' : {},
   'user-form': {
-    addLabel: 'Contact form (beta)',
-    adminOnly: true,
-    hideByDefault: true,
-    beta: true
   },
   'local-video': {
     addLabel: 'Video (upload)',
