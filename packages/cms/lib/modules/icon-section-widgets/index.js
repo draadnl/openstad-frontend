@@ -131,7 +131,6 @@ module.exports = {
             widget.iconSectionId,
             self.apos.utils.generateId()
           );
-          console.log('containerId', containerId);
           widget.containerId = containerId;
           widget.formattedContainerStyles = styleSchema.format(
             containerId,
