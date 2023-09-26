@@ -40,12 +40,12 @@ exports.copyMongoDb = (oldDbName, newDbName) => {
         var admin = db.admin();
 
         admin.command(mongoCommand, function(commandErr, data) {
+          db.close();
           if (!commandErr) {
             resolve(data)
           } else {
             reject(commandErr.errmsg);
           }
-          db.close();
         });
       }
     });
