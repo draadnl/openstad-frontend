@@ -159,13 +159,7 @@ function serveSite(req, res, siteConfig, forceRestart) {
 
             if ((!aposServer[domain] || forceRestart) && !aposStartingUp[domain]) {
                 console.log('(Re)Start apos domain, siteId', domain, siteConfig.id);
-
-                // Destroy the server if it exists and we are doing a force restart
-                if (aposServer[domain] && forceRestart) {
-                    aposServer[domain].apos.destroy(() => { console.log ('Force restarting server', domain)});
-                    delete aposServer[domain];
-                }
-
+                
                 //format sitedata so  config values are in the root of the object
                 var config = siteConfig.config;
                 config.id = siteConfig.id;
@@ -179,6 +173,13 @@ function serveSite(req, res, siteConfig, forceRestart) {
                 runner(dbName, config, req.options)
                   .then(function (apos) {
                     aposStartingUp[domain] = false;
+                    
+                    // Destroy the server if it exists
+                    if (aposServer[domain]) {
+                        aposServer[domain].apos.destroy(() => { console.log ('Restarting domain', domain)});
+                        delete aposServer[domain];
+                    }
+                    
                     aposServer[domain] = apos;
                     aposServer[domain].app.set('trust proxy', true);
                     aposServer[domain].app(req, res);
