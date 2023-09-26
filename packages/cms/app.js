@@ -121,11 +121,9 @@ function cleanUpSites() {
 
     if (runningDomains) {
         runningDomains.forEach((runningDomain) => {
-            if (!sites[runningDomain]) {
-                if (aposServer[runningDomain]) {
-                    aposServer[runningDomain].apos.destroy(() => {() => { console.log ('Cleaning up site', runningDomain)}});
-                    delete aposServer[runningDomain];
-                }
+            if (!sites[runningDomain] && aposServer[runningDomain]) {
+                aposServer[runningDomain].apos.destroy(() => { console.log ('Cleaning up site', runningDomain)});
+                delete aposServer[runningDomain];
             }
         });
     }
