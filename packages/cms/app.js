@@ -61,7 +61,7 @@ app.set('trust proxy', true);
 async function restartAllSites() {
     const sites = Object.keys(aposServer);
     const promises = sites.map(site => {
-        const url = new URL('http://' + site);        
+        const url = new URL('http://' + site);
         return fetch(`http://localhost:${process.env.PORT}${url.pathname}/config-reset`,{
             headers: {
                 Host: url.hostname
@@ -122,8 +122,10 @@ function cleanUpSites() {
     if (runningDomains) {
         runningDomains.forEach((runningDomain) => {
             if (!sites[runningDomain]) {
-                aposServer[runningDomain].apos.destroy();
-                delete aposServer[runningDomain];
+                if (aposServer[runningDomain]) {
+                    aposServer[runningDomain].apos.destroy(() => {() => { console.log ('Cleaning up site', runningDomain)}});
+                    delete aposServer[runningDomain];
+                }
             }
         });
     }
@@ -159,6 +161,12 @@ function serveSite(req, res, siteConfig, forceRestart) {
 
             if ((!aposServer[domain] || forceRestart) && !aposStartingUp[domain]) {
                 console.log('(Re)Start apos domain, siteId', domain, siteConfig.id);
+
+                // Destroy the server if it exists and we are doing a force restart
+                if (aposServer[domain] && forceRestart) {
+                    aposServer[domain].apos.destroy(() => { console.log ('Force restarting server', domain)});
+                    delete aposServer[domain];
+                }
 
                 //format sitedata so  config values are in the root of the object
                 var config = siteConfig.config;
