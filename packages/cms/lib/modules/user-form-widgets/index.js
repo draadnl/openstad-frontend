@@ -28,6 +28,49 @@ module.exports = {
             label: 'Where do we redirect the user after a successful submission?'
         },
         {
+            type: 'boolean',
+            name: 'linkedToIdea',
+            label: 'Is this form linked to an idea (getting the ideaId from the url)',
+            choices: [
+                {
+                    value: true,
+                    label: "Yes",
+                    showFields: ['shouldSendEmailToIdeaUser']
+                },
+                {
+                    value: false,
+                    label: "No"
+                },
+            ],
+        },
+        {
+            type: 'boolean',
+            name: 'shouldSendEmailToIdeaUser',
+            label: 'Send email to user of the linked idea.',
+            choices: [
+                {
+                    value: true,
+                    label: "Yes",
+                    showFields: ['userEmailTemplate', 'formHiddenText']
+                },
+                {
+                    value: false,
+                    label: "No"
+                },
+            ],
+
+        },
+        {
+            type: 'string',
+            name: 'userEmailTemplate',
+            label: 'Email template for email to user of the idea',
+        },
+        {
+            type: 'string',
+            name: 'formHiddenText',
+            label: 'Text to display when the user has submitted this idea',
+        },
+        {
             type:    'select',
             name:    'sendMail',
             label:   'Send confirmation mail',
@@ -43,7 +86,22 @@ module.exports = {
             ]
         },
         {
+            type: 'string',
+            name: 'email',
+            label: 'User Email field name (email input field for sending confirmation email to the user)'
+        },
+        {
             type:  'string',
+            name: 'emailAdminTemplate',
+            label: 'Email admin template'
+        },
+        {
+            type: 'string',
+            name: 'emailTemplate',
+            label: 'Email template'
+        },
+        {
+            type: 'string',
             name:  'emailSubject',
             label: 'Email subject user'
         },
@@ -123,6 +181,11 @@ module.exports = {
                     ]
                 },
                 {
+                    type: 'string',
+                    name: 'inputKey',
+                    label: 'database name',
+                },
+                {
                     type:  'string',
                     name:  'validation',
                     label: 'Validatie (Komma gescheiden, bv: required, minlength:20, maxlength:500)',
@@ -149,6 +212,18 @@ module.exports = {
                     widget.containerId              = containerId;
                     widget.mappedValidation = mapFormValidations(widget.formFields);
                     widget.formattedContainerStyles = styleSchema.format(containerId, widget.containerStyles);
+
+                    if(widget.linkedToIdea) {
+                        const ideaId = req.url
+                            .replace(/(\/.*\/)/, '')
+                            .replace(/\?.*/, '');
+
+                        widget.ideaId = ideaId;
+
+                        const idea = req.data.ideas ? req.data.ideas.find(idea => idea.id === parseInt(ideaId, 10)) : null;
+
+                        widget.hideForm = !!(!idea || (idea && req.data.openstadUser && idea.userId === req.data.openstadUser.id && !req.data.isAdmin) || idea.status === 'DRAFT');
+                    }
                 }
 
                 widget.cssHelperClassesString = widget.cssHelperClasses ? widget.cssHelperClasses.join(' ') : '';
@@ -214,11 +289,6 @@ module.exports = {
                 submittedData: {},
                 titles:        {}
             };
-            const auth        = ` Bearer ${req.session.jwt}`;
-            const errors      = []
-            const isValid     = (fieldValidation, fieldValue) => {
-                return true;
-            }
 
             var bodyData = req.body.data;
 
@@ -234,9 +304,17 @@ module.exports = {
             body.titles            = req.body.title;
             body.sendMail          = req.body.sendMail;
             body.emailTemplate     = req.body.emailTemplate;
+            body.emailAdminTemplate = req.body.emailAdminTemplate;
             body.emailSubject      = req.body.emailSubject;
             body.emailSubjectAdmin = req.body.emailSubjectAdmin;
             body.formId            = req.body.formId;
+
+            if(req.body.linkedToIdea) {
+                body.ideaId = req.body.linkedToIdea;
+                body.shouldSendEmailToIdeaUser = req.body.shouldSendEmailToIdeaUser;
+                body.userEmailTemplate = req.body.shouldSendEmailToIdeaUser ? req.body.userEmailTemplate : null;
+            }
+
             body.recipient = activeResource && activeResource.user && activeResource.user.email ? activeResource.user.email : null;
 
             const options = {
