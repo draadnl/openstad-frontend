@@ -24,6 +24,11 @@ exports.copyMongoDb = (oldDbName, newDbName) => {
   return new Promise((resolve, reject) => {
     MongoClient.connect(getConnectionString(), function(err, db) {
       if (err) {
+        try {
+          db.close();
+        } catch (err) {
+          console.log('error closing mongodb connection in copyMongoDb', err, oldDbName, newDbName);
+        }
         reject(err);
       } else {
         var mongoCommand = {
@@ -51,6 +56,11 @@ exports.dbExists = (dbName) => {
   return new Promise((resolve, reject) => {
     MongoClient.connect(getConnectionString(), (err, db) => {
       if (err) {
+        try {
+          db.close();
+        } catch (err) {
+          console.log('error closing mongodb connection in dbExists', err, dbName);
+        }
         reject(err);
       } else {
         var adminDb = db.admin();
