@@ -7,22 +7,22 @@
     </div>
     <div class="content-modal-body">
       {#
-        <a href="{{data.siteUrl}}/forms/{{data.widget.formId}}/submissions?download" class="pull-right outlined">Download als CSV</a>
+      <a href="/forms/{{data.widget.formId}}/submissions?download" class="pull-right outlined">Download als CSV</a>
       #}
       <table id="votes" class="data-table table">
         <thead>
-          <tr>
-            <th>Inzending ID</th>
-            <th>Ingestuurde gegevens</th>
-            <th>Datum</th>
-          </tr>
+        <tr>
+          <th>Inzending ID</th>
+          <th>Ingestuurde gegevens</th>
+          <th>Datum</th>
+        </tr>
         </thead>
         <tbody>
 
         </tbody>
       </table>
       <a href="#closed" class="content-modal-close" >
-        <img src="{{appUrl}}/modules/openstad-assets/img/close.svg" width="13" height="13"/>
+        <img src="{{appUrl}}/img/close.svg" width="13" height="13"/>
       </a>
     </div>
   </div>
