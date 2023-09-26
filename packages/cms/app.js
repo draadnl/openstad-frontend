@@ -122,7 +122,12 @@ function cleanUpSites() {
     if (runningDomains) {
         runningDomains.forEach((runningDomain) => {
             if (!sites[runningDomain] && aposServer[runningDomain]) {
-                aposServer[runningDomain].apos.destroy(() => { console.log ('Cleaning up site', runningDomain)});
+                try {
+                    aposServer[runningDomain].apos.db.close(false);
+                    aposServer[runningDomain].apos.destroy(() => { console.log('Cleaning up site', runningDomain)});
+                } catch (err) {
+                    console.log('error closing mongodb connection / destroying apos in cleanUpSites', err, runningDomain);
+                }
                 delete aposServer[runningDomain];
             }
         });
@@ -176,7 +181,12 @@ function serveSite(req, res, siteConfig, forceRestart) {
                     
                     // Destroy the server if it exists
                     if (aposServer[domain]) {
-                        aposServer[domain].apos.destroy(() => { console.log ('Restarting domain', domain)});
+                        try {
+                          aposServer[domain].apos.db.close(false);
+                          aposServer[domain].apos.destroy(() => { console.log ('Restarting domain', domain)});
+                        } catch (err) {
+                          console.log('error closing mongodb connection / destroying apos in runner', err, domain);
+                        }
                         delete aposServer[domain];
                     }
                     
