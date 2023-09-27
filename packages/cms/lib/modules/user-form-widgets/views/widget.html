@@ -4,24 +4,21 @@
 <script>
 	window.userFormValidation = {};
 </script>
+{% if data.widget.hideForm %}
+{% if data.widget.formHiddenText %}
+<p>{{ data.widget.formHiddenText | nlbr }}</p>
+{% else %}
+<p>Het is niet mogelijk om hulp aan te bieden op je zelfingediende initiatief.</p>
+{% endif %}
+{% else %}
 <div
-	class="vote-box"
-	id="{{data.widget.containerId}}"
+		class="vote-box"
+		id="{{data.widget.containerId}}"
 >
 	<h2> {{data.widget.title}} </h2>
 	<p>  {{data.widget.intro | nlbr}} </p>
-
-  <script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-polyfill.min.js"></script>
-  <script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond.js"></script>
-
-  <script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-plugin-image-preview.js"></script>
-  <script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-plugin-file-validate-type.js"></script>
-  <script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-plugin-file-validate-size.js"></script>
-  <script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-plugin-file-poster.js"></script>
-  <script src="{{data.siteUrl}}/modules/openstad-assets/js/vendor/filepond-plugin-image-exif-orientation.js"></script>
-
-	<form method="POST" action="{{data.siteUrl}}/modules/user-form-widgets/submit" class="user-form" data-form-validation="{{ data.widget.mappedValidation | dump }}">
-	{% for field in data.widget.formFields %}
+	<form method="POST" action="/modules/user-form-widgets/submit" class="user-form" data-form-validation="{{ data.widget.mappedValidation | dump }}">
+		{% for field in data.widget.formFields %}
 		{% if field.validation %}
 		<script>
 			window.userFormValidation['{{field.title}}'] = "{{ field.validation }}";
@@ -29,24 +26,54 @@
 		{% endif %}
 
 		{% include 'field-'+field.inputType+'.html' %}
-	{% endfor %}
-	<input type="hidden" name="sendMail" value="{{data.widget.sendMail}}" />
-	<input type="hidden" name="emailTemplate" value="{{data.widget.emailTemplate}}" />
-	<input type="hidden" name="emailAdminTemplate" value="{{data.widget.emailAdminTemplate}}" />
-	<input type="hidden" name="emailSubject" value="{{data.widget.emailSubject}}" />
-	<input type="hidden" name="emailSubjectAdmin" value="{{data.widget.emailSubjectAdmin}}" />
-	<input type="hidden" name="redirectUrl" value="{{data.widget.redirectUrl}}" />
-	<input type="hidden" name="formId" value="{{data.widget.formId}}" />
-	<input type="hidden" name="emailField" value="{{data.widget.email}}" />
-	<button type="submit" class="default btn btn-primary">
-		Verstuur
-	</button>
+		{% endfor %}
+		<input type="hidden" name="sendMail" value="{{data.widget.sendMail}}" />
+		<input type="hidden" name="emailTemplate" value="{{data.widget.emailTemplate}}" />
+		<input type="hidden" name="emailAdminTemplate" value="{{data.widget.emailAdminTemplate}}" />
+		<input type="hidden" name="emailSubject" value="{{data.widget.emailSubject}}" />
+		<input type="hidden" name="emailSubjectAdmin" value="{{data.widget.emailSubjectAdmin}}" />
+		<input type="hidden" name="redirectUrl" value="{{data.widget.redirectUrl}}" />
+		<input type="hidden" name="formId" value="{{data.widget.formId}}" />
+		<input type="hidden" name="emailField" value="{{data.widget.email}}" />
+
+		{% if data.widget.linkedToIdea %}
+		<input type="hidden" name="linkedToIdea" value="{{data.widget.ideaId}}" />
+		{% if data.widget.shouldSendEmailToIdeaUser %}
+		<input type="hidden" name="shouldSendEmailToIdeaUser" value="true" />
+		<input type="hidden" name="userEmailTemplate" value="{{data.widget.userEmailTemplate}}" />
+		{% endif %}
+
+		{% endif %}
+
+		<div id="recaptcha"></div>
+
+		<button type="submit" class="filled-button btn btn-primary">
+			Verstuur
+		</button>
 	</form>
 
 </div>
-{% if data.hasModeratorRights %}
+{% if data.isAdmin %}
 <a href="#overview-submissions" class="edit-button submission-overview-button" data-form-id="{{data.widget.formId}}">
 	Bekijk inzendingen
 </a>
 {% include 'includes/modal-submission-overview.html' %}
 {% endif %}
+{% endif %}
+
+<script type="text/javascript">
+	var onloadCallback = function() {
+		grecaptcha.render('recaptcha', {
+			'sitekey' : '6LemZb0ZAAAAANm91W6Y1l5C4Dokx4RqwB_7YpkA',
+			'callback' : 'verifyCallback'
+		});
+	};
+
+	var verifyCallback = function () {
+		$('#recaptcha-error').remove();
+	}
+</script>
+
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+		async defer>
+</script>
