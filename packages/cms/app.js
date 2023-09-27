@@ -226,12 +226,18 @@ function serveSite(req, res, siteConfig, forceRestart) {
             res.status(500).json({error: 'An error occured checking if the Mongo DB exists: ' + e});
         });
 }
+let openstadComponentsCdn = null;
+let openstadReactAdminCdn = null;
 
 async function run(id, siteData, options, callback) {
     const site = {_id: id}
 
-    let openstadComponentsCdn = await cdns.contructComponentsCdn();
-    let openstadReactAdminCdn = await cdns.contructReactAdminCdn();
+    if (!openstadComponentsCdn) {
+        openstadComponentsCdn = await cdns.contructComponentsCdn();
+    }
+    if (!openstadReactAdminCdn) {
+        openstadReactAdminCdn = await cdns.contructReactAdminCdn();
+    }
 
     const config = _.merge(siteData, options, { openstadComponentsCdn, openstadReactAdminCdn });
 
