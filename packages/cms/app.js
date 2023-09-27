@@ -387,6 +387,6 @@ module.exports.getMultiSiteApp = (options) => {
     /**
      * Update the site config every few minutes
      */
-    setInterval(restartAllSites, REFRESH_SITES_INTERVAL);
+    //setInterval(restartAllSites, REFRESH_SITES_INTERVAL);
     return app;
 };
