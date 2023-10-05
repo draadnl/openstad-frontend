@@ -1,0 +1,116 @@
+# automatically publishes v tags to dockerhub.
+# so for instance v0.5.1 wil publish but randtom wont
+name: Build and Publish Version Tags
+on:
+  push:
+    branches:
+      - '**'
+    tags:
+      - "v*"
+
+env:
+  FRONTED_PORT: 4444
+  FRONTEND_MINIFY_JS: ON
+  COOKIE_SECURE_OFF: yes
+  API: "http://localhost:8111"
+  IMAGE_API_URL: "http://localhost:3333"
+  IMAGE_API_ACCESS_TOKEN: xxxx
+  SITE_API_KEY: xxxx
+  DEFAULT_DB: default
+  DEFAULT_HOST: "localhost:4444"
+  APP_URL: "http://localhost:4444"
+  APOS_BUNDLE: assets
+  APOS_MINIFY: 1
+  APOS_WORKFLOW: ON
+  MONGO_DB_CONNECTION_STRING: "mongodb://root:example@localhost:27017"
+  APOS_MONGODB_URI: "mongodb://root:example@localhost:27017"
+  NODE_ENV: production
+  IMAGE: ${{ secrets.DOCKER_IMAGE || 'openstad/frontend' }}
+
+jobs:
+  build:
+    name: Build Docker image and push to repositories
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:5
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
+          MONGO_INITDB_DATABASE: ${DEFAULT_DB}
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            # branch event
+            type=ref,event=branch,suffix=-{{sha}}
+            # tag event
+            type=ref,event=tag
+
+      # setup Docker buld action
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - run: npm install --production
+
+      # We currently have no frontend tests
+      #- run: npm run test -- --coverage
+
+      - run: mkdir assets
+
+      - name: Bundle assets
+        run: node apostrophe.js apostrophe:generation  --create-bundle assets
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image and push to Docker Hub and GitHub Container Registry
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+
+      - name: Comment build info in commit
+        uses: actions/github-script@0.9.0
+        env:
+          STDOUT: "Published new image: `${{ fromJson(steps.docker_build.outputs.metadata)['image.name'] }}`"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: process.env.STDOUT
+            })
+
+      - name: Image digest
+        run: echo "${{ steps.docker_build.outputs.metadata }}"
