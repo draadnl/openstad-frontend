@@ -1,3 +1,5 @@
 <p class="resource-summary">
-  {{data.widget.activeResource.description | nlbr | sanitize | safe}}
+  {% if data.widget.activeResource and data.widget.activeResource.description %}
+    {{data.widget.activeResource.description | nlbr | sanitize | safe}}
+  {% endif %}
 </p>
