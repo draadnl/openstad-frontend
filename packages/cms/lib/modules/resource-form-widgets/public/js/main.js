@@ -6,6 +6,7 @@
 
 var fieldsetElement = document.querySelector('.filepondFieldset');
 
+
 if (fieldsetElement) {
   FilePond.registerPlugin(FilePondPluginImagePreview);
   FilePond.registerPlugin(FilePondPluginFileValidateSize);
@@ -75,15 +76,6 @@ var formHasChanged = false;
 $(document).ready(function () {
   var ideaForm = document.getElementById('js-form');
 
-
-/*  if (ideaFiles) {
-    ideaFiles.forEach(function (file) {
-      pond.addFile(file).then(function(file){
-      });
-    })
-  }*/
-
-
   if (ideaForm && pondEl) {
 
     // check if files are being uploaded
@@ -98,21 +90,7 @@ $(document).ready(function () {
         return processingFiles.length === 0;
     }, "Plaatjes zijn nog aan het uploaden.");
 
-    $.validator.addMethod("validateFilePond", function() {
-      if ($('.filepond').prop('required')) {
-        var files = pond ? pond.getFiles() : [];
-        var pondFileStates =  FilePond.FileStatus;
 
-        files = files.filter(function (file) {
-          return file.status === pondFileStates.PROCESSING_COMPLETE;
-        });
-
-        return files && files.length > 0;
-      } else {
-        return true;
-      }
-
-    }, "Eén of meerdere plaatjes zijn verplicht.");
 
     $.validator.addMethod("minLengthWithoutHTML", function(val, el, params) {
       var mainEditor  = document.getElementById('js-editor');
@@ -136,43 +114,73 @@ $(document).ready(function () {
     });
   }
 
-  if (ideaForm) {
+  $.validator.addMethod("postcodeNL", function(value, element, val) {
+    var rege = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
+    return !value || rege.test(value);
+  }, "Postcode niet correct");
 
+  if (ideaForm) {
 
     initLeavePageWarningForForm();
 
-    /*$.validator.addClassRules('filepond', {
-      validateFilePond: true,
-    });*/
+    const conditionalRequired = function(element) {
+      const publishAsConceptInput = $('#publishAsConcept');
+      const shouldBeSavedAsConcept = publishAsConceptInput? publishAsConceptInput.val(): false;
+      return shouldBeSavedAsConcept? false : element.hasAttribute('required');
+    }
+
+    const conditionalLength = function(element, lengthField, lengthValue) {
+      const publishAsConceptInput = $('#publishAsConcept');
+      const shouldBeSavedAsConcept = publishAsConceptInput && publishAsConceptInput.val();
+      const hasLength = element.hasAttribute(lengthField) && element.getAttribute(lengthField);
+      return shouldBeSavedAsConcept? 0 : hasLength? element.getAttribute(lengthField): lengthValue;
+    }
 
     var validator = $(ideaForm).validate({
       ignore: '',
       rules: {
         ignore: [],
-  //      location: {
-  //        required: true
-  //      },
+        
         title : {
           required: true,
-          minlength: titleMinLength,
+          minlength: titleMinLength, 
           maxlength: titleMaxLength,
         },
         summary : {
-          minlength: summaryMinLength,
+          required: conditionalRequired,
+          minlength: function(element) { return conditionalLength(element, "minlength", summaryMinLength);},
           maxlength: summaryMaxLength,
         },
         description : {
-          required: true,
-          minlength: descriptionMinLength,
+          required: conditionalRequired,
+          minlength: function(element) { return conditionalLength(element, "minlength", descriptionMinLength);},
           maxlength: descriptionMaxLength,
         },
         validateImages: {
           validateFilePond: true,
           validateFilePondProcessing: true
         },
-    /*    description: {
-          minLengthWithoutHTML: 140
-        }*/
+        firstName: {
+          required: true
+        },
+        lastName: {
+          required: true,
+        },
+        postcode: {
+          required: false,
+          minlength: 1,  // <- here
+          postcodeNL: true
+        },
+        "extraData[phone]":{
+          required: conditionalRequired,
+          minlength: function(element) { return conditionalLength(element, "minlength", 10);},
+        },
+        "extraData[area]": {
+          required: conditionalRequired,
+        },
+        "extraData[theme]": {
+          required: conditionalRequired,
+        }
       },
       submitHandler: function(form) {
 
@@ -190,15 +198,32 @@ $(document).ready(function () {
           success:function(response) {
               formHasChanged = false;
               var redirect = $(form).find('.form-redirect-uri').val();
+
+              // for some reason when you select the dynamic form then the input field with class .form-redirect-uri is not within the form
+              if(!redirect) {
+                redirect = document.querySelector('.form-redirect-uri').value;
+              }
+
               redirect = redirect.replace(':id', response.id);
-              //use href to simulate a link click! Not replace, that doesn't allow for back button to work
-              window.location.href = window.siteUrl + redirect;
+              redirect = window.siteUrl + redirect;
+
+              // in case its the same page a reload is necessary
+              // otherwise when there hashtags used the page wont be reloaded
+              if (redirect ===  window.location.href) {
+                window.location.reload();
+              } else {
+                window.location.href = redirect;
+              }
+
+            //use href to simulate a link click! Not replace, that doesn't allow for back button to work
           },
           error:function(response) {
-              // "this" the object you passed
-              alert(response.responseJSON.msg);
-              $(form).find('input[type="submit"]').val('Opslaan');
-              $(form).find('input[type="submit"]').attr('disabled', false);
+            // "this" the object you passed
+            $(form).find('input[type="submit"]').each(function(index, button) {
+              $(this).val(oldButtonValues[index]);
+            });
+            alert(response.responseJSON.msg);
+            $(form).find('input[type="submit"]').attr('disabled', false);
           },
 
         });
@@ -230,7 +255,21 @@ $(document).ready(function () {
       }
     });
 
+    $.validator.addMethod("validateFilePond", function() {
+      if ($('.filepond').prop('required')) {
+        var files = pond ? pond.getFiles() : [];
+        var pondFileStates =  FilePond.FileStatus;
 
+        files = files.filter(function (file) {
+          return file.status === pondFileStates.PROCESSING_COMPLETE;
+        });
+
+        return files && files.length > 0;
+      } else {
+        return true;
+      }
+
+    }, "Eén of meerdere plaatjes zijn verplicht.");
 
 
     $('#locationField').on('change', function () {
@@ -286,7 +325,8 @@ function initCharsLeftInfo(target, contentDiv, minLen, maxLen, isHTML) {
       value = tmp.textContent || tmp.innerText || "";
     }
 
-		var num_newlines = value.split(/\r\n|\r|\n/).length - 1;
+    var match = value.match(/\r\n|\r|\n/);
+		var num_newlines = match ? match.length : 0;
 		var len = value.length + num_newlines;
 
 		var enable  = len < minLen ? 'min' : 'max';
@@ -298,8 +338,20 @@ function initCharsLeftInfo(target, contentDiv, minLen, maxLen, isHTML) {
 
 		msg[enable].className  = enable + ' ' + ( ok ? 'ok' : 'error' ) + ' visible';
 		msg[disable].className = disable;
-		span[enable].innerHTML = chars;
-	}
+
+		msg[enable].setAttribute("aria-live", "polite");
+		msg[disable].removeAttribute("aria-live");
+
+		var innerHTML = msg[enable].innerHTML;
+
+    var output = innerHTML.replace("<span>", "").replace("</span>", "");
+    output = output.replace(/nog -?\d* tekens/g, 'nog ' + chars + ' tekens');
+    output = output.replace(/minimaal \d* tekens/g, 'minimaal ' + chars + ' tekens');
+
+    msg[enable].innerHTML = '';
+    msg[enable].innerHTML = output;
+
+  }
 
 }
 

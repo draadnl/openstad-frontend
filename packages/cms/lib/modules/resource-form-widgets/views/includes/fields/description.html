@@ -36,7 +36,7 @@
     </div>
   </div>
 </trix-toolbar>
-<trix-editor id="js-editor" class="userContentEditor" input="js-description" toolbar="trixToolbar"></trix-editor>
+<trix-editor id="js-editor" class="userContentEditor" required input="js-description" toolbar="trixToolbar"></trix-editor>
   <input
     type="hidden"
     id="js-description"
@@ -49,3 +49,8 @@
 {% else %}
   <textarea name="description" id="description-textarea" {% if data.widget.requiredDescription %}required{% endif %}>{{activeResource.description}}</textarea>
 {% endif %}
+
+<div id="charsLeftDescription" class="charsLeft">
+  <div class="min">Nog minimaal <span>0</span> tekens</div>
+  <div class="max">Je hebt nog <span>0</span> tekens over.</div>
+</div>

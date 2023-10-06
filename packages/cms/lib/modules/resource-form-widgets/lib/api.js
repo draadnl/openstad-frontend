@@ -1,4 +1,4 @@
-module.exports = async (self, options) => {
+module.exports = async function(self, options) {
   /**
    * Sync data with api when user saves or commit
    * @param req
@@ -21,12 +21,19 @@ module.exports = async (self, options) => {
               await self.addOrUpdateNotification(item, 'User');
             } catch (error) {
               console.error(
-                'something went wrong when update admin confirmation settings to api',
+                'something went wrong when update user confirmation settings to api',
                 error.message
               );
             }
           } else {
-            await self.disableNotificationRuleSet(`User-${item.formName}`);
+            try {
+              await self.disableNotificationRuleSet(`User-${item.formName}`);
+            } catch (error) {
+              console.error(
+                'something went wrong when disable user confirmation settings to api',
+                error.message
+              );
+            }
           }
 
           if (item.confirmationEnabledAdmin) {
@@ -39,7 +46,14 @@ module.exports = async (self, options) => {
               );
             }
           } else {
-            await self.disableNotificationRuleSet(`Admin-${item.formName}`);
+            try {
+              await self.disableNotificationRuleSet(`Admin-${item.formName}`);
+            } catch (error) {
+              console.error(
+                'something went wrong when disable admin confirmation settings to api',
+                error.message
+              );
+            }
           }
         }
       })
@@ -54,7 +68,6 @@ module.exports = async (self, options) => {
    */
   self.addOrUpdateNotification = async (item, type) => {
     const formName = `${type}-${item.formName}`;
-    console.log('item', item);
 
     const { ruleset, template, recipient } = await self.getNotificationByFormName(formName);
 
@@ -68,7 +81,7 @@ module.exports = async (self, options) => {
     if (template) {
       templateData.id = template.id
     }
-    console.log('template data', templateData);
+
     const updatedTemplate = await self.apos.openstadApi.addOrUpdateNotificationTemplate(templateData);
     const ruleSetData = {
       notificationTemplateId: updatedTemplate.id,
@@ -79,8 +92,6 @@ module.exports = async (self, options) => {
     if (ruleset) {
       ruleSetData.id = ruleset.id
     }
-
-    console.log('ruleset data', ruleSetData);
 
     const updatedRuleSet = await self.apos.openstadApi.addOrUpdateNotificationRuleSet(ruleSetData);
     const recipientData = {
@@ -96,15 +107,11 @@ module.exports = async (self, options) => {
 
   self.disableNotificationRuleSet = async (formName) => {
     const { ruleset } = await self.getNotificationByFormName(formName);
-    if (ruleset && ruleset.id) {
-      console.log('disable ruleset', ruleset.id);
-      await self.apos.openstadApi.addOrUpdateNotificationRuleSet({
-        id: ruleset.id,
-        label: ruleset.label,
-        body: ruleset.body,
-        active: 0
-      });
-    }
+
+    await self.apos.openstadApi.addOrUpdateNotificationRuleSet({
+      id: ruleset.id,
+      active: 0
+    });
   }
 
   /**
