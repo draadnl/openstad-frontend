@@ -152,7 +152,7 @@ var OpenlayersMap = {
             const iconStyling = {
                 crossOrigin: 'anonymous',
                // anchorOrigin: 'top-left',
-                anchor: [24, 22],
+                anchor: [4, 22],
                 size: marker.icon.size,
                 anchorXUnits: 'pixels',
                 anchorYUnits: 'pixels',
