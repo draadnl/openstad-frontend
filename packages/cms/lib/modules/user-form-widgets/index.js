@@ -385,6 +385,7 @@ module.exports = {
                         body.formName = req.body.formName;
 
                         if(req.body.linkedToIdea) {
+                            body.userId = req.body.userId;
                             body.ideaId = req.body.linkedToIdea;
                             body.shouldSendEmailToIdeaUser = req.body.shouldSendEmailToIdeaUser;
                             body.userEmailTemplate = req.body.shouldSendEmailToIdeaUser ? req.body.userEmailTemplate : null;
