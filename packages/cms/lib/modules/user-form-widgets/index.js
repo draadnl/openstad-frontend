@@ -8,8 +8,8 @@ module.exports = {
     addFields: [
         {
             type: 'string',
-            name: 'formId',
-            label: 'Form ID (used to match e-mail template)'
+            name: 'formName',
+            label: 'Form name',
         },
         {
             type: 'string',
@@ -382,7 +382,7 @@ module.exports = {
                         body.emailAdminTemplate = req.body.emailAdminTemplate;
                         body.emailSubject = req.body.emailSubject;
                         body.emailSubjectAdmin = req.body.emailSubjectAdmin;
-                        body.formId = req.body.formId;
+                        body.formName = req.body.formName;
 
                         if(req.body.linkedToIdea) {
                             body.ideaId = req.body.linkedToIdea;

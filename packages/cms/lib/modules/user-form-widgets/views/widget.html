@@ -33,7 +33,7 @@
 		<input type="hidden" name="emailSubject" value="{{data.widget.emailSubject}}" />
 		<input type="hidden" name="emailSubjectAdmin" value="{{data.widget.emailSubjectAdmin}}" />
 		<input type="hidden" name="redirectUrl" value="{{data.widget.redirectUrl}}" />
-		<input type="hidden" name="formId" value="{{data.widget.formId}}" />
+		<input type="hidden" name="formName" value="{{data.widget.formName}}" />
 		<input type="hidden" name="emailField" value="{{data.widget.email}}" />
 
 		{% if data.widget.linkedToIdea %}
@@ -54,7 +54,7 @@
 
 </div>
 {% if data.isAdmin %}
-<a href="#overview-submissions" class="edit-button submission-overview-button" data-form-id="{{data.widget.formId}}">
+<a href="#overview-submissions" class="edit-button submission-overview-button" data-form-id="{{data.widget.formName}}">
 	Bekijk inzendingen
 </a>
 {% include 'includes/modal-submission-overview.html' %}
