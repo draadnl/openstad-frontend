@@ -431,11 +431,13 @@ module.exports = {
                 }
             }) : [];
 
-            widget.formatImageUrl = function (image, location, widget, width, height, crop, cookieConsent) {
+            widget.formatImageUrl = function (image, location, widget, width, height, crop, cookieConsent, themeImage) {
                 let url;
                 if (image) {
                     url = image + '/:/rs=w:' + width + ',h:' + height;
                     url = crop ? url + ';cp=w:' + width + ',h:' + height : url;
+                } else if (themeImage) {
+                    url = self.apos.attachments.url(themeImage);
                 } else if (widget.defaultImage) {
                     url = self.apos.attachments.url(widget.defaultImage);
                 } else {

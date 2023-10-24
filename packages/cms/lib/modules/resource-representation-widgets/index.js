@@ -106,6 +106,10 @@ module.exports = {
               .getConfig();
         }
 
+        widget.formatImageUrl = function (image) {
+          return image ? self.apos.attachments.url(image) : '';
+        }
+
         if (widget.activeResourceType === 'activeUser' && widget.displayType === 'user-activity') {
 
           const activities = widget.activeResource.activity;

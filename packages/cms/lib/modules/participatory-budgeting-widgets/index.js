@@ -86,10 +86,12 @@ module.exports = {
                 }
             }) : [];
 
-            widget.formatImageUrl = function (url, width, height, crop, location) {
+            widget.formatImageUrl = function (url, width, height, crop, location, themeImage) {
                 if (url) {
                     url = url + '/:/rs=w:' + width + ',h:' + height;
                     url = crop ? url + ';cp=w:' + width + ',h:' + height : url;
+                } else if (themeImage) {
+                    url = self.apos.attachments.url(themeImage);
                 } else {
                     url = '/modules/openstad-assets/img/placeholders/idea.jpg';
                 }
