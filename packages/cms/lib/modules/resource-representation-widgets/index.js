@@ -106,13 +106,7 @@ module.exports = {
               .getConfig();
         }
 
-        widget.formatImageUrl = function (image) {
-          return image ? self.apos.attachments.url(image) : '';
-        }
-
         widget.getImageForIdea = function(idea, widget) {
-          const defaultImageUrl = '';
-
           if (idea.extraData && idea.extraData.images && idea.extraData.images.length) {
               return idea.extraData.images[0];
           }
@@ -128,7 +122,7 @@ module.exports = {
               return self.apos.attachments.url(widget.defaultImage);
           }
 
-          return defaultImageUrl;
+          return '';
         };
 
         if (widget.activeResourceType === 'activeUser' && widget.displayType === 'user-activity') {

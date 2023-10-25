@@ -89,17 +89,14 @@ module.exports = {
             widget.getImageForIdea = function(idea, widget, width, height, crop) {
                 const defaultImageUrl = '/modules/openstad-assets/img/placeholders/idea.jpg';
 
-                const boundFormatImageUrl = (image) => formatImageUrl(image, width, height, crop);
-
                 if (idea.extraData && idea.extraData.images && idea.extraData.images.length) {
-                    return boundFormatImageUrl(idea.extraData.images[0]);
+                    return formatImageUrl(idea.extraData.images[0], width, height, crop);
                 }
 
                 if (idea.extraData && idea.extraData.theme && widget.themes.length > 0) {
                     const themeObject = widget.themes.find(theme => theme.value === idea.extraData.theme);
                     if (themeObject?.uploadedThemeDefaultImage) {
-                        const themeImageUrl = self.apos.attachments.url(themeObject.uploadedThemeDefaultImage);
-                        return boundFormatImageUrl(themeImageUrl);
+                        return self.apos.attachments.url(themeObject.uploadedThemeDefaultImage);
                     }
                 }
 
