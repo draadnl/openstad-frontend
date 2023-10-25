@@ -11,30 +11,14 @@
 {% set notReactedTo =  not isReactedTo %}
 {% set isOwnerOrAdmin = (notReactedTo and isOwner) or data.hasModeratorRights %}
 
-{% set ideaImage = '' %}
-{% if idea.extraData and idea.extraData.images.length > 0 and idea.extraData.images[0] %}
-{% set ideaImage = idea.extraData.images[0] %}
-{% elseif idea.extraData and idea.extraData.theme && data.global.themes %}
-{% for theme in data.global.themes %}
-{% if theme.value == idea.extraData.theme and theme.uploadedThemeDefaultImage %}
-{% set ideaImage = data.widget.formatImageUrl(theme.uploadedThemeDefaultImage) %}
-{% endif %}
-{% endfor %}
-{% endif %}
-
 {% import 'includes/numberplatebutton.html' as numberPlateButton %}
 
 <div class="pageContent idea openstad-ajax-refresh" id="single-idea-container">
 	<div id="title">
 		<div>
 			<div class="primary">
-				{% if ideaImage %}
-				<div class="image" style="background-image: url('{{ideaImage}}');"></div>
-				{% elif data.widget.defaultImage %}
-        <div class="image"  style="background-image: url('{{apos.attachments.url(data.widget.defaultImage)}}')"></div>
-        {% else %}
-				<div class="image"></div>
-				{% endif %}
+
+				<div class="image" style="background-image: url('{{data.widget.getImageForIdea(idea, data.widget)}}');"></div>
 
 				{% if data.widget['label' + idea.status] %}
 				<div class="statusbalk {{idea.status}}">{{data.widget['label' + idea.status]}}</div>

@@ -44,16 +44,7 @@ data-default-sort="{{data.widget.defaultSorting}}"
         <div class="ranking"><div class="label">{{idea.ranking}}</div></div>
         {% endif %}
 
-        {% set themeImage = '' %}
-        {% if idea.extraData and idea.extraData.theme && data.global.themes %}
-        {% for theme in data.global.themes %}
-        {% if theme.value == idea.extraData.theme and theme.uploadedThemeDefaultImage %}
-        {% set themeImage = theme.uploadedThemeDefaultImage %}
-        {% endif %}
-        {% endfor %}
-        {% endif %}
-
-        <div class="image" style="background-image: url('{{data.widget.formatImageUrl(idea.extraData.images[0], idea.location, data.widget, 500, 500, true, data.cookieConsent, themeImage) }}')"></div>
+        <div class="image" style="background-image: url('{{data.widget.getImageForIdea(idea, data.widget, 500, 500, true) }}')"></div>
 
         {% if data.widget.displayLabel %}
         <div class="duration">
