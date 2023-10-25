@@ -134,8 +134,9 @@
       </div>
       {% endif %}
     </div>
+
     <script>
-     imageUrl[{{idea.id}}] = "{{data.widget.formatImageUrl(idea.extraData.images[0], idea.location, data.widget, 500, 500, true, data.cookieConsent)}}";
+     imageUrl[{{idea.id}}] = "{{data.widget.getImageForIdea(idea, data.widget, 500, 500, true)}}";
      doShowImage({{idea.id}}, document.querySelector('#idea-{{idea.id}}'))
     </script>
   </li>{% endfor %}
@@ -161,10 +162,10 @@
             >
               {% if (idea.extraData) and (idea.extraData.images) and (idea.extraData.images.length > 0) %}
               {% for image in idea.extraData.images %}
-              <a href="{{data.widget.formatImageUrl(image, idea.location, data.widget, 1200, 1200, false, data.cookieConsent)}}"></a>
+              <a href="{{data.widget.formatImageUrl(image, 1200, 1200, false)}}"></a>
               {% endfor %}
               {% else %}
-              <a href="{{data.widget.formatImageUrl(idea.extraData.images[0], idea.location, data.widget, 1200, 1200, true, data.cookieConsent)}}"></a>
+              <a href="{{data.widget.getImageForIdea(idea, data.widget, 1200, 1200, true)}}"></a>
               {% endif %}
 
             </div>

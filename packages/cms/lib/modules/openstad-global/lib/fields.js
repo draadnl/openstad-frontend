@@ -366,6 +366,12 @@ module.exports = [
         type: 'string',
       },
       {
+        name: 'uploadedThemeDefaultImage',
+        type: 'attachment',
+        label: 'Upload een standaard afbeelding voor in overzichten en de detailpagina',
+        trash: true
+      },
+      {
         name: 'mapicon',
         type: 'string',
         label: 'Icon op de kaart (JSON, momenteel alleen Kaartapplicatie)',

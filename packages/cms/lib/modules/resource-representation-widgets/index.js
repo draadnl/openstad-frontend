@@ -106,6 +106,25 @@ module.exports = {
               .getConfig();
         }
 
+        widget.getImageForIdea = function(idea, widget) {
+          if (idea.extraData && idea.extraData.images && idea.extraData.images.length) {
+              return idea.extraData.images[0];
+          }
+
+          if (idea.extraData && idea.extraData.theme && options.themes.length > 0) {
+              const themeObject = options.themes.find(theme => theme.value === idea.extraData.theme);
+              if (themeObject?.uploadedThemeDefaultImage) {
+                  return self.apos.attachments.url(themeObject.uploadedThemeDefaultImage);
+              }
+          }
+
+          if (widget.defaultImage) {
+              return self.apos.attachments.url(widget.defaultImage);
+          }
+
+          return '';
+        };
+
         if (widget.activeResourceType === 'activeUser' && widget.displayType === 'user-activity') {
 
           const activities = widget.activeResource.activity;
