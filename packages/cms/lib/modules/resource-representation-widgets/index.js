@@ -110,6 +110,27 @@ module.exports = {
           return image ? self.apos.attachments.url(image) : '';
         }
 
+        widget.getImageForIdea = function(idea, widget) {
+          const defaultImageUrl = '';
+
+          if (idea.extraData && idea.extraData.images && idea.extraData.images.length) {
+              return idea.extraData.images[0];
+          }
+
+          if (idea.extraData && idea.extraData.theme && widget.themes.length > 0) {
+              const themeObject = widget.themes.find(theme => theme.value === idea.extraData.theme);
+              if (themeObject?.uploadedThemeDefaultImage) {
+                  return self.apos.attachments.url(themeObject.uploadedThemeDefaultImage);
+              }
+          }
+
+          if (widget.defaultImage) {
+              return self.apos.attachments.url(widget.defaultImage);
+          }
+
+          return defaultImageUrl;
+        };
+
         if (widget.activeResourceType === 'activeUser' && widget.displayType === 'user-activity') {
 
           const activities = widget.activeResource.activity;

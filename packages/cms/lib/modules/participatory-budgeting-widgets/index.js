@@ -86,18 +86,33 @@ module.exports = {
                 }
             }) : [];
 
-            widget.formatImageUrl = function (url, width, height, crop, location, themeImage) {
-                if (url) {
-                    url = url + '/:/rs=w:' + width + ',h:' + height;
-                    url = crop ? url + ';cp=w:' + width + ',h:' + height : url;
-                } else if (themeImage) {
-                    url = self.apos.attachments.url(themeImage);
-                } else {
-                    url = '/modules/openstad-assets/img/placeholders/idea.jpg';
+            widget.getImageForIdea = function(idea, widget, width, height, crop) {
+                const defaultImageUrl = '/modules/openstad-assets/img/placeholders/idea.jpg';
+
+                const boundFormatImageUrl = (image) => formatImageUrl(image, width, height, crop);
+
+                if (idea.extraData && idea.extraData.images && idea.extraData.images.length) {
+                    return boundFormatImageUrl(idea.extraData.images[0]);
                 }
 
+                if (idea.extraData && idea.extraData.theme && widget.themes.length > 0) {
+                    const themeObject = widget.themes.find(theme => theme.value === idea.extraData.theme);
+                    if (themeObject?.uploadedThemeDefaultImage) {
+                        const themeImageUrl = self.apos.attachments.url(themeObject.uploadedThemeDefaultImage);
+                        return boundFormatImageUrl(themeImageUrl);
+                    }
+                }
+
+                return defaultImageUrl;
+            };
+
+            const formatImageUrl = function(image, width, height, crop) {
+                let url = `${image}/:/rs=w:${width},h:${height}`;
+                if (crop) {
+                    url += `;cp=w:${width},h:${height}`;
+                }
                 return url;
-            }
+            };
 
             widget.userHasVoted = false;
             widget.userIsLoggedIn = false;
