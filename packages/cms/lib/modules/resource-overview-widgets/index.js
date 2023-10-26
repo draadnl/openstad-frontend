@@ -432,6 +432,8 @@ module.exports = {
             }) : [];
 
             widget.formatImageUrl = function (image, location, widget, width, height, crop, cookieConsent) {
+                console.log('Format options', options);
+
                 let url;
                 if (image) {
                     url = image + '/:/rs=w:' + width + ',h:' + height;
