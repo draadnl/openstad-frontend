@@ -68,6 +68,15 @@ module.exports = {
             self.pushAsset('script', 'main', {when: 'always'});
         };
 
+        const superLoad = self.load;
+        self.load = function (req, widgets, next) {
+            widgets.forEach((widget) => {
+                widget.themes = req.data.global.themes;
+            });
+
+            return superLoad(req, widgets, next);
+        }
+
         const superOutput = self.output;
 
         self.output = function (widget, options) {
@@ -93,8 +102,8 @@ module.exports = {
                     return formatImageUrl(idea.extraData.images[0], width, height, crop);
                 }
 
-                if (idea.extraData && idea.extraData.theme && options.themes.length > 0) {
-                    const themeObject = options.themes.find(theme => theme.value === idea.extraData.theme);
+                if (idea.extraData && idea.extraData.theme && widget.themes && widget.themes.length > 0) {
+                    const themeObject = widget.themes.find(theme => theme.value === idea.extraData.theme);
                     if (themeObject?.uploadedThemeDefaultImage) {
                         return self.apos.attachments.url(themeObject.uploadedThemeDefaultImage);
                     }

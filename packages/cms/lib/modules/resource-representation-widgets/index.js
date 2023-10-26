@@ -44,7 +44,7 @@ module.exports = {
                 widget.containerId = containerId;
                   widget.formattedContainerStyles = styleSchema.format(containerId, widget.containerStyles);
               }
-
+              widget.themes = req.data.global.themes;
               widget.cssHelperClassesString = widget.cssHelperClasses ? widget.cssHelperClasses.join(' ') : '';
 
               widget.mapCenterLat = globalData.mapCenterLat;
@@ -111,8 +111,8 @@ module.exports = {
               return idea.extraData.images[0];
           }
 
-          if (idea.extraData && idea.extraData.theme && options.themes.length > 0) {
-              const themeObject = options.themes.find(theme => theme.value === idea.extraData.theme);
+          if (idea.extraData && idea.extraData.theme && widget.themes && widget.themes.length > 0) {
+              const themeObject = widget.themes.find(theme => theme.value === idea.extraData.theme);
               if (themeObject?.uploadedThemeDefaultImage) {
                   return self.apos.attachments.url(themeObject.uploadedThemeDefaultImage);
               }
