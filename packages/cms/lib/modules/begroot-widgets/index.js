@@ -236,6 +236,7 @@ module.exports = {
     /*    const acceptedIdeas = req.data.ideas ? req.data.ideas.filter(idea => idea.status === 'ACCEPTED') : []; */
         widgets.forEach((widget) => {
           widget.acceptedIdeas = req.data.ideas;
+          widget.themes = req.data.global.themes;
         });
 
         return superLoad(req, widgets, callback);
@@ -259,8 +260,8 @@ module.exports = {
            return formatImageUrl(idea.extraData.images[0], width, height, crop);
          }
 
-         if (idea.extraData && idea.extraData.theme && options.themes.length > 0) {
-           const themeObject = options.themes.find(theme => theme.value === idea.extraData.theme);
+         if (idea.extraData && idea.extraData.theme && widget.themes && widget.themes.length > 0) {
+           const themeObject = widget.themes.find(theme => theme.value === idea.extraData.theme);
            if (themeObject?.uploadedThemeDefaultImage) {
              return self.apos.attachments.url(themeObject.uploadedThemeDefaultImage);
            }
