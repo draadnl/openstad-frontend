@@ -93,7 +93,7 @@ module.exports = {
       {
         name: 'generalGroup',
         label: 'General',
-        fields: ['uploadedImage', 'displaySize']
+        fields: ['uploadedImage', 'displaySize', 'addLink', 'imageUrl']
       },
       {
         name: 'stylingGroup',
