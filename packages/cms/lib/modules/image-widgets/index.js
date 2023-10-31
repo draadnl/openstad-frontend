@@ -17,6 +17,31 @@ module.exports = {
       svgImages: true
     },
     {
+      type: 'boolean',
+      name: 'addLink',
+      default: false,
+      label: 'Add a link to the image?',
+      choices: [
+        {
+          value: true,
+          label: 'Yes',
+          showFields: [
+            'imageUrl'
+          ]
+        },
+        {
+          value: false,
+          label: 'No',
+        },
+      ],
+    },
+    {
+      name: 'imageUrl',
+      type: 'string',
+      label: 'Url',
+      required: true,
+    },
+    {
       name: 'uploadedImageTitle',
       type: 'text',
       label: 'Image title',
