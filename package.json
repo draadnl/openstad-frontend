@@ -1,6 +1,6 @@
 {
   "name": "openstad-frontend",
-  "version": "0.41.0",
+  "version": "1.0.0",
   "description": "Openstad frontent project including openstad frontend packages\"",
   "main": "index.js",
   "scripts": {
@@ -24,8 +24,11 @@
     "apostrophe-blog": "^2.1.2",
     "apostrophe-palette": "^2.0.30",
     "apostrophe-workflow": "2.40.0",
+    "deepl-node": "^1.7.1",
     "dotenv": "^8.2.0",
+    "file-type": "^16.5.4",
     "memory-cache": "^0.2.0",
+    "merge": "^2.1.1",
     "morgan": "^1.10.0",
     "npm": "^8.16.0",
     "query-string": "^6.13.8",

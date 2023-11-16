@@ -1,4 +1,5 @@
 const request = require('request-promise');
+const queryString = require('query-string');
 
 module.exports = (self, options) => {
 
@@ -10,8 +11,12 @@ module.exports = (self, options) => {
   };
 
   self.updateSiteConfig = async (req, siteConfig, item, apiSyncFields) => {
-
     apiSyncFields.forEach(field => {
+      if(field.name === 'ideaSlug') {
+        siteConfig.ideas.feedbackEmail["inzendingPath"] = item.ideaSlug;
+        siteConfig.ideas.conceptEmail["inzendingPath"] = item.ideaSlug;
+        siteConfig.ideas.conceptToPublishedEmail["inzendingPath"] = item.ideaSlug;
+      }
       //item is the inter global config
       const value = self.getFieldValue(item, field);
       self.setApiConfigValue(siteConfig, field.apiSyncField, value);
@@ -83,6 +88,24 @@ module.exports = (self, options) => {
   self.getAllIdeas = async (req, siteId, sort) => {
     const options = self.getOptions({
       uri: `${self.apiUrl}/api/site/${siteId}/idea?sort=${sort}&includeVoteCount=1&includeUserVote=1&includeArgsCount=1`,
+    });
+
+    return request(options);
+  };
+
+  self.getResource = async (req, siteId, resource, resourceId, params, withAuth) => {
+    const defaultParams = {
+      includeVoteCount: 1,
+      includeUserVote: 1,
+      includeArgsCount: 1
+    };
+    
+    const getOptions = (typeof withAuth !== 'undefined' && withAuth === true) ? self.getOptionsWithAuth : self.getOptions;
+
+    resource = resource || 'idea'
+    const queryParams = queryString.stringify(Object.assign(defaultParams, params));
+    const options = getOptions({
+      uri: `${self.apiUrl}/api/site/${siteId}/${resource}/${resourceId}?${queryParams}`
     });
 
     return request(options);

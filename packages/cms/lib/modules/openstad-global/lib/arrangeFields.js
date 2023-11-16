@@ -43,7 +43,7 @@ module.exports = [
     {
         name: 'mainMenu',
         label: 'Hoofdmenu',
-        fields: ['arrangeMainMenu', 'displayLoginTopLink', 'mainMenuItems', 'ctaButtonText', 'ctaButtonUrl', 'topLinks', 'displayMyAcount', "myAccountButtonText"]
+        fields: ['arrangeMainMenu', 'displayLoginTopLink', 'mainMenuItems', 'ctaButtonText', 'ctaButtonUrl', 'topLinks', 'displayMyAcount', "myAccountButtonText", 'shouldAutoTranslate']
     },
     {
         name: 'userRights',
@@ -58,7 +58,7 @@ module.exports = [
     {
         name: 'themes-areas',
         label: 'Themes, areas & idea types',
-        fields: ['themes', 'areas', 'ideaTypes']
+        fields: ['themes', 'areas', 'ideaTypes', 'templateDoc']
     },
 
     // this is a bit of a hack. We hide the section link with CSS

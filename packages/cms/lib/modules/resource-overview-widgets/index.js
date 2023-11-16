@@ -68,11 +68,21 @@ module.exports = {
             const promises = [];
             const globalData = req.data.global;
 
+            const openstadTags = req.data.openstadTags ? req.data.openstadTags.map((tag) => {
+                return Object.assign({}, tag);
+            }) : [];
+
+            const groupedOpenstadTags = req.data.groupedOpenstadTags;
+
+
+
             widgets.forEach((widget) => {
                 // Add function for rendering raw string with nunjucks templating engine
                 // Yes this ia a powerful but dangerous feature :), admin only
                 widget.renderString = (data, activeResource) => {
                     data.activeResource = activeResource;
+                    data.activeResource.tags = openstadTags;
+                    data.activeResource.groupedTags = groupedOpenstadTags;
 
                     try {
                         return self.apos.templates.renderStringForModule(req, widget.rawInput, data, self);
@@ -230,21 +240,18 @@ module.exports = {
 
                 // format string
                 const getUrl = `/api/site/${siteId}/${resource}?${qs.stringify(params)}`;
-                const cacheKey = encodeURIComponent(getUrl);
+                const cacheKey = encodeURIComponent(getUrl) + req.session?.openstadUser?.id;
 
                 const options = {
                     uri: `${apiUrl}${getUrl}`,
                     headers: {'Accept': 'application/json', "Cache-Control": "no-cache"},
                     json: true
                 };
-
-                /*
-                   We explicitly don't add JWT since results are cached
-                  if (req.session.jwt) {
+            
+                if (req.session.jwt) {
                     options.headers["X-Authorization"] = `Bearer ${req.session.jwt}`;
-                  }
-                */
-
+                }
+                
                 const queryParams = Object.assign({}, queryObject);
 
                 widget.pathname = widget.pathname ? widget.pathname : req.data.currentPathname;
@@ -260,10 +267,8 @@ module.exports = {
                   }, {label: 'tegen', value: 'no', screenReaderAddition: 'dit plan stemmen'}],
                 }
               
-                widget.openstadTags = req.data.openstadTags ? req.data.openstadTags.map((tag) => {
-                    return Object.assign({}, tag);
-                }) : [];
-
+                widget.openstadTags = openstadTags;
+                widget.groupedOpenstadTags = groupedOpenstadTags;          
                 let response;
 
                 // if cache is turned on, check if current url is available in cache
@@ -310,7 +315,6 @@ module.exports = {
                         })
                     }(req, self));
                 }
-
             });
 
             if (promises.length > 0) {

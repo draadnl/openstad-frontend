@@ -90,6 +90,22 @@ module.exports = [
     trash: true
   },
   {
+    type: 'boolean',
+    name: 'shouldAutoTranslate',
+    label: 'Try to translate each page on entering',
+    def: false,
+    choices: [
+      {
+        label: 'Yes',
+        value: true,
+      },
+      {
+        label: 'No',
+        value: false
+      }
+    ]
+  },
+  {
     name: 'ideaSlug',
     type: 'string',
     permission: 'admin',
@@ -113,6 +129,24 @@ module.exports = [
     label: 'Url van de bewerk pagina',
     required: false
   },
+  {
+    name: 'templateDoc',
+    type: 'attachment',
+    permission: 'admin',
+    svgImages: true,
+    label: 'Upload hier een template begroting',
+    // apiSyncField: 'styling.logo',
+    trash: true
+  },
+ {
+  name: 'formattedTemplateDoc',
+  permission: 'admin',
+  type: 'string',
+  label: 'formattedTemplateDoc',
+  formatField: function (value, apos, doc, req) {
+    return apos.attachments.url(doc.templateDoc);
+  },
+ },
   {
     name: 'modbreakAuthor',
     type: 'string',

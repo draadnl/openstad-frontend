@@ -116,6 +116,7 @@ const contentWidgets = {
 
     }
   },
+  'translation': {},
   'openstad-user-remove' : {},
   'user-form': {
     addLabel: 'Contact form (beta)',
@@ -208,3 +209,5 @@ const getVisibleContentWidgets = (filteredWidgets, displaySettings) => {
 
   return filteredContentWidgets;
 }
+
+exports.contentWidgets = contentWidgets;
