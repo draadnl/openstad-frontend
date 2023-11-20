@@ -76,6 +76,10 @@ RUN mkdir -p /home/app/public/uploads/assets
 # otherwise takes very long
 RUN chown -R node:node /home/app/public
 RUN chown -R node:node /home/app/data
+
+RUN touch /home/app/store.json
+RUN chown -R node:node /home/app/store.json
+
 USER node
 
 # Exposed ports for application
