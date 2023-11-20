@@ -56,7 +56,7 @@ const aposServer = {};
 app.use(express.static('public'));
 
 
-app.set('trust proxy', true);
+app.set('trust proxy', process.env.TRUST_PROXY || 'true');
 
 async function restartAllSites() {
     const sites = Object.keys(aposServer);
