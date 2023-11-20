@@ -1,5 +1,5 @@
 # Nodejs 8.0.0 alpine 3.6.0
-FROM node:13.14.0-alpine
+FROM node:16.16.0-alpine
 
 # Label for tracking
 LABEL nl.openstad.container="frontend" nl.openstad.version="0.0.1-beta" nl.openstad.release-date="2020-05-07"
@@ -33,9 +33,11 @@ ENV S3_KEY=""
 ENV S3_SECRET=""
 ENV S3_BUCKET=""
 
+# CDN distribution tag used to fetch the latest version of the component libraries (openstad-components and react-admin)
+ENV CDN_DIST_TAG="latest"
 
 # Install all base dependencies.
-RUN apk add --no-cache --update openssl g++ make python musl-dev git bash
+RUN apk add --no-cache --update openssl g++ make python3 musl-dev git bash
 
 
 # Set the working directory to the root of the container
@@ -54,7 +56,7 @@ RUN npm install --loglevel warn --production
 RUN npm install -g nodemon
 
 # Remove unused packages only used for building.
-RUN apk del openssl g++ make python && rm -rf /var/cache/apk/*
+RUN apk del openssl g++ make python3 && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /home/app/public
 RUN mkdir -p /home/app/public
@@ -76,13 +78,6 @@ RUN mkdir -p /home/app/public/uploads/assets
 # otherwise takes very long
 RUN chown -R node:node /home/app/public
 RUN chown -R node:node /home/app/data
-
-RUN touch /home/app/store.json
-RUN chown -R node:node /home/app/store.json
-
-RUN mkdir /home/app/tmp
-RUN chown -R node:node /home/app/tmp
-
 USER node
 
 # Exposed ports for application
