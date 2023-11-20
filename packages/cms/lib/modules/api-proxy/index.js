@@ -19,7 +19,6 @@ module.exports = {
             target: apiUrl,
             changeOrigin: true,
             pathRewrite: {['^' + apiPath]: '/api'},
-            xfwd: false,
             onProxyReq: (proxyReq, req, res) => {
 
                 const siteId = req.data.global.siteId;
