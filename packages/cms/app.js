@@ -54,7 +54,7 @@ const aposServer = {};
 app.use(express.static('public'));
 
 
-this.app.set('trust proxy', process.env.TRUST_PROXY || 'true');
+app.set('trust proxy', process.env.TRUST_PROXY || 'true');
 
 function fetchAllSites(req, res, startSites) {
     const apiUrl = process.env.INTERNAL_API_URL ? process.env.INTERNAL_API_URL : process.env.API;
