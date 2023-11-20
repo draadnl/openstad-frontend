@@ -80,6 +80,9 @@ RUN chown -R node:node /home/app/data
 RUN touch /home/app/store.json
 RUN chown -R node:node /home/app/store.json
 
+RUN mkdir /home/app/tmp
+RUN chown -R node:node /home/app/tmp
+
 USER node
 
 # Exposed ports for application
