@@ -52,6 +52,10 @@ module.exports = {
                 // add custom header to request
                 proxyReq.setHeader('Accept', 'application/json');
                 proxyReq.setHeader('Content-Type', 'application/json; charset=utf-8');
+                
+                console.log ('current request IP', req.ip)
+                
+                proxyReq.setHeader('X-Forwarded-For', req.ip);
 
                 if (req.session.jwt) {
                     proxyReq.setHeader('X-Authorization', `Bearer ${req.session.jwt}`);
