@@ -70,8 +70,6 @@ module.exports =  function (req, res, next) {
          /**
           * Format ideas data
           */
-
-         console.log('ideas', ideas);
          
          ideas = typeof ideas !== 'undefined' ? [ideas].map((idea) => {
            let createdData = new Date(idea.createdAt);
