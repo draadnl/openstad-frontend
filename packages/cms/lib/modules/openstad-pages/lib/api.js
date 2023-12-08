@@ -11,6 +11,11 @@ module.exports = (self, options) => {
       })
       .map((idea) => {
         idea.ranking = counter;
+
+        if ( typeof(idea.extraData) === 'undefined' ) {
+            idea.extraData = {};
+        }
+        
         idea.extraData.ranking = counter;
         counter++;
         return idea;
