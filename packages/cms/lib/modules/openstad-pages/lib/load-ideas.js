@@ -70,7 +70,10 @@ module.exports =  function (req, res, next) {
          /**
           * Format ideas data
           */
-         ideas = typeof ideas !== 'undefined' ? ideas.map((idea) => {
+
+         console.log('ideas', ideas);
+         
+         ideas = typeof ideas !== 'undefined' ? [ideas].map((idea) => {
            let createdData = new Date(idea.createdAt);
            idea.fullUrl = ideaSlug && ideaSlug.match(/\{ideaId\}/i) ? `${siteUrl}/${ideaSlug.replace(/\{ideaId\}/ig, idea.id)}` : `${siteUrl}/${ideaSlug}/${idea.id}`;
            idea.overviewUrl = ideaOverviewSlug && ideaOverviewSlug.match(/\{ideaId\}/i) ? `${siteUrl}/${ideaOverviewSlug.replace(/\{ideaId\}/ig, idea.id)}` : `${siteUrl}/${ideaOverviewSlug}?ideaId=${idea.id}`;
