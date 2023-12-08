@@ -70,20 +70,20 @@ module.exports =  function (req, res, next) {
          /**
           * Format ideas data
           */
-         ideas = ideas.map((idea) => {
+         ideas = typeof ideas !== 'undefined' ? ideas.map((idea) => {
            let createdData = new Date(idea.createdAt);
            idea.fullUrl = ideaSlug && ideaSlug.match(/\{ideaId\}/i) ? `${siteUrl}/${ideaSlug.replace(/\{ideaId\}/ig, idea.id)}` : `${siteUrl}/${ideaSlug}/${idea.id}`;
            idea.overviewUrl = ideaOverviewSlug && ideaOverviewSlug.match(/\{ideaId\}/i) ? `${siteUrl}/${ideaOverviewSlug.replace(/\{ideaId\}/ig, idea.id)}` : `${siteUrl}/${ideaOverviewSlug}?ideaId=${idea.id}`;
            idea.createdTime = createdData.getTime();
 
            return idea;
-         });
+         }) : [];
 
          //add ideas to to the data object so it's available in templates
          req.data.ideas = ideas;
 
          // filter the ideas the user voted for
-         req.data.ideasVotedFor = ideas.filter(idea => idea.userVote);
+         req.data.ideasVotedFor = ideas.length > 0 ? ideas.filter(idea => idea.userVote) : [];
 
          // set the cache,
          if (req.data.global.cacheIdeas) {
