@@ -12,11 +12,10 @@ module.exports = (self, options) => {
       .map((idea) => {
         idea.ranking = counter;
 
-        if ( typeof(idea.extraData) === 'undefined' ) {
-            idea.extraData = {};
+        if ( typeof(idea.extraData) !== 'undefined' && (typeof(idea.extraData) === 'object' || Array.isArray(idea.extraData) ) ) {
+            idea.extraData['ranking'] = counter;
         }
-        
-        idea.extraData.ranking = counter;
+
         counter++;
         return idea;
       }) : [];
