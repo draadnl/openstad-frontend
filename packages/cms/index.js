@@ -14,7 +14,11 @@ module.exports.getSingleApp = () => {
 module.exports.site = (options) => {
 
   const app = openstadApp.getMultiSiteApp(options);
-  app.listen(process.env.PORT);
+  const server = app.listen(process.env.PORT);
+  
+  server.on('listening', () => {
+    openstadApp.startSites();
+  });
 
 };
 

@@ -58,19 +58,40 @@ app.use(express.static('public'));
 
 app.set('trust proxy', true);
 
-async function restartAllSites() {
-    const sites = Object.keys(aposServer);
-    const promises = sites.map(site => {
+async function startAllSites() {
+    //const sites = Object.keys(sites);
+    console.log ('Starting all sites', Object.keys(sites));
+    const promises = Object.keys(sites).map(site => {
+        if (!site) {
+            return;
+        }
         const url = new URL('http://' + site);
-        return fetch(`http://localhost:${process.env.PORT}${url.pathname}/config-reset`,{
-            headers: {
-                Host: url.hostname
+        const siteUrl = `http://localhost:${process.env.PORT}${url.pathname}`;
+        
+        let hostname = url.hostname;
+        
+        if (url.port) {
+            hostname = hostname + ':' + url.port;
+        }
+        
+        let headers = {
+                Host: hostname
+            };
+        
+        if (sites[site] && sites[site].config && sites[site].config.basicAuth && sites[site].config.basicAuth.active && sites[site].config.basicAuth.user && sites[site].config.basicAuth.password) {
+            headers.Authorization = 'Basic ' + Buffer.from(sites[site].config.basicAuth.user + ':' + sites[site].config.basicAuth.password).toString('base64');
+        }
+        
+        return fetch(siteUrl,{
+            headers: headers
+        }).then(res => {
+            if (res.status == 200) {
+                console.log('Started site ' + site, res.status, res.url)
+            } else {
+                return console.log('Failed starting site ' + site, res.status, res.url, headers, sites[site])
             }
         }).catch(err => {
-            if (err.statusCode === 404) {
-                return console.log('Done resetting site ' + site)
-            }
-            console.error(err)
+            return console.log('Error starting site ' + site, err.url, err, headers)
         })
     });
 
@@ -387,6 +408,12 @@ module.exports.getMultiSiteApp = (options) => {
     /**
      * Update the site config every few minutes
      */
-    setInterval(restartAllSites, REFRESH_SITES_INTERVAL);
+    //setInterval(restartAllSites, REFRESH_SITES_INTERVAL);
     return app;
+};
+
+module.exports.startSites = function () {
+    fetchAllSites().then(async () => {
+        await startAllSites();
+    })
 };
