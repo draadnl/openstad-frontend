@@ -190,27 +190,51 @@ apos.define('resource-form-widgets', {
 
         const conditionalRequired = function (element) {
           const publishAsConceptInput = $('#publishAsConcept');
-          const shouldBeSavedAsConcept = publishAsConceptInput
-            ? publishAsConceptInput.val()
-            : false;
-          return shouldBeSavedAsConcept
-            ? false
-            : element.hasAttribute('required');
+          const publishAsConceptValue = publishAsConceptInput
+              ? publishAsConceptInput.val()
+              : false;
+
+          console.group('conditionalRequired Debug');
+          console.log('Publish As Concept Input:', publishAsConceptInput);
+          console.log('Publish As Concept Value:', publishAsConceptValue);
+
+          const isRequired = publishAsConceptValue
+              ? false
+              : element.hasAttribute('required');
+
+          console.log('Is Required:', isRequired);
+          console.groupEnd();
+
+          return isRequired;
         };
 
         const conditionalLength = function (element, lengthField, lengthValue) {
           const publishAsConceptInput = $('#publishAsConcept');
-          const shouldBeSavedAsConcept =
-            publishAsConceptInput && publishAsConceptInput.val();
+          const publishAsConceptValue =
+              publishAsConceptInput && publishAsConceptInput.val();
+
+          console.group('conditionalLength Debug');
+          console.log('Publish As Concept Input:', publishAsConceptInput);
+          console.log('Publish As Concept Value:', publishAsConceptValue);
+
           const hasLength =
-            element.hasAttribute(lengthField) &&
-            element.getAttribute(lengthField);
-          return shouldBeSavedAsConcept
-            ? 0
-            : hasLength
-            ? element.getAttribute(lengthField)
-            : lengthValue;
+              element.hasAttribute(lengthField) &&
+              element.getAttribute(lengthField);
+
+          console.log('Has Length:', hasLength);
+
+          const length = publishAsConceptValue
+              ? 0
+              : hasLength
+                  ? element.getAttribute(lengthField)
+                  : lengthValue;
+
+          console.log('Length:', length);
+          console.groupEnd();
+
+          return length;
         };
+
 
         // Default set of rules
         var rules = {
