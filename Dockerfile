@@ -29,7 +29,7 @@ ENV APOS_BUNDLE="assets"
 ENV NODE_ENV="production"
 
 # Install all base dependencies.
-RUN apk add --no-cache --update openssl g++ make python musl-dev git bash
+RUN apk add --no-cache --update openssl g++ make python musl-dev git bash file imagemagick
 
 
 # Set the working directory to the root of the container
