@@ -72,7 +72,7 @@ module.exports = {
         arguments:siteConfig.arguments,
         openstadMap:siteConfig.openstadMap,
         users: {
-          allowUseOfNicknames: siteConfig.users && siteConfig.users.allowUseOfNicknames ? siteConfig.users.allowUseOfNicknames : false
+          allowUseOfNicknames: siteConfig && siteConfig.users && siteConfig.users.allowUseOfNicknames ? siteConfig.users.allowUseOfNicknames : false
         }
       };
 
