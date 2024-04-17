@@ -13,7 +13,7 @@ function bindArgumentValidation ($form){
       description : {
         required: true,
         minlength: 30,
-        maxlength: 500
+        maxlength: 1000
       },
       validateImages: {
         validateFilePond: true
