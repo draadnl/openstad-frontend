@@ -1,0 +1,36 @@
+{% if not fieldValue %}
+{% if data.query[field.fieldKey] %}
+{% set fieldValue = data.query[field.fieldKey] %}
+{% else %}
+{% set fieldValue = field.fieldValue %}
+{% endif %}
+{% endif %}
+
+{% set uniqueId = apos.utils.generateId() %}
+
+<div class="radio-container image-radio-container">
+    {% for option in field.fieldImages %}
+
+    <div class="radio">
+        <label for="radio-{{uniqueId}}-{{loop.index}}-{{option.value}}">
+            <img
+                    id="{{option.image._id}}"
+                    src="{{apos.attachments.url(option.image)}}"
+                    title="{{option.image.title}}"
+                    alt="{{option.image.imageAlt}}"
+            />
+        <input
+                type="radio"
+                name="extraData[{{field.fieldKey}}]"
+                value="{{option.value}}"
+                id="radio-{{uniqueId}}-{{loop.index}}-{{option.value}}"
+
+                {% if field.fieldRequired %}required{% endif %}
+                {% if fieldValue === option.value %}checked{% endif %}
+        />
+
+            <span class="radio-label">{{option.imageDesc}}</span>
+        </label>
+    </div>
+    {% endfor %}
+</div>

@@ -95,6 +95,9 @@ const contentWidgets = {
   },
   'resource-form': {
   },
+  'enquete': {
+    adminOnly: true,
+  },
   'resource-representation': {
   },
   'recource-raw': {
