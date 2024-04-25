@@ -61,7 +61,7 @@ app.set('trust proxy', process.env.TRUST_PROXY || true);
 async function restartAllSites() {
     const sites = Object.keys(aposServer);
     const promises = sites.map(site => {
-        const url = new URL('http://' + site);        
+        const url = new URL('http://' + site);
         return fetch(`http://localhost:${process.env.PORT}${url.pathname}/config-reset`,{
             headers: {
                 Host: url.hostname
@@ -131,7 +131,8 @@ function cleanUpSites() {
 
 function serveSite(req, res, siteConfig, forceRestart) {
     const runner = Promise.promisify(run);
-    const dbName = siteConfig.config && siteConfig.config.cms && siteConfig.config.cms.dbName ? siteConfig.config.cms.dbName : '';
+    const dbPrefix = process.env.MONGO_DB_PREFIX ? process.env.MONGO_DB_PREFIX : '';
+    const dbName = (dbPrefix + (siteConfig.config && siteConfig.config.cms && siteConfig.config.cms.dbName ? siteConfig.config.cms.dbName : '')).substring(0, 63);
     const domain = siteConfig.domain;
 
     // check if this site needs to redirect. We can then skip the rest.
