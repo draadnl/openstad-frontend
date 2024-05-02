@@ -94,30 +94,30 @@ module.exports = {
       // Send back an AJAX response with `res.send()` as you normally do with Express
     });
 
-    const superLoad = self.load;
-
-    self.load = function (req, widgets, next) {
-      widgets.forEach(async (widget) => {
-        const siteConfig = req.data.global.siteConfig;
-        widget.argumentMinLength =
-          siteConfig
-          && typeof (siteConfig.arguments) !== 'undefined'
-          && typeof (siteConfig.arguments.descriptionMinLength) !== 'undefined'
-            ? siteConfig.arguments.descriptionMinLength
-            : 30;
-
-        widget.argumentMaxLength =
-          siteConfig
-          && typeof (siteConfig.arguments) !== 'undefined'
-          && typeof (siteConfig.arguments.descriptionMaxLength) !== 'undefined'
-            ? siteConfig.arguments.descriptionMaxLength
-            : 500;
-      });
-
-      superLoad(req, widgets, next);
-    };
-
-    const superOutput = self.output;
+    // const superLoad = self.load;
+    //
+    // self.load = function (req, widgets, next) {
+    //   widgets.forEach(async (widget) => {
+    //     const siteConfig = req.data.global.siteConfig;
+    //     widget.argumentMinLength =
+    //       siteConfig
+    //       && typeof (siteConfig.arguments) !== 'undefined'
+    //       && typeof (siteConfig.arguments.descriptionMinLength) !== 'undefined'
+    //         ? siteConfig.arguments.descriptionMinLength
+    //         : 30;
+    //
+    //     widget.argumentMaxLength =
+    //       siteConfig
+    //       && typeof (siteConfig.arguments) !== 'undefined'
+    //       && typeof (siteConfig.arguments.descriptionMaxLength) !== 'undefined'
+    //         ? siteConfig.arguments.descriptionMaxLength
+    //         : 500;
+    //   });
+    //
+    //   superLoad(req, widgets, next);
+    // };
+    //
+    // const superOutput = self.output;
 
     self.output = function(widget, options) {
       widget.ideaId =  options.activeResource ?  options.activeResource.id : false;
