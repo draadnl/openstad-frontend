@@ -117,7 +117,7 @@ module.exports = {
     //   superLoad(req, widgets, next);
     // };
     //
-    // const superOutput = self.output;
+    const superOutput = self.output;
 
     self.output = function(widget, options) {
       widget.ideaId =  options.activeResource ?  options.activeResource.id : false;
