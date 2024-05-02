@@ -10,8 +10,8 @@
 					class="textarea margin-hor-s block argument-textarea role-required-member"
 					data-modal-text="Log in om een argument te plaatsen, te reageren, of een argument te liken."
 					name="description"
-					minlength="30"
-					maxlength="500"
+					minlength="{{data.widget.argumentMinLength}}"
+					maxlength="{{data.widget.argumentMaxLength}}"
 					placeholder="{{data.widget.placeholder}}"
 				></textarea>
 
@@ -20,18 +20,6 @@
 					<div class="max"><span>360</span> tekens resterend.</div>
 				</div>
 			</div>
-
-			<input
-				type="hidden"
-				name="minCharactersArguments"
-				value="{{data.widget.argumentMinLength}}"
-			/>
-
-			<input
-				type="hidden"
-				name="maxCharactersArguments"
-				value="{{data.widget.argumentMaxLength}}"
-			/>
 
 			<input
 				type="hidden"

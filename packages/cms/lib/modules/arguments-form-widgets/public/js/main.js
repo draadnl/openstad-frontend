@@ -12,8 +12,8 @@ function bindArgumentValidation ($form){
     rules: {
       description : {
         required: true,
-        minlength: 30,
-        maxlength: 500
+        minlength: parseInt($form.find('textarea[name="description"]').attr('minlength')),
+        maxlength: parseInt($form.find('textarea[name="description"]').attr('maxlength'))
       },
       validateImages: {
         validateFilePond: true
