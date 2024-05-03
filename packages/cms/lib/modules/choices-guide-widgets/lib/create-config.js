@@ -9,6 +9,7 @@ module.exports = function createConfig({ widget, data }) {
     noOfQuestionsToShow: widget.noOfQuestionsToShow,
     startWithAllQuestionsAnswered: widget.startWithAllQuestionsAnswered,
     startWithAllQuestionsAnsweredAndConfirmed: widget.startWithAllQuestionsAnsweredAndConfirmed,
+    showPageCountAndCurrentPageInButton: widget.showPageCountAndCurrentPageInButton,
     choices: {
       type: widget.choicesType,
       sticky: {

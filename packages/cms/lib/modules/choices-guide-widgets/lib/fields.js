@@ -55,6 +55,22 @@ module.exports = {
 			  }
 		  ]
  	  },
+		{
+			name: 'showPageCountAndCurrentPageInButton',
+			type: 'select',
+			label: 'Wil je de voortgang van de pagina\'s te zien is in de \'Volgende\' knop?',
+			def: false,
+			choices: [
+				{
+					label: 'Nee',
+					value: false,
+				},
+				{
+					label: 'Ja',
+					value: true,
+				}
+			]
+		},
 	  {
 		  type: 'select',
 		  name: 'choicesType',
