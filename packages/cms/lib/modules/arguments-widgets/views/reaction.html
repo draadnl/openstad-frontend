@@ -19,7 +19,13 @@
   {% if mayEdit %}
   <form class="action argument-form argument-edit-form ajax-refresh-after-submit" method="POST" action="{{apiArgumentUrl}}/{{reaction.id}}" class="editForm">
     <input type="hidden" name="_method" value="PUT">
-    <textarea name="description" rows="3" placeholder="Typ hier jouw reactie...">{{reaction.description}}</textarea>
+    <textarea
+            name="description"
+            rows="3"
+            placeholder="Typ hier jouw reactie..."
+            minlength="{{data.widget.argumentMinLength}}"
+            maxlength="{{data.widget.argumentMaxLength}}"
+    >{{reaction.description}}</textarea>
     <input type="submit" class="btn btn-primary" value="Opslaan" title="Argument bewerken">
     &nbsp;
     <a href="#" class="reaction-edit-cancel"> Annuleer </a>

@@ -106,6 +106,21 @@ module.exports = {
             widget.activeResourceId = resource.id;
           }
         }
+
+        const siteConfig = req.data.global.siteConfig;
+        widget.argumentMinLength =
+          siteConfig
+          && typeof (siteConfig.arguments) !== 'undefined'
+          && typeof (siteConfig.arguments.descriptionMinLength) !== 'undefined'
+            ? siteConfig.arguments.descriptionMinLength
+            : 30;
+
+        widget.argumentMaxLength =
+          siteConfig
+          && typeof (siteConfig.arguments) !== 'undefined'
+          && typeof (siteConfig.arguments.descriptionMaxLength) !== 'undefined'
+            ? siteConfig.arguments.descriptionMaxLength
+            : 500;
       });
 
       await Promise.all(promises);
