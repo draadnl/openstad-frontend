@@ -32,7 +32,8 @@
 			 var containerTop = window.pageYOffset + containerRect.top;
 			 var containerBottom = containerTop + containerRect.height;
 			 var elementHeight = elementRect.height;
-			 var elementBottomPosition = window.pageYOffset + elementRect.top + elementHeight;
+			 var elementRectTop = elementRect.top > 0 ? elementRect.top : 0;
+			 var elementBottomPosition = window.pageYOffset + elementRectTop + elementHeight;
 			 var absLeft = window.pageXOffset + elementRect.left;
 
 			 if (window.pageYOffset > containerTop && elementBottomPosition < containerBottom) {
