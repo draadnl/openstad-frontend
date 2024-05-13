@@ -13,64 +13,59 @@
  
  // sticky
  document.addEventListener('osc-choices-guide-is-ready', function(event) {
-   setupStickyChoices()
+	 setupStickyChoices();
  });
  function setupStickyChoices() {
-   // it is using js, because plain css sticky only works when you scroll the direct container
-   var element = document.getElementById('osc-choices-container-{{data.widget.divId}}')
+	 var container = document.getElementById('{{data.widget.divId}}');
+	 var element = document.getElementById('osc-choices-container-{{data.widget.divId}}');
+	 var questiongroupdiv = document.querySelector('.osc-question-group');
 
-   if ( element ) {
-     var elemRect = element.getBoundingClientRect();
-     var absTop   = elemRect.top;
-     var absLeft  = elemRect.left;
-     var orgPos   = element.style.position;
-     var orgTop   = element.style.top;
-     var orgLeft  = element.style.left;
-     var threshold = absTop - 10;
+	 if (container && element) {
+		 var orgPos = element.style.position;
+		 var orgTop = element.style.top;
+		 var orgLeft = element.style.left;
 
-		 window.addEventListener('scroll', function(event) {
-       if (element) {
-         let questiongroupdiv = document.querySelector('.osc-question-group');
+		 function updateStickyStatus() {
+			 var containerRect = container.getBoundingClientRect();
+			 var elementRect = element.getBoundingClientRect();
 
-         if (window.pageYOffset >= threshold) {
-           if (!element.className.match(/\ ?sticky/)) {
-             element.classList += ' sticky';
-             if (questiongroupdiv) questiongroupdiv.className += ' sticky-placeholder';
-           }
-           if (element.offsetTop != 0) { // not on mobile - todo: better check
-             element.style.left = absLeft + 'px'
-           }
-         } else {
-           element.className = element.className.replace(/\ ?sticky/, '')
-           if (questiongroupdiv) questiongroupdiv.className = questiongroupdiv.className.replace(/ ?sticky-placeholder/, '');
-           element.style.position = orgPos;
-           element.style.top = orgTop;
-           element.style.left = orgLeft;
-         }
-       }
-     });
+			 var containerTop = window.pageYOffset + containerRect.top;
+			 var containerBottom = containerTop + containerRect.height;
+			 var elementHeight = elementRect.height;
+			 var elementBottomPosition = window.pageYOffset + elementRect.top + elementHeight;
+			 var absLeft = window.pageXOffset + elementRect.left;
 
-		 window.addEventListener('resize', function(event) {
-       if (element) {
-         var isSticky = false;
-         if (element.className.match(/\ ?sticky/)){
-           isSticky = true;
-           element.className = element.className.replace(/\ ?sticky/, '')
-         }
-         element.style.position = orgPos;
-         element.style.top = orgTop;
-         element.style.left = orgLeft;
-         var elemRect = element.getBoundingClientRect();
-         absTop   = elemRect.top;
-         absLeft  = elemRect.left;
-         if (isSticky) {
-           element.className += ' sticky';
-           element.style.left = absLeft + 'px'
-         }
-       }
-     });
+			 if (window.pageYOffset > containerTop && elementBottomPosition < containerBottom) {
+				 if (!element.classList.contains('sticky')) {
+					 element.classList.add('sticky');
+					 element.style.position = 'fixed';
+					 element.style.top = "0px";
+					 element.style.left = absLeft + 'px';
 
-   }
+					 if (questiongroupdiv && !questiongroupdiv.classList.contains('sticky-placeholder')) {
+						 questiongroupdiv.classList.add('sticky-placeholder');
+					 }
+				 }
+			 } else {
+				 if (element.classList.contains('sticky')) {
+					 element.classList.remove('sticky');
+					 element.style.position = orgPos;
+					 element.style.top = orgTop;
+					 element.style.left = orgLeft;
+
+					 if (questiongroupdiv) {
+						 questiongroupdiv.classList.remove('sticky-placeholder');
+					 }
+				 }
+			 }
+		 }
+
+		 window.addEventListener('scroll', updateStickyStatus);
+		 window.addEventListener('resize', function() {
+			 orgLeft = element.style.left;
+			 updateStickyStatus();
+		 });
+	 }
  }
 
 </script>
