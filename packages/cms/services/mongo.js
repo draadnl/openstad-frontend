@@ -15,6 +15,8 @@ function getConnectionString (database) {
   
   const useAuth = user && password;
   
+  console.log ('mongodb connection string', `mongodb://${useAuth ? `${user}:${password}@` : ''}${host}:${port}/${database ? database : ''}${authSource ? `?authSource=${authSource}` : ''}`);
+  
   return `mongodb://${useAuth ? `${user}:${password}@` : ''}${host}:${port}/${database ? database : ''}${authSource ? `?authSource=${authSource}` : ''}`;
 }
 
