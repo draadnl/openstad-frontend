@@ -50,8 +50,9 @@ exports.copyMongoDb = (oldDbName, newDbName) => {
 }
 
 exports.dbExists = (dbName) => {
+  console.log ('db exists? con string:', getConnectionString('admin'));
   return new Promise((resolve, reject) => {
-    MongoClient.connect(getConnectionString(), (err, db) => {
+    MongoClient.connect(getConnectionString('admin'), (err, db) => {
       if (err) {
         reject(err);
       } else {
