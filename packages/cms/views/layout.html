@@ -71,7 +71,44 @@
 
 {% else %}
 {% if data.global.fbImage %}
-<meta property="og:image" content="{{apos.attachments.url(data.global.fbImage)}}">
+<meta property="og:image">
+
+<script>
+  var fbImageValue = "{{ apos.attachments.url(data.global.fbImage) }}";
+  var siteUrl = "{{ data.siteUrl }}";
+
+  if (typeof fbImageValue === 'string' && fbImageValue.trim() !== '' &&
+    typeof siteUrl === 'string' && siteUrl.trim() !== '') {
+
+    function findSuffix(url) {
+      if (url.startsWith('/')) {
+        var parts = url.split('/');
+        return parts[1];
+      }
+      return '';
+    }
+
+    function mergeUrls(siteUrl, fbImageValue) {
+      let suffix = findSuffix(fbImageValue);
+      if (suffix !== '') {
+        suffix = '/' + suffix;
+      }
+
+      if (siteUrl.includes(suffix)) {
+        siteUrl = siteUrl.replace(suffix, '');
+      }
+
+      if (!siteUrl.endsWith('/') && !fbImageValue.startsWith('/')) {
+        siteUrl += '/';
+      }
+
+      return siteUrl + fbImageValue;
+    }
+
+    var finalUrl = mergeUrls(siteUrl, fbImageValue);
+    document.querySelector('meta[property="og:image"]').setAttribute('content', finalUrl);
+  }
+</script>
 {% endif %}
 {% endif %}
 
