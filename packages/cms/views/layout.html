@@ -71,7 +71,7 @@
 
 {% else %}
 {% if data.global.fbImage %}
-<meta property="og:image" content="{{apos.settings.getOption('appUrl')}}{{apos.attachments.url(data.global.fbImage)}}">
+<meta property="og:image" content="{{data.siteUrl}}{{apos.attachments.url(data.global.fbImage)}}">
 {% endif %}
 {% endif %}
 
