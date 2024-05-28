@@ -52,18 +52,19 @@ exports.copyMongoDb = (oldDbName, newDbName) => {
 exports.dbExists = (dbName) => {
   console.log ('db exists? con string:', getConnectionString('admin'));
   return new Promise((resolve, reject) => {
-    MongoClient.connect(getConnectionString('admin'), (err, db) => {
+    const client = new MongoClient(getConnectionString('admin'));
+    client.connect((err, client) => {
       if (err) {
         reject(err);
       } else {
-        var adminDb = db.admin();
+        const adminDb = client.db("admin").admin();
         // List all the available databases
         adminDb.listDatabases(function(err, dbs) {
           console.log('---> err', err);
           console.log('---> dbs.dbName', dbName);
           console.log('---> dbs.databases', dbs.databases);
           const found = dbs.databases.find(dbObject => dbName === dbObject.name);
-          db.close();
+          client.close();
           resolve(!!found)
         });
       }
