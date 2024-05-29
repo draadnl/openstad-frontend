@@ -117,6 +117,22 @@ module.exports = {
       ]
     },
     {
+      name: 'maxCount',
+      label: 'Max. numbers to show',
+      type: 'select',
+      def: '3',
+      choices: [
+        {
+          label: '3',
+          value: '3',
+        },
+        {
+          label: '4',
+          value: '4',
+        },
+      ]
+    },
+    {
       name: 'choicesGuideId',
       label: 'Choices guide id',
       type: 'string'

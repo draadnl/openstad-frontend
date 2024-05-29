@@ -32,10 +32,11 @@
   {% endif %}
 
   <script>
-   function setNumberPlates{{data.widget.containerId}}(count) {
-     let len = count.toString().length;
-     if (len < 3) len = 3;
-     count = ('000' + count).slice(-len);
+   function setNumberPlates{{data.widget.containerId}}(count, maxCount === '3') {
+     let len = parseInt(maxCount);
+     const startingPoint = maxCount === '4' ? '0000' : '000';
+
+     count = (startingPoint + count).slice(-len);
      var html = '<span class="margin-right-s">';
      for (i=0; i<len; i++) {
        html += '<span id="counter-number-plate-'+i+'" class="number-plate">'+count[i]+'</span>'
@@ -43,7 +44,7 @@
      html += '</span>';
      document.getElementById("counter-{{data.widget.counterType}}-{{data.widget.containerId}}").innerHTML = html;
    }
-   setNumberPlates{{data.widget.containerId}}('{{data.widget.count}}' || 0)
+   setNumberPlates{{data.widget.containerId}}('{{data.widget.count}}' || 0, '{{data.widget.maxCount}}' || '3')
   </script>
 
   {% if data.widget.statsUrl %}
@@ -64,7 +65,7 @@
 		   success: function(result) {
          let count = result.count;
          if ( count == -1 ) count = 0;
-         setNumberPlates{{data.widget.containerId}}(count);
+         setNumberPlates{{data.widget.containerId}}(count, '{{data.widget.maxCount}}' || '3');
 		   },
 		   error: function(error) {
 		     console.log(err);
