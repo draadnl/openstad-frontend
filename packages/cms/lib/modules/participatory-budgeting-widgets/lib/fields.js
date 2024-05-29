@@ -54,6 +54,22 @@ const fields = [
  
    */
   {
+    name: 'showModBreak',
+    label: 'Show Mod Break?',
+    type: 'boolean',
+    choices: [
+      {
+        label: 'Yes',
+        value: true,
+      },
+      {
+        label: 'No',
+        value: false,
+      }
+    ],
+    def: false
+  },
+  {
     name: 'votingType',
     type: 'select',
     label: 'Voting type',

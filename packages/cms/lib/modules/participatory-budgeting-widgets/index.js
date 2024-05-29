@@ -17,7 +17,7 @@ module.exports = {
             {
                 name: 'display-options',
                 label: 'Display options',
-                fields: ['displayRanking', 'displayBudgetLabel', 'showVoteCount', 'unavailableButton','displayOriginalIdeaUrl', 'originalIdeaUrl']
+                fields: ['displayRanking', 'displayBudgetLabel', 'showVoteCount', 'showModBreak', 'unavailableButton','displayOriginalIdeaUrl', 'originalIdeaUrl']
             },
             {
                 name: 'sorting-options',
