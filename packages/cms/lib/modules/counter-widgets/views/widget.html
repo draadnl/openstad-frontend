@@ -32,7 +32,7 @@
   {% endif %}
 
   <script>
-   function setNumberPlates{{data.widget.containerId}}(count, maxCount === '3') {
+   function setNumberPlates{{data.widget.containerId}}(count, maxCount = '3') {
      let len = parseInt(maxCount);
      const startingPoint = maxCount === '4' ? '0000' : '000';
 
