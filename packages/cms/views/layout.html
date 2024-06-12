@@ -70,46 +70,29 @@
 {% endif %}
 
 {% else %}
-{% if data.global.fbImage %}
-<meta property="og:image">
+  
+  {% if data.global.fbImage %}
+    {% set fbImageValue = apos.attachments.url(data.global.fbImage) %}
+    {% set siteUrl = data.siteUrl %}
 
-<script>
-  var fbImageValue = "{{ apos.attachments.url(data.global.fbImage) }}";
-  var siteUrl = "{{ data.siteUrl }}";
+    {% if fbImageValue and fbImageValue | trim and siteUrl and siteUrl | trim %}
 
-  if (typeof fbImageValue === 'string' && fbImageValue.trim() !== '' &&
-    typeof siteUrl === 'string' && siteUrl.trim() !== '') {
+      {% set siteUrlParts = siteUrl.split('/') %}
+      {% set fbImageParts = fbImageValue.split('/') %}
+      {% set siteUrlEnd = siteUrlParts[siteUrlParts.length - 1] %}
+      {% set fbImageStart = fbImageParts[1] %}
 
-    function findSuffix(url) {
-      if (url.startsWith('/')) {
-        var parts = url.split('/');
-        return parts[1];
-      }
-      return '';
-    }
+      {% set cleanedSiteUrl = siteUrl %}
 
-    function mergeUrls(siteUrl, fbImageValue) {
-      let suffix = findSuffix(fbImageValue);
-      if (suffix !== '') {
-        suffix = '/' + suffix;
-      }
+      {% if siteUrlEnd == fbImageStart %}
+        {% set cleanedSiteUrl = siteUrl.replace('/' ~ siteUrlEnd, '') %}
+      {% endif %}
 
-      if (siteUrl.includes(suffix)) {
-        siteUrl = siteUrl.replace(suffix, '');
-      }
+      {% set finalUrl = cleanedSiteUrl + fbImageValue %}
 
-      if (!siteUrl.endsWith('/') && !fbImageValue.startsWith('/')) {
-        siteUrl += '/';
-      }
-
-      return siteUrl + fbImageValue;
-    }
-
-    var finalUrl = mergeUrls(siteUrl, fbImageValue);
-    document.querySelector('meta[property="og:image"]').setAttribute('content', finalUrl);
-  }
-</script>
-{% endif %}
+      <meta property="og:image" content="{{ finalUrl }}">
+    {% endif %}
+  {% endif %}
 {% endif %}
 
 <script>
