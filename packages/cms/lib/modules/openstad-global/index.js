@@ -43,7 +43,7 @@ module.exports = {
        * TODO: move to it's own lib modules
        */
       let ignore_paths = ['/attachment-upload']; // TODO: configurable
-      if (siteConfig.basicAuth && siteConfig.basicAuth.active && !ignore_paths.includes(req.path)) {
+      if (siteConfig && siteConfig.basicAuth && siteConfig.basicAuth.active && !ignore_paths.includes(req.path)) {
         var user = auth(req);
 
         if (!user || !compare(user.name, siteConfig.basicAuth.user) || ! compare(user.pass, siteConfig.basicAuth.password)) {

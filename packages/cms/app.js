@@ -109,7 +109,7 @@ function cleanUpSites() {
 
 function serveSite(req, res, siteConfig, forceRestart) {
     const runner = Promise.promisify(run);
-    const dbName = siteConfig.config && siteConfig.config.cms && siteConfig.config.cms.dbName ? siteConfig.config.cms.dbName : '';
+    const dbName = siteConfig && siteConfig.config && siteConfig.config.cms && siteConfig.config.cms.dbName ? siteConfig.config.cms.dbName : '';
     const domain = siteConfig.domain;
 
     // check if the mongodb database exist. The name for databse

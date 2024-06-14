@@ -176,7 +176,7 @@ module.exports = {
           }
         }
 
-        const markerStyle = siteConfig.openStadMap && siteConfig.openStadMap.markerStyle ? siteConfig.openStadMap.markerStyle : null;
+        const markerStyle = siteConfig && siteConfig.openStadMap && siteConfig.openStadMap.markerStyle ? siteConfig.openStadMap.markerStyle : null;
 
         // Todo: refactor this to get resourceId in a different way
         const activeResource = req.data.activeResource;
