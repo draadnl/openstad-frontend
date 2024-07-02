@@ -29,7 +29,8 @@ module.exports =  function (req, res, next) {
   //add url
 //  req.data.siteUrl = siteUrl;
   req.data.currentPath = parsedUrl.path;
-  req.data.currentPathname = parsedUrl.pathname;
+  // Remove /singel from the pathname
+  req.data.currentPathname = (parsedUrl.pathname.startsWith('/singel') ? parsedUrl.pathname.substring(7) : parsedUrl.pathname);
   req.data.currentUrl = fullUrl;
 
   /**
