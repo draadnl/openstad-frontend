@@ -107,10 +107,18 @@ module.exports = {
 
                 // make sure it's a string
                 returnTo = returnTo.path ? returnTo.path : '';
+                
+                // check if there is overlap in the end of cmsUrl and the start of returnTo, if so, make sure it's removed
+                const cmsUrlPath = Url.parse(cmsUrl).pathname;
+                const returnToPath = Url.parse(returnTo).pathname;
+                
+                returnTo = removeOverlap(cmsUrlPath, returnToPath);
 
                 // always attach cmsUrl so no external redirects are possible and subdir is working
                 returnTo = cmsUrl + returnTo;
 
+                console.log ('final returnTo:', returnTo);
+                
                 // add params so modules now it's a first time return from login
                 // used in some cases like auto voting
                 returnTo = returnTo.includes('?') ? returnTo + '&freshLogIn=1' : returnTo + '?freshLogIn=1';
@@ -239,6 +247,32 @@ module.exports = {
       }
     });
          */
+
+        // Function to remove overlapping part
+        function removeOverlap(cmsUrlPath, returnToPath) {
+            let overlapIndex = -1;
+        
+            // Check if cmsUrlPath ends with any starting part of returnToPath
+            for (let i = 0; i < returnToPath.length; i++) {
+                const partToCheck = returnToPath.substring(0, i + 1);
+                if (cmsUrlPath.endsWith(partToCheck)) {
+                    overlapIndex = i;
+                }
+            }
+        
+            // If there's an overlap, remove it from returnToPath
+            if (overlapIndex !== -1) {
+                returnToPath = returnToPath.substring(overlapIndex + 1);
+            }
+        
+            // Ensure there's no double slash at the joining point
+            if (cmsUrlPath.endsWith('/') && returnToPath.startsWith('/')) {
+                returnToPath = returnToPath.substring(1);
+            }
+        
+            // Return the concatenated URL without the overlap
+            return cmsUrl + returnToPath;
+        }
 
 
         self.apos.app.get('/oauth/logout', (req, res, next) => {
