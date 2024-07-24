@@ -83,13 +83,21 @@ module.exports = {
                 const parsedUrl = Url.parse(fullUrl, true);
                 let fullUrlPath = parsedUrl.path;
 
+                console.log ('fullUrlPath', fullUrlPath, parsedUrl);
+                
                 // remove the JWT Parameter otherwise keeps redirecting
                 let returnTo = req.session.returnTo ? req.session.returnTo : removeURLParameter(fullUrlPath, 'jwt');
+                
+                console.log ('returnTo', returnTo, req.session.returnTo);
 
                 const sitePrefix = req.sitePrefix ? '/' + req.sitePrefix : false;
+                
+                console.log('sitePrefix', sitePrefix);
 
                 // incase the site prefix, this happens to be filled for a /subdir, make sure this is removed if it exists, otherwise it will be added double
                 returnTo = sitePrefix && returnTo.startsWith(sitePrefix) ? returnTo.replace(sitePrefix, '') : returnTo;
+                
+                console.log ('returnTo after siteprefix replace', returnTo);
 
                 // in case full url is prefixed remove it, otherwise will also cause issues
                 returnTo = cmsUrl && returnTo.startsWith(cmsUrl) ? returnTo.replace(cmsUrl, '') : returnTo;
