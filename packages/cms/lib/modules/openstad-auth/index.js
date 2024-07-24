@@ -112,7 +112,7 @@ module.exports = {
                 const cmsUrlPath = Url.parse(cmsUrl).pathname;
                 const returnToPath = Url.parse(returnTo).pathname;
                 
-                returnTo = removeOverlap(cmsUrlPath, returnToPath);
+                returnTo = removeOverlap(cmsUrlPath, returnToPath, cmsUrl);
 
                 // always attach cmsUrl so no external redirects are possible and subdir is working
                 returnTo = cmsUrl + returnTo;
@@ -249,7 +249,7 @@ module.exports = {
          */
 
         // Function to remove overlapping part
-        function removeOverlap(cmsUrlPath, returnToPath) {
+        function removeOverlap(cmsUrlPath, returnToPath, cmsUrl) {
             let overlapIndex = -1;
         
             // Check if cmsUrlPath ends with any starting part of returnToPath
