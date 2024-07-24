@@ -110,9 +110,12 @@ module.exports = {
                 
                 // check if there is overlap in the end of cmsUrl and the start of returnTo, if so, make sure it's removed
                 const cmsUrlPath = Url.parse(cmsUrl).pathname;
-                const returnToPath = Url.parse(returnTo).pathname;
                 
-                returnTo = removeOverlap(cmsUrlPath, returnToPath, cmsUrl);
+                console.log ('before remove overlap', returnTo)
+                
+                returnTo = removeOverlap(cmsUrlPath, returnTo);
+                
+                console.log ('removed overlap', returnTo, cmsUrl, cmsUrlPath);
 
                 // always attach cmsUrl so no external redirects are possible and subdir is working
                 returnTo = cmsUrl + returnTo;
@@ -249,7 +252,7 @@ module.exports = {
          */
 
         // Function to remove overlapping part
-        function removeOverlap(cmsUrlPath, returnToPath, cmsUrl) {
+        function removeOverlap(cmsUrlPath, returnToPath) {
             let overlapIndex = -1;
         
             // Check if cmsUrlPath ends with any starting part of returnToPath
@@ -265,13 +268,8 @@ module.exports = {
                 returnToPath = returnToPath.substring(overlapIndex + 1);
             }
         
-            // Ensure there's no double slash at the joining point
-            if (cmsUrlPath.endsWith('/') && returnToPath.startsWith('/')) {
-                returnToPath = returnToPath.substring(1);
-            }
-        
             // Return the concatenated URL without the overlap
-            return cmsUrl + returnToPath;
+            return returnToPath;
         }
 
 
