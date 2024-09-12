@@ -187,6 +187,19 @@ const fields = [
     ]
   },
   {
+    name: 'step_0_intro',
+    label: 'Step 0: intro',
+    type: 'string',
+    textarea: true,
+    def: '<h4 style="padding-top: 10px;">Kies jouw favoriete plannen per thema!</h4>\n' +
+      '<ol type="1">\n' +
+      '<li>Selecteer hieronder een thema om de plannen voor dat thema te bekijken</li>\n' +
+      '<li>Kies jouw favoriete plannen voor dat thema binnen het beschikbare budget</li>\n' +
+      '<li>Ga naar het volgende thema om hetzelfde te doen</li>\n' +
+      '<li>Klaar en tevreden? In stap 3 vul je ter controle de stemcode in die je per post hebt ontvangen. Tot slot verstuur je in stap 4 je stem</li>\n' +
+      '</ol>'
+  },
+  {
     name: 'step_1_intro',
     label: 'Step 1: intro',
     type: 'string',
