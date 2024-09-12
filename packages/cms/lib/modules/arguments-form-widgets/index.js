@@ -99,14 +99,6 @@ module.exports = {
     self.load = function (req, widgets, next) {
       if (widgets) {
         widgets.forEach((widget) => {
-
-          console.log( 'START' );
-          console.log( 'global', req.data.global );
-          console.log( 'siteConfig', req.data.global.siteConfig );
-          console.log( 'arguments', req.data.global.siteConfig.arguments );
-          console.log( 'descriptionMinLength', req.data.global.siteConfig.arguments.descriptionMinLength );
-          console.log( 'END' );
-
           const siteConfig = req.data.global.siteConfig;
           widget.argumentMinLength =
             siteConfig
