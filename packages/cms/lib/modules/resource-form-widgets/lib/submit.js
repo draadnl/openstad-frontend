@@ -16,7 +16,7 @@ module.exports = async function(self, options) {
 		console.log ('====> frontend submission check IP', ip, req.headers, req.ip);
 		
 		if (ip) {
-			data.extraData.clientIp = ip;
+			req.body.extraData.clientIp = ip;
 		}
 
     /**
