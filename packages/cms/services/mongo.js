@@ -7,6 +7,13 @@ function getConnectionString (database) {
     return process.env.MONGO_DB_CONNECTION_STRING.replace('{database}', database);
   }
   
+  if (process.env.MONGO_DB_PREFIX) {
+    const prefix = process.env.MONGO_DB_PREFIX;
+    if (prefix && prefix.length > 0 && database && database.length > 0 && database.indexOf(prefix) !== 0) {
+      database = `${prefix}${database}`.substring(0, 63);
+    }
+  }
+  
   const host = process.env.MONGO_DB_HOST || 'localhost';
   const port = process.env.MONGODB_PORT_27017_TCP_PORT || process.env.MONGO_DB_PORT || 27017;
   const user = process.env.MONGO_DB_USER || '';
