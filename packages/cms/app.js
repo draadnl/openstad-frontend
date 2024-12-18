@@ -23,9 +23,13 @@ const auth = require('basic-auth');
 const compare = require('tsscmp');
 const path = require('path');
 const morgan = require('morgan')
+const { URL } = require('url')
+const fetch = require('node-fetch');
 
 //internal code
-const dbExists = require('./services/mongo').dbExists;
+const cdns = require('./services/cdns');
+const mongo = require('./services/mongo');
+
 const openstadMap = require('./config/map').default;
 const openstadMapPolygons = require('./config/map').polygons;
 const defaultSiteConfig = require('./config/siteConfig');
@@ -36,9 +40,10 @@ const fileExtension = process.env.MINIFY_JS === 'ON' ? [...defaultExtensions, '.
 
 // Storing all site data in the site config
 let sites = {};
+let sitesById = {};
 let sitesResponse = [];
 const aposStartingUp = {};
-const REFRESH_SITES_INTERVAL = 60000 * 5;
+const REFRESH_SITES_INTERVAL =  60000 * 5;
 
 
 if (process.env.REQUEST_LOGGING === 'ON') {
@@ -53,6 +58,25 @@ app.use(express.static('public'));
 
 app.set('trust proxy', true);
 
+async function restartAllSites() {
+    const sites = Object.keys(aposServer);
+    const promises = sites.map(site => {
+        const url = new URL('http://' + site);
+        return fetch(`http://localhost:${process.env.PORT}${url.pathname}/config-reset`,{
+            headers: {
+                Host: url.hostname
+            }
+        }).catch(err => {
+            if (err.statusCode === 404) {
+                return console.log('Done resetting site ' + site)
+            }
+            console.error(err)
+        })
+    });
+
+    await Promise.allSettled(promises);
+}
+
 function fetchAllSites(req, res, startSites) {
     const apiUrl = process.env.INTERNAL_API_URL ? process.env.INTERNAL_API_URL : process.env.API;
 
@@ -64,33 +88,31 @@ function fetchAllSites(req, res, startSites) {
         return;
     }
 
-    const siteOptions = {
-        uri: `${apiUrl}/api/site`, //,
+    return fetch(`${apiUrl}/api/site`, {
         headers: {
             'Accept': 'application/json',
             "Cache-Control": "no-cache",
             "X-Authorization": process.env.SITE_API_KEY
         },
-        json: true // Automatically parses the JSON string in the response
-    };
+    }).then(async response => {
+        sitesResponse = await response.json();
+        const newSites = [];
+        const newSitesById = [];
 
-    return rp(siteOptions)
-        .then((response) => {
-            sitesResponse = response;
-            const newSites = [];
-
-            response.forEach((site, i) => {
-                // for convenience and speed we set the domain name as the key
-                newSites[site.domain] = site;
-            });
-
-            sites = newSites;
-            cleanUpSites();
-
-        }).catch((e) => {
-            console.error('An error occurred fetching the site config:', e);
-            if (res) res.status(500).json({error: 'An error occured fetching the sites data: ' + e});
+        sitesResponse.forEach((site, i) => {
+            // for convenience and speed we set the domain name as the key
+            newSites[site.domain] = site;
+          newSitesById[site.id] = site
         });
+
+        sites = newSites;
+        sitesById = newSitesById;
+
+        cleanUpSites();
+    }).catch((e) => {
+        console.error('An error occurred fetching the site config:', e);
+        if (res) res.status(500).json({error: 'An error occured fetching the sites data: ' + e});
+    });
 }
 
 // run through all sites see if anyone is not active anymore and needs to be shut down
@@ -109,11 +131,30 @@ function cleanUpSites() {
 
 function serveSite(req, res, siteConfig, forceRestart) {
     const runner = Promise.promisify(run);
-    const dbName = siteConfig && siteConfig.config && siteConfig.config.cms && siteConfig.config.cms.dbName ? siteConfig.config.cms.dbName : '';
+    const dbPrefix = process.env.MONGO_DB_PREFIX ? process.env.MONGO_DB_PREFIX : '';
+    const dbName = (dbPrefix + (siteConfig.config && siteConfig.config.cms && siteConfig.config.cms.dbName ? siteConfig.config.cms.dbName : '')).substring(0, 63);
     const domain = siteConfig.domain;
 
+    // check if this site needs to redirect. We can then skip the rest.
+    let redirectURI = siteConfig.config && siteConfig.config.cms && siteConfig.config.cms.redirectURI;
+    if (redirectURI) {
+      return res.redirect(redirectURI);
+    }
+  
     // check if the mongodb database exist. The name for databse
-    return dbExists(dbName).then((exists) => {
+    return new Promise((resolve, reject) => {
+
+        if (aposServer[domain]) {
+            return resolve(true);
+        }
+
+        mongo.dbExists(dbName)
+          .then((isExisting) => {
+              resolve(isExisting);
+          }).catch((err) => {
+            reject(err);
+          })
+    }).then((exists) => {
         // if default DB is set
         if (exists || dbName === process.env.DEFAULT_DB) {
 
@@ -130,12 +171,17 @@ function serveSite(req, res, siteConfig, forceRestart) {
 
                 aposStartingUp[domain] = true;
 
-                runner(dbName, config, req.options).then(function (apos) {
+                runner(dbName, config, req.options)
+                  .then(function (apos) {
                     aposStartingUp[domain] = false;
                     aposServer[domain] = apos;
                     aposServer[domain].app.set('trust proxy', true);
                     aposServer[domain].app(req, res);
-                });
+                  })
+                  .catch((err) => {
+                      console.log('Err starting up site: ', domain,  err)
+                      res.status(500).json({error: 'An error occured running site ' , domain});
+                  })
             } else {
                 const startServer = (server, req, res) => {
                     server.app(req, res);
@@ -165,10 +211,14 @@ function serveSite(req, res, siteConfig, forceRestart) {
         });
 }
 
-function run(id, siteData, options, callback) {
+async function run(id, siteData, options, callback) {
     const site = {_id: id}
 
-    const config = _.merge(siteData, options);
+    let openstadComponentsCdn = await cdns.contructComponentsCdn();
+    let openstadReactAdminCdn = await cdns.contructReactAdminCdn();
+
+    const config = _.merge(siteData, options, { openstadComponentsCdn, openstadReactAdminCdn });
+
     let assetsIdentifier;
 
     // for dev sites grab the assetsIdentifier from the first site in order to share assets
@@ -186,10 +236,19 @@ function run(id, siteData, options, callback) {
             return callback(null, apos);
         }
     };
-
-    const apos = apostrophe(
-        _.merge(siteConfig, siteData)
-    );
+    
+    let aposConfig;
+    
+    if (siteData?.cms?.dbName) {
+        const dbPrefix = process.env.MONGO_DB_PREFIX ? process.env.MONGO_DB_PREFIX : '';
+        const dbName = (dbPrefix + (siteData?.cms?.dbName)).substring(0, 63);
+   
+        aposConfig = _.merge(siteConfig, siteData, {'modules': {'apostrophe-db': {uri: mongo.getConnectionString(dbName)}}});
+    } else {
+        aposConfig = _.merge(siteConfig, siteData);
+    }
+    
+    const apos = apostrophe(aposConfig);
 }
 
 module.exports.getDefaultConfig = (options) => {
@@ -232,11 +291,11 @@ module.exports.getMultiSiteApp = (options) => {
     const resetConfigMw = async (req, res, next) => {
         let host = req.headers['x-forwarded-host'] || req.get('host');
         host = host.replace(['http://', 'https://'], ['']);
-        console.log('reset host', host)
         await fetchAllSites(req, res);
         req.forceRestart = true;
         next();
     }
+    
 
     /**
      * Route for resetting the config of the server
@@ -263,7 +322,6 @@ module.exports.getMultiSiteApp = (options) => {
 
         if (site) {
             site.sitePrefix = req.params.sitePrefix;
-            console.log();
             req.sitePrefix = req.params.sitePrefix;
             req.site = site;
 
@@ -299,6 +357,7 @@ module.exports.getMultiSiteApp = (options) => {
         // if site exists serve it, otherwise give a 404
         if (site) {
             req.site = site;
+            req.allSites = sitesById;
             serveSite(req, res, site, req.forceRestart);
         } else {
             res.status(404).json({error: 'Site not found'});
@@ -309,6 +368,6 @@ module.exports.getMultiSiteApp = (options) => {
     /**
      * Update the site config every few minutes
      */
-    setInterval(fetchAllSites, REFRESH_SITES_INTERVAL);
+    setInterval(restartAllSites, REFRESH_SITES_INTERVAL);
     return app;
 };
