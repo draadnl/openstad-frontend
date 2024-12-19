@@ -239,9 +239,10 @@ async function run(id, siteData, options, callback) {
     
     let aposConfig;
     
-    if (siteData?.cms?.dbName) {
+    if (siteData && siteData.cms && siteData.cms.dbName) {
+        
         const dbPrefix = process.env.MONGO_DB_PREFIX ? process.env.MONGO_DB_PREFIX : '';
-        const dbName = (dbPrefix + (siteData?.cms?.dbName)).substring(0, 63);
+        const dbName = (dbPrefix + (siteData.cms.dbName)).substring(0, 63);
    
         aposConfig = _.merge(siteConfig, siteData, {'modules': {'apostrophe-db': {uri: mongo.getConnectionString(dbName)}}});
     } else {
