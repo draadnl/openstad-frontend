@@ -109,14 +109,9 @@ apos.on('ready', function () {
                         }
                     }
                 });
-            } else {
-                console.log('No links found in this .row:', $row);
             }
         });
-    } else {
-        console.log('No .row elements found in the DOM.');
     }
-
 });
 
 
