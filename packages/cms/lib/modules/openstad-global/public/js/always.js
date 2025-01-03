@@ -91,30 +91,28 @@ apos.on('ready', function () {
     }
 
     // Remove target="_blank" from internal links
-    document.addEventListener('DOMContentLoaded', function () {
-        try {
-            const rows = document.querySelectorAll('.row');
-            const baseDomain = window.location.origin; // Base domain van de huidige site
+    try {
+        const rows = document.querySelectorAll('.row');
+        const baseDomain = window.location.origin; // Base domain van de huidige site
 
-            rows.forEach(row => {
-                const links = row.querySelectorAll('a[href]');
-                links.forEach(link => {
-                    try {
-                        const href = link.getAttribute('href');
-                        if (href.startsWith(baseDomain) || !href.startsWith('http')) {
-                            if (link.target === '_blank') {
-                                link.removeAttribute('target');
-                            }
+        rows.forEach(row => {
+            const links = row.querySelectorAll('a[href]');
+            links.forEach(link => {
+                try {
+                    const href = link.getAttribute('href');
+                    if (href.startsWith(baseDomain) || !href.startsWith('http')) {
+                        if (link.target === '_blank') {
+                            link.removeAttribute('target');
                         }
-                    } catch (linkError) {
-                        console.error('Error processing link:', link, linkError);
                     }
-                });
+                } catch (linkError) {
+                    console.error('Error processing link:', link, linkError);
+                }
             });
-        } catch (error) {
-            console.error('Error processing .row elements:', error);
-        }
-    });
+        });
+    } catch (error) {
+        console.error('Error processing .row elements:', error);
+    }
 
 });
 
