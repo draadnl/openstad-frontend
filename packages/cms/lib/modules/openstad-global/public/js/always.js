@@ -89,6 +89,33 @@ apos.on('ready', function () {
     } else if(select) {
         select.setAttribute('disabled', true);
     }
+
+    // Remove target="_blank" from internal links
+    document.addEventListener('DOMContentLoaded', function () {
+        try {
+            const rows = document.querySelectorAll('.row');
+            const baseDomain = window.location.origin; // Base domain van de huidige site
+
+            rows.forEach(row => {
+                const links = row.querySelectorAll('a[href]');
+                links.forEach(link => {
+                    try {
+                        const href = link.getAttribute('href');
+                        if (href.startsWith(baseDomain) || !href.startsWith('http')) {
+                            if (link.target === '_blank') {
+                                link.removeAttribute('target');
+                            }
+                        }
+                    } catch (linkError) {
+                        console.error('Error processing link:', link, linkError);
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('Error processing .row elements:', error);
+        }
+    });
+
 });
 
 
