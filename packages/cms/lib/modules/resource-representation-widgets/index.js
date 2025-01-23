@@ -81,8 +81,8 @@ module.exports = {
 
         //Todo, find a nice way of adding functions per display / resource type
         if (widget.activeResourceType === 'idea' && widget.displayType === 'idea-page') {
-          const openStadMap =  widget.siteConfig && widget.siteConfig.openStadMap ? widget.siteConfig.openStadMap : {};
-          const markerStyle = widget.siteConfig && widget.siteConfig.openStadMap && widget.siteConfig.openStadMap.markerStyle ? widget.siteConfig.openStadMap.markerStyle : null;
+          const openStadMap =  widget && widget.siteConfig && widget.siteConfig.openStadMap ? widget.siteConfig.openStadMap : {};
+          const markerStyle = widget && widget.siteConfig && widget.siteConfig.openStadMap && widget.siteConfig.openStadMap.markerStyle ? widget.siteConfig.openStadMap.markerStyle : null;
           const idea = widget.activeResource;
 
           let daysOld = parseInt( ( Date.now() - new Date(idea.startDate).getTime() ) / ( 24 * 60 * 60 * 1000 ) );
