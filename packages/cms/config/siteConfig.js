@@ -83,7 +83,14 @@ module.exports = {
 
               //     '/vote',
               //     '/api/**'
-            ]
+            ],
+            cookie: {
+              path: '/',
+              httpOnly: true,
+              secure: process.env.COOKIE_SECURE_OFF === 'yes' ? false : true,
+              // Default login lifetime between requests is one day
+              maxAge: parseInt(process.env.COOKIE_MAX_AGE) && ! isNaN(parseInt(process.env.COOKIE_MAX_AGE)) ? parseInt(process.env.COOKIE_MAX_AGE) : 86400000
+            }
           }
         },
         'apostrophe-login': {
