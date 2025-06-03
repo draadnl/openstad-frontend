@@ -4,6 +4,7 @@
 const proxy         = require('http-proxy-middleware');
 const imageApiUrl   = process.env.IMAGE_API_URL;
 const imageApiToken = process.env.IMAGE_API_ACCESS_TOKEN;
+const util = require('util');
 
 module.exports = {
     label: 'Image proxy',
@@ -15,9 +16,11 @@ module.exports = {
         // console.log('options.sitePrefix on image proxy', options.sitePrefix);
 
         function checkUserMiddlware(req, res, next) {
-            console.log( "req.data.loggedIn", req.data.loggedIn );
-            console.log( "req.data", JSON.stringify(req.data) );
-            console.log( "req", JSON.stringify(req) );
+            console.log("req.body", req.body);
+            console.log("req.headers", req.headers);
+            console.log("req.params", req.params);
+            console.log("req.user", req.user);
+            console.log("req", util.inspect(req, { showHidden: false, depth: 2, colors: true }));
 
             if (!req.data.loggedIn) return next(new Error('No user found'));  // loggedIn is created in the openstad-auth module and checked against requiredRoles = ['member', 'moderator', 'admin', 'editor'];
             return next();
